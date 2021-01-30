@@ -1,0 +1,14 @@
+#Load Environment
+source ../../environment_nvidia
+
+#DSBOARD_XV for AGX Xavier
+make ARCH=arm64 O=/home/nvidia/kernel_out_dsboard_xv tegra_defconfig
+make ARCH=arm64 O=/home/nvidia/kernel_out_dsboard_xv -j
+
+#DSBOARD_NX2 for Xavier NX
+make ARCH=arm64 O=/home/nvidia/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
+make ARCH=arm64 O=/home/nvidia/kernel_out_dsboard_nx2 -j
+
+#MILBOARD_XV for AGX Xavier
+make ARCH=arm64 O=/home/nvidia/kernel_out_milboard_xv milboard_xv_defconfig
+make ARCH=arm64 O=/home/nvidia/kernel_out_milboard_xv -j
