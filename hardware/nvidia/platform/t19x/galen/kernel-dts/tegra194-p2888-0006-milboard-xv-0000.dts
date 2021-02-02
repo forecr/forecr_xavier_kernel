@@ -85,12 +85,12 @@
 		ports {
 			usb2-0 {
 				status = "okay";
-				vbus-supply = <0x1c>;
+				vbus-supply = <&battery_reg>;
 				mode = "host";
 			};
 			usb2-3 {
 				status = "okay";
-				vbus-supply = <0x1c>;
+				vbus-supply = <&battery_reg>;
 				mode = "host";
 			};
 		};
