@@ -10,7 +10,6 @@ dtbo-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-all-p3509-0000-hdr40.dtbo
 dtbo-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-all-p3509-0000-adafruit-sph0645lm4h.dtbo
 dtbo-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-all-p3509-0000-fe-pi-audio.dtbo
 dtbo-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-all-p3509-0000-respeaker-4-mic-array.dtbo
-dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000.dtb
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
