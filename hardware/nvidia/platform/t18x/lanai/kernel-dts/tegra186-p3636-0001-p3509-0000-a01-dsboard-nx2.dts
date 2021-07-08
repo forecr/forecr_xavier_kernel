@@ -59,23 +59,23 @@
 		status = "okay";
 	};
 
-    sdhci@3440000 {
-		/delete-property/ only-1-8-v;
-		cd-inverted;
-		cd-gpios = <&tegra_main_gpio TEGRA_MAIN_GPIO(X, 4) 0>;
-		nvidia,vmmc-always-on;
-		nvidia,cd-wakeup-capable;
+    	sdhci@3440000 {
+		status = "okay";
+		mmc-ocr-mask = <3>;
+		uhs-mask = <0x8>;
 		disable-wp;
-		no-sdio;
-		no-mmc;
-		mmc-ocr-mask=<0>;
-		vqmmc-supply = <&spmic_sd2>;
-		vmmc-supply = <&spmic_sd3>;
 		sd-uhs-sdr104;
 		sd-uhs-sdr50;
 		sd-uhs-sdr25;
 		sd-uhs-sdr12;
-		status = "okay";
+		mmc-ddr-1_8v;
+		mmc-hs200-1_8v;
+
+		vmmc-supply = <&spmic_sd3>;
+		nvidia,vmmc-always-on;
+
+		/delete-property/ non-removable;
+		/delete-property/ force-non-removable-rescan;
 	};
 
 	xudc@3550000 {
