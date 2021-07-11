@@ -61,6 +61,8 @@
 
     	sdhci@3440000 {
 		status = "okay";
+		cd-inverted;
+		cd-gpios = <&tegra_main_gpio TEGRA_MAIN_GPIO(X, 4) 0>;
 		mmc-ocr-mask = <3>;
 		uhs-mask = <0x8>;
 		disable-wp;
