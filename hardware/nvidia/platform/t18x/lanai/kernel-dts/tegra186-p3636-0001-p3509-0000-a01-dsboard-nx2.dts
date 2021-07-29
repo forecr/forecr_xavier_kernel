@@ -59,7 +59,11 @@
 		status = "okay";
 	};
 
-    	sdhci@3440000 {
+  serial@c280000 {
+		status = "okay";
+	};
+
+  sdhci@3440000 {
 		status = "okay";
 		cd-inverted;
 		cd-gpios = <&tegra_main_gpio TEGRA_MAIN_GPIO(X, 4) 0>;
