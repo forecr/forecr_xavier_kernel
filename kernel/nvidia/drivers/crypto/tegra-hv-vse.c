@@ -4,7 +4,7 @@
  *
  * Support for Tegra Virtual Security Engine hardware crypto algorithms.
  *
- * Copyright (c) 2016-2020, NVIDIA Corporation. All Rights Reserved.
+ * Copyright (c) 2016-2021, NVIDIA Corporation. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3653,16 +3653,11 @@ static int tegra_vse_kthread(void *unused)
 			read_size = tegra_hv_ivc_read(pivck,
 					ivc_resp_msg,
 					sizeof(struct tegra_virtual_se_ivc_msg_t));
-			if (read_size <= 0) {
-				dev_err(se_dev->dev,
-					"tegra_hv_ivc_read returned error %d\n", read_size);
+			if (read_size < sizeof(struct tegra_virtual_se_ivc_msg_t) ) {
+				pr_err("tegra_hv_ivc_read returned error %d\n", read_size);
 				break;
 			}
-			if (read_size < sizeof(struct tegra_virtual_se_ivc_msg_t)) {
-				dev_err(se_dev->dev,
-					"Wrong read msg len %d\n", read_size);
-				continue;
-			}
+
 			p_dat =
 				(struct tegra_vse_tag *)ivc_resp_msg->hdr.tag;
 			priv = (struct tegra_vse_priv_data *)p_dat->priv_data;
@@ -3812,6 +3807,24 @@ static int tegra_hv_vse_probe(struct platform_device *pdev)
 			dev_err(se_dev->dev, "alloc_workqueue failed\n");
 			goto exit;
 		}
+
+		atomic_set(&se_dev->ivc_count, 0);
+
+		se_dev->priv_pool = mempool_create_kmalloc_pool(
+			TEGRA_HV_VSE_MEMPOOL_SIZE,
+			sizeof(struct tegra_vse_priv_data));
+		se_dev->req_pool = mempool_create_kmalloc_pool(
+			TEGRA_HV_VSE_MEMPOOL_SIZE,
+			sizeof(struct tegra_virtual_se_ivc_msg_t));
+		if (!se_dev->priv_pool || !se_dev->req_pool) {
+			err = -ENOMEM;
+			mempool_destroy(se_dev->priv_pool);
+			mempool_destroy(se_dev->req_pool);
+			dev_err(&pdev->dev,
+				"mempool_create failed for priv or req struct\n");
+			goto exit;
+		}
+
 		for (i = 0; i < ARRAY_SIZE(aes_algs); i++) {
 			err = crypto_register_alg(&aes_algs[i]);
 			if (err) {
@@ -3825,18 +3838,6 @@ static int tegra_hv_vse_probe(struct platform_device *pdev)
 		if (err) {
 			dev_err(&pdev->dev,
 				"cmac alg register failed. Err %d\n", err);
-			goto exit;
-		}
-		atomic_set(&se_dev->ivc_count, 0);
-		se_dev->priv_pool = mempool_create_kmalloc_pool(
-			TEGRA_HV_VSE_MEMPOOL_SIZE,
-			sizeof(struct tegra_vse_priv_data));
-		se_dev->req_pool = mempool_create_kmalloc_pool(
-			TEGRA_HV_VSE_MEMPOOL_SIZE,
-			sizeof(struct tegra_virtual_se_ivc_msg_t));
-		if (!se_dev->priv_pool || !se_dev->req_pool) {
-			dev_err(&pdev->dev,
-				"mempool_create failed for priv or req struct\n");
 			goto exit;
 		}
 	}

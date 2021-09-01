@@ -30,7 +30,7 @@
  * =========================================================================
  */
 /*
- * Copyright (c) 2015-2020, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (c) 2015-2021, NVIDIA CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -952,7 +952,7 @@ static int eqos_read_coalesc_params(struct platform_device *pdev,
 	/* RIWT value to be set */
 	ret = of_property_read_u32(np, "nvidia,rx_riwt", &rx_riwt);
 	if (ret < 0) {
-		use_riwt = EQOS_COAELSCING_ENABLE;
+		use_riwt = EQOS_COAELSCING_DISABLE;
 	} else {
 		if ((rx_riwt > EQOS_MAX_RX_COALESCE_USEC) ||
 		    (rx_riwt < EQOS_MIN_RX_COALESCE_USEC)) {
@@ -1036,6 +1036,7 @@ int eqos_probe(struct platform_device *pdev)
 	u8 mac_addr[6];
 	struct eqos_cfg *pdt_cfg;
 	bool	use_multi_q;
+	uint	phyrst_lp_mode;
 	uint	num_chans, chan;
 
 	pr_debug("-->%s()\n", __func__);
@@ -1370,6 +1371,20 @@ int eqos_probe(struct platform_device *pdev)
 		pdata->phy_node = of_node_get(node);
 	}
 
+	/* Read the supported phy low power mode for the attached phy.
+	 * Default is to put phy in reset mode, if not set then use the
+	 * low power mode supported by the particular phy chip.
+	 */
+	ret = of_property_read_u32(pdata->phy_node, "phy_rst_lp_mode",
+				   &phyrst_lp_mode);
+	if (ret < 0) {
+		pr_info("Using default phy reset low power mode\n");
+		pdata->dt_cfg.phyrst_lpmode = 1U;
+	} else {
+		pr_info("Using phyrst_lpmode = %d from DT\n", phyrst_lp_mode);
+		pdata->dt_cfg.phyrst_lpmode = phyrst_lp_mode ? 1U : 0U;
+	}
+
 	if (pdata->mdio_node) {
 		ret = eqos_mdio_register(ndev);
 		if (ret < 0) {
@@ -1489,10 +1504,12 @@ int eqos_probe(struct platform_device *pdev)
 	}
 
 	eqos_clock_disable(pdata);
+	/* keep initial settings as restore disabled */
+	pdata->wolopts = 0;
 
 	/* put Ethernet PHY in reset for power save */
 	if (gpio_is_valid(pdata->phy_reset_gpio) &&
-	    (pdata->mac_ver > EQOS_MAC_CORE_4_10))
+	    (pdata->dt_cfg.phyrst_lpmode == 1U))
 		gpio_set_value(pdata->phy_reset_gpio, 0);
 
 	return 0;
@@ -1655,8 +1672,8 @@ static int eqos_suspend_noirq(struct device *dev)
 			enable_irq_wake(pdata->phydev->irq);
 		} else {
 			phy_stop(pdata->phydev);
-			if ((gpio_is_valid(pdata->phy_reset_gpio) &&
-			    (pdata->mac_ver > EQOS_MAC_CORE_4_10))) {
+			if (gpio_is_valid(pdata->phy_reset_gpio) &&
+			    (pdata->dt_cfg.phyrst_lpmode == 1U)) {
 				gpio_set_value(pdata->phy_reset_gpio, 0);
 				usleep_range(pdata->phy_reset_duration,
 					     pdata->phy_reset_duration + 1);
@@ -1739,6 +1756,19 @@ static int eqos_resume_noirq(struct device *dev)
 		/* Init the PHY */
 		pdata->phydev->drv->config_init(pdata->phydev);
 		phy_start(pdata->phydev);
+	}
+
+	/* restore wake on lan settings if already enabled */
+	if (pdata->wolopts) {
+		struct ethtool_wolinfo wol = { .cmd = ETHTOOL_SWOL };
+
+		wol.wolopts = WAKE_MAGIC;
+		/* set the WoL bit */
+		ret = phy_ethtool_set_wol(pdata->phydev, &wol);
+		if (ret < 0) {
+			dev_err(&pdata->pdev->dev, "WoL set failed\n");
+			return ret;
+		}
 	}
 
 	netif_tx_start_all_queues(pdata->dev);
