@@ -1,8 +1,7 @@
-From 9a83ff7e91b8502253c2d45667b26b1d4c727e82 Mon Sep 17 00:00:00 2001
+From 7db075372cc9b7643a7e5baf95cc0a41db410047 Mon Sep 17 00:00:00 2001
 From: Ingo Molnar <mingo@elte.hu>
 Date: Fri, 3 Jul 2009 08:30:16 -0500
-Subject: [PATCH 082/371] ide: Do not disable interrupts for PREEMPT-RT
-X-NVConfidentiality: public
+Subject: [PATCH 082/352] ide: Do not disable interrupts for PREEMPT-RT
 
 Use the local_irq_*_nort variants.
 

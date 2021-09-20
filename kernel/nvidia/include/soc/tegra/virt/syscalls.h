@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2020, NVIDIA CORPORATION. All rights reserved.
+ * Copyright (C) 2014-2019, NVIDIA CORPORATION. All rights reserved.
  *
  * Hypervisor interfaces
  *
@@ -200,13 +200,8 @@ struct hyp_server_page {
 #define _X7_X17 "x7", "x8", "x9", "x10", "x11", "x12", \
 "x13", "x14", "x15", "x16", "x17"
 
-#if IS_ENABLED(CONFIG_KASAN)
-#   define __INLINE __no_sanitize_address __maybe_unused
-#else
-#   define __INLINE inline
-#endif
 
-static __INLINE int hyp_read_gid(unsigned int *gid)
+static inline int hyp_read_gid(unsigned int *gid)
 {
 	register uint64_t r0 asm("x0");
 	register uint64_t r1 asm("x1");
@@ -220,7 +215,7 @@ static __INLINE int hyp_read_gid(unsigned int *gid)
 	return (int)r0;
 }
 
-static __INLINE uint32_t hyp_read_vcpu_id(void)
+static inline uint32_t hyp_read_vcpu_id(void)
 {
 	register uint64_t r0 asm("x0");
 
@@ -232,7 +227,7 @@ static __INLINE uint32_t hyp_read_vcpu_id(void)
 	return (uint32_t)r0;
 }
 
-static __INLINE int hyp_read_nguests(unsigned int *nguests)
+static inline int hyp_read_nguests(unsigned int *nguests)
 {
 	register uint64_t r0 asm("x0");
 	register uint64_t r1 asm("x1");
@@ -246,7 +241,7 @@ static __INLINE int hyp_read_nguests(unsigned int *nguests)
 	return (int)r0;
 }
 
-static __INLINE int hyp_read_ivc_info(uint64_t *ivc_info_page_pa)
+static inline int hyp_read_ivc_info(uint64_t *ivc_info_page_pa)
 {
 	register uint64_t r0 asm("x0");
 	register uint64_t r1 asm("x1");
@@ -260,7 +255,7 @@ static __INLINE int hyp_read_ivc_info(uint64_t *ivc_info_page_pa)
 	return (int)r0;
 }
 
-static __INLINE int hyp_read_ipa_pa_info(struct hyp_ipa_pa_info *info,
+static inline int hyp_read_ipa_pa_info(struct hyp_ipa_pa_info *info,
 		unsigned int guestid, uint64_t ipa)
 {
 	register uint64_t r0 asm("x0") = guestid;
@@ -281,7 +276,7 @@ static __INLINE int hyp_read_ipa_pa_info(struct hyp_ipa_pa_info *info,
 	return (int)r0;
 }
 
-static __INLINE int hyp_raise_irq(unsigned int irq, unsigned int vmid)
+static inline int hyp_raise_irq(unsigned int irq, unsigned int vmid)
 {
 	register uint64_t r0 asm("x0") = irq;
 	register uint64_t r1 asm("x1") = vmid;
@@ -294,7 +289,7 @@ static __INLINE int hyp_raise_irq(unsigned int irq, unsigned int vmid)
 	return (int)r0;
 }
 
-static __INLINE int hyp_read_guest_state(unsigned int vmid, unsigned int *state)
+static inline int hyp_read_guest_state(unsigned int vmid, unsigned int *state)
 {
 	register uint64_t r0 asm("x0") = vmid;
 	register uint64_t r1 asm("x1");
@@ -308,7 +303,7 @@ static __INLINE int hyp_read_guest_state(unsigned int vmid, unsigned int *state)
 	return (int)r0;
 }
 
-static __INLINE int hyp_read_hyp_info(uint64_t *hyp_info_page_pa)
+static inline int hyp_read_hyp_info(uint64_t *hyp_info_page_pa)
 {
 	register uint64_t r0 asm("x0");
 	register uint64_t r1 asm("x1");
@@ -322,7 +317,7 @@ static __INLINE int hyp_read_hyp_info(uint64_t *hyp_info_page_pa)
 	return (int)r0;
 }
 
-static __INLINE int hyp_guest_reset(unsigned int id,
+static inline int hyp_guest_reset(unsigned int id,
 				  struct hyp_sys_state_info *out)
 {
 	register uint64_t r0 asm("x0") = id;
@@ -345,7 +340,7 @@ static __INLINE int hyp_guest_reset(unsigned int id,
 	return (int)r0;
 }
 
-static __INLINE uint64_t hyp_sysinfo_ipa(void)
+static inline uint64_t hyp_sysinfo_ipa(void)
 {
 	register uint64_t r0 asm("x0");
 
@@ -357,7 +352,7 @@ static __INLINE uint64_t hyp_sysinfo_ipa(void)
 	return r0;
 }
 
-static __INLINE int hyp_trace_get_mask(uint64_t *mask)
+static inline int hyp_trace_get_mask(uint64_t *mask)
 {
 	register uint64_t x0 asm("x0");
 	register uint64_t x1 asm("x1");
@@ -375,7 +370,7 @@ static __INLINE int hyp_trace_get_mask(uint64_t *mask)
 	return (int)x0;
 }
 
-static __INLINE int hyp_trace_set_mask(uint64_t mask)
+static inline int hyp_trace_set_mask(uint64_t mask)
 {
 	register uint64_t x0 asm("x0") = mask;
 
@@ -390,7 +385,7 @@ static __INLINE int hyp_trace_set_mask(uint64_t mask)
 	return (int)x0;
 }
 
-static __INLINE int hyp_read_uart_relay_info(uint64_t *ipa, uint64_t *size,
+static inline int hyp_read_uart_relay_info(uint64_t *ipa, uint64_t *size,
 					uint64_t *num_channels,
 					uint64_t *max_msg_size)
 {
@@ -415,7 +410,8 @@ static __INLINE int hyp_read_uart_relay_info(uint64_t *ipa, uint64_t *size,
 	return (int)x0;
 }
 
-static __INLINE int hyp_read_nvlog_reader_info(uint64_t *ipa, uint64_t *size,
+
+static inline int hyp_read_nvlog_reader_info(uint64_t *ipa, uint64_t *size,
 					uint64_t *num_vms)
 {
 	register uint64_t x0 asm("x0");
@@ -438,7 +434,7 @@ static __INLINE int hyp_read_nvlog_reader_info(uint64_t *ipa, uint64_t *size,
 	return (int)x0;
 }
 
-static __INLINE int hyp_read_nvlog_writer_info(uint64_t *ipa, uint64_t *size)
+static inline int hyp_read_nvlog_writer_info(uint64_t *ipa, uint64_t *size)
 {
 	register uint64_t x0 asm("x0");
 	register uint64_t x1 asm("x1");
@@ -459,7 +455,7 @@ static __INLINE int hyp_read_nvlog_writer_info(uint64_t *ipa, uint64_t *size)
 	return (int)x0;
 }
 
-static __INLINE int hyp_read_err_info_get(uint64_t *ipa, uint64_t *buff_size,
+static inline int hyp_read_err_info_get(uint64_t *ipa, uint64_t *buff_size,
 	unsigned int *async_err_arr_items, int *peer_err_irq_id,
 	unsigned int *vcpu_cnt)
 {
@@ -484,7 +480,7 @@ static __INLINE int hyp_read_err_info_get(uint64_t *ipa, uint64_t *buff_size,
 	return (int)r0;
 }
 
-static __INLINE int hyp_send_async_err_ack(uint64_t local_rd_idx)
+static inline int hyp_send_async_err_ack(uint64_t local_rd_idx)
 {
 	register uint64_t r0 asm("x0") = local_rd_idx;
 
@@ -496,7 +492,7 @@ static __INLINE int hyp_send_async_err_ack(uint64_t local_rd_idx)
 	return (int)r0;
 }
 
-static __INLINE int hyp_send_sync_err_ack(void)
+static inline int hyp_send_sync_err_ack(void)
 {
 	register uint64_t r0 asm("x0");
 

@@ -476,12 +476,7 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
 					   long long release_count,
 					   long long ordered_count)
 {
-	/*
-	 * Makes sure operations that setup readdir cache (update page
-	 * cache and i_size) are strongly ordered w.r.t. the following
-	 * atomic64_set() operations.
-	 */
-	smp_mb();
+	smp_mb__before_atomic();
 	atomic64_set(&ci->i_complete_seq[0], release_count);
 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
 }

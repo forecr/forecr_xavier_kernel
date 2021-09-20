@@ -1,8 +1,7 @@
-From 959bf4ce69cc732455d636d6ab9c74ea779c0ddf Mon Sep 17 00:00:00 2001
+From 3aa828ec128d142f80f3faf7ad79e9630f303b76 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Wed, 22 Mar 2017 11:35:53 +0100
-Subject: [PATCH 010/371] futex: Cleanup refcounting
-X-NVConfidentiality: public
+Subject: [PATCH 010/352] futex: Cleanup refcounting
 
 Upstream commit bf92cf3a5100f5a0d5f9834787b130159397cb22
 
@@ -26,7 +25,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/futex.c b/kernel/futex.c
-index c393c4a..d3b305f 100644
+index e7e5936..d561ceb 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
 @@ -801,7 +801,7 @@ static int refill_pi_state_cache(void)

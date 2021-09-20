@@ -1,11 +1,10 @@
-From 966b2a57304e13641a480689230ddebb0e59acbd Mon Sep 17 00:00:00 2001
+From 11655d8ad53365933c3645131b4f310bfa057e15 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sun, 17 Jul 2011 21:51:45 +0200
-Subject: [PATCH 151/371] locking: Disable spin on owner for RT
+Subject: [PATCH 151/352] locking: Disable spin on owner for RT
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-NVConfidentiality: public
 
 Drop spin on owner for mutex / rwsem. We are most likely not using it
 but…

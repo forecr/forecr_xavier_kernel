@@ -55,6 +55,7 @@ int nvgpu_os_fence_sema_wait_gen_cmd(struct nvgpu_os_fence *s,
 		wait_cmd_size * num_wait_cmds,
 		wait_cmd);
 	if (err) {
+		nvgpu_err(c->g, "not enough priv cmd buffer space");
 		return err;
 	}
 

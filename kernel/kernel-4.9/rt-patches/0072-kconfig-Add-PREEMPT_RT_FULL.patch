@@ -1,8 +1,7 @@
-From 2caac88ce62d03a4e9eb9d4f0962428951978427 Mon Sep 17 00:00:00 2001
+From f6c608d8a57436c2abda9a7960eb38679eb6d6ce Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Wed, 29 Jun 2011 14:58:57 +0200
-Subject: [PATCH 072/371] kconfig: Add PREEMPT_RT_FULL
-X-NVConfidentiality: public
+Subject: [PATCH 072/352] kconfig: Add PREEMPT_RT_FULL
 
 Introduce the final symbol for PREEMPT_RT_FULL.
 

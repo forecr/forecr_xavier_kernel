@@ -1,9 +1,8 @@
-From 71c14dc8c3294642810181a05443a289d5e8f99b Mon Sep 17 00:00:00 2001
+From 39b7f35901c6ed92027e3ec4bec3d83a7297a190 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 3 Jul 2009 08:44:31 -0500
-Subject: [PATCH 123/371] hrtimer: Fixup hrtimer callback changes for
+Subject: [PATCH 123/352] hrtimer: Fixup hrtimer callback changes for
  preempt-rt
-X-NVConfidentiality: public
 
 In preempt-rt we can not call the callbacks which take sleeping locks
 from the timer interrupt context.
@@ -69,7 +68,7 @@ index b7c2d54..65d0671 100644
  	unsigned int			active_bases;
  	unsigned int			clock_was_set_seq;
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 43529d4..25cdade 100644
+index d8fffe3..64ac7a2 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
 @@ -360,6 +360,7 @@ static void init_rq_hrtick(struct rq *rq)

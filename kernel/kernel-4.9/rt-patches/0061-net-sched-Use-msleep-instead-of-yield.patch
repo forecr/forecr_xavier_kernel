@@ -1,8 +1,7 @@
-From 2b3ad870203b333df41498bb0be76a20f343503f Mon Sep 17 00:00:00 2001
+From b8925c5ea0af45e958698cd3e32ccf9fd0beab93 Mon Sep 17 00:00:00 2001
 From: Marc Kleine-Budde <mkl@pengutronix.de>
 Date: Wed, 5 Mar 2014 00:49:47 +0100
-Subject: [PATCH 061/371] net: sched: Use msleep() instead of yield()
-X-NVConfidentiality: public
+Subject: [PATCH 061/352] net: sched: Use msleep() instead of yield()
 
 On PREEMPT_RT enabled systems the interrupt handler run as threads at prio 50
 (by default). If a high priority userspace process tries to shut down a busy
@@ -46,10 +45,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index a9b71e0..80c6af0 100644
+index 4718809..2cff9e4 100644
 --- a/net/sched/sch_generic.c
 +++ b/net/sched/sch_generic.c
-@@ -937,7 +937,7 @@ void dev_deactivate_many(struct list_head *head)
+@@ -933,7 +933,7 @@ void dev_deactivate_many(struct list_head *head)
  	/* Wait for outstanding qdisc_run calls. */
  	list_for_each_entry(dev, head, close_list)
  		while (some_qdisc_is_busy(dev))

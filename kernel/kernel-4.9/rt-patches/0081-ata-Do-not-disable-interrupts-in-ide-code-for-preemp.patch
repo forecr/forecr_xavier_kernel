@@ -1,9 +1,8 @@
-From 2fc571c687ccfd5092611defcedbe03ad7f68ed7 Mon Sep 17 00:00:00 2001
+From a70e28ff6284bca88c8c702f380ee2e63ade3b00 Mon Sep 17 00:00:00 2001
 From: Steven Rostedt <srostedt@redhat.com>
 Date: Fri, 3 Jul 2009 08:44:29 -0500
-Subject: [PATCH 081/371] ata: Do not disable interrupts in ide code for
+Subject: [PATCH 081/352] ata: Do not disable interrupts in ide code for
  preempt-rt
-X-NVConfidentiality: public
 
 Use the local_irq_*_nort variants.
 
@@ -15,7 +14,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
-index d717785..27d227e 100644
+index f9e85ed..fd99ae8 100644
 --- a/drivers/ata/libata-sff.c
 +++ b/drivers/ata/libata-sff.c
 @@ -678,9 +678,9 @@ unsigned int ata_sff_data_xfer_noirq(struct ata_device *dev, unsigned char *buf,
@@ -30,7 +29,7 @@ index d717785..27d227e 100644
  
  	return consumed;
  }
-@@ -723,7 +723,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+@@ -719,7 +719,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
  		unsigned long flags;
  
  		/* FIXME: use a bounce buffer */
@@ -39,7 +38,7 @@ index d717785..27d227e 100644
  		buf = kmap_atomic(page);
  
  		/* do the actual data transfer */
-@@ -731,7 +731,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+@@ -727,7 +727,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
  				       do_write);
  
  		kunmap_atomic(buf);
@@ -48,7 +47,7 @@ index d717785..27d227e 100644
  	} else {
  		buf = page_address(page);
  		ap->ops->sff_data_xfer(qc->dev, buf + offset, qc->sect_size,
-@@ -870,7 +870,7 @@ static int __atapi_pio_bytes(struct ata_queued_cmd *qc, unsigned int bytes)
+@@ -864,7 +864,7 @@ static int __atapi_pio_bytes(struct ata_queued_cmd *qc, unsigned int bytes)
  		unsigned long flags;
  
  		/* FIXME: use bounce buffer */
@@ -57,7 +56,7 @@ index d717785..27d227e 100644
  		buf = kmap_atomic(page);
  
  		/* do the actual data transfer */
-@@ -878,7 +878,7 @@ static int __atapi_pio_bytes(struct ata_queued_cmd *qc, unsigned int bytes)
+@@ -872,7 +872,7 @@ static int __atapi_pio_bytes(struct ata_queued_cmd *qc, unsigned int bytes)
  								count, rw);
  
  		kunmap_atomic(buf);

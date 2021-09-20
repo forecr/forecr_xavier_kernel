@@ -675,7 +675,6 @@ static struct devfreq_governor devfreq_watermark_active = {
 	.name = "wmark_active",
 	.get_target_freq = devfreq_watermark_target_freq,
 	.event_handler = devfreq_watermark_event_handler,
-	.interrupt_driven = true,
 };
 
 

@@ -1247,18 +1247,13 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
 
 int __init arch_ioremap_pud_supported(void)
 {
-	/*
-	 * Only 4k granule supports level 1 block mappings.
-	 * SW table walks can't handle removal of intermediate entries.
-	 */
-	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
-	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+	/* only 4k granule supports level 1 block mappings */
+	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
 }
 
 int __init arch_ioremap_pmd_supported(void)
 {
-	/* See arch_ioremap_pud_supported() */
-	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+	return 1;
 }
 
 int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)

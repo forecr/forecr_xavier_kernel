@@ -175,6 +175,7 @@ static const struct file_operations pstore_file_operations = {
 static int pstore_unlink(struct inode *dir, struct dentry *dentry)
 {
 	struct pstore_private *p = d_inode(dentry)->i_private;
+	int err;
 
 	if (p->psi->erase)
 		p->psi->erase(p->type, p->id, p->count,

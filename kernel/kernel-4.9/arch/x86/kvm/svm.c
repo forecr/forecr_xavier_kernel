@@ -1333,23 +1333,20 @@ static u64 *avic_get_physical_id_entry(struct kvm_vcpu *vcpu, int index)
 static int avic_init_access_page(struct kvm_vcpu *vcpu)
 {
 	struct kvm *kvm = vcpu->kvm;
-	int ret = 0;
+	int ret;
 
-	mutex_lock(&kvm->slots_lock);
 	if (kvm->arch.apic_access_page_done)
-		goto out;
+		return 0;
 
-	ret = __x86_set_memory_region(kvm,
-				      APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
-				      APIC_DEFAULT_PHYS_BASE,
-				      PAGE_SIZE);
+	ret = x86_set_memory_region(kvm,
+				    APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
+				    APIC_DEFAULT_PHYS_BASE,
+				    PAGE_SIZE);
 	if (ret)
-		goto out;
+		return ret;
 
 	kvm->arch.apic_access_page_done = true;
-out:
-	mutex_unlock(&kvm->slots_lock);
-	return ret;
+	return 0;
 }
 
 static int avic_init_backing_page(struct kvm_vcpu *vcpu)
@@ -1518,11 +1515,7 @@ static void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 	if (!kvm_vcpu_apicv_active(vcpu))
 		return;
 
-	/*
-	 * Since the host physical APIC id is 8 bits,
-	 * we can support host APIC ID upto 255.
-	 */
-	if (WARN_ON(h_physical_id > AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK))
+	if (WARN_ON(h_physical_id >= AVIC_MAX_PHYSICAL_ID_COUNT))
 		return;
 
 	entry = READ_ONCE(*(svm->avic_physical_id_cache));
@@ -1679,24 +1672,9 @@ out:
 	return ERR_PTR(err);
 }
 
-static void svm_clear_current_vmcb(struct vmcb *vmcb)
-{
-	int i;
-
-	for_each_online_cpu(i)
-		cmpxchg(&per_cpu(svm_data, i)->current_vmcb, vmcb, NULL);
-}
-
 static void svm_free_vcpu(struct kvm_vcpu *vcpu)
 {
 	struct vcpu_svm *svm = to_svm(vcpu);
-
-	/*
-	 * The vmcb page can be recycled, causing a false negative in
-	 * svm_vcpu_load(). So, ensure that no logical CPU has this
-	 * vmcb page recorded as its current vmcb.
-	 */
-	svm_clear_current_vmcb(svm->vmcb);
 
 	__free_page(pfn_to_page(svm->vmcb_pa >> PAGE_SHIFT));
 	__free_pages(virt_to_page(svm->msrpm), MSRPM_ALLOC_ORDER);
@@ -1704,6 +1682,11 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
 	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
 	kvm_vcpu_uninit(vcpu);
 	kmem_cache_free(kvm_vcpu_cache, svm);
+	/*
+	 * The vmcb page can be recycled, causing a false negative in
+	 * svm_vcpu_load(). So do a full IBPB now.
+	 */
+	indirect_branch_prediction_barrier();
 }
 
 static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
@@ -2866,14 +2849,6 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
 	kvm_mmu_reset_context(&svm->vcpu);
 	kvm_mmu_load(&svm->vcpu);
 
-	/*
-	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
-	 * doesn't end up in L1.
-	 */
-	svm->vcpu.arch.nmi_injected = false;
-	kvm_clear_exception_queue(&svm->vcpu);
-	kvm_clear_interrupt_queue(&svm->vcpu);
-
 	return 0;
 }
 
@@ -3708,7 +3683,7 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
 			return 1;
 
 		/* The STIBP bit doesn't fault even if it's not advertised */
-		if (data & ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD))
+		if (data & ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP))
 			return 1;
 
 		svm->spec_ctrl = data;
@@ -5235,13 +5210,6 @@ static bool svm_cpu_has_accelerated_tpr(void)
 
 static bool svm_has_emulated_msr(int index)
 {
-	switch (index) {
-	case MSR_IA32_MCG_EXT_CTL:
-		return false;
-	default:
-		break;
-	}
-
 	return true;
 }
 

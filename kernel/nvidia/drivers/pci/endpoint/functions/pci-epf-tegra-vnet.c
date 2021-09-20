@@ -584,13 +584,13 @@ static netdev_tx_t tvnet_ep_start_xmit(struct sk_buff *skb,
 	ep_dma_virt[desc_widx].dar_low = lower_32_bits(dst_iova);
 	ep_dma_virt[desc_widx].dar_high = upper_32_bits(dst_iova);
 	/* CB bit should be set at the end */
-	mb();
+	smp_mb();
 	ctrl_d = DMA_CH_CONTROL1_OFF_WRCH_LIE;
 	ctrl_d |= DMA_CH_CONTROL1_OFF_WRCH_CB;
 	ep_dma_virt[desc_widx].ctrl_reg.ctrl_d = ctrl_d;
 
 	/* DMA write should not go out of order wrt CB bit set */
-	mb();
+	smp_mb();
 
 	timeout = jiffies + msecs_to_jiffies(1000);
 	dma_common_wr8(tvnet->dma_base, DMA_WR_DATA_CH, DMA_WRITE_DOORBELL_OFF);
@@ -622,7 +622,7 @@ static netdev_tx_t tvnet_ep_start_xmit(struct sk_buff *skb,
 	desc_ridx = tvnet->desc_cnt.rd_cnt % DMA_DESC_COUNT;
 	/* Clear DMA cycle bit and increment rd_cnt */
 	ep_dma_virt[desc_ridx].ctrl_reg.ctrl_e.cb = 0;
-	mb();
+	smp_mb();
 
 	tvnet->desc_cnt.rd_cnt++;
 #else
@@ -632,7 +632,7 @@ static netdev_tx_t tvnet_ep_start_xmit(struct sk_buff *skb,
 	 * tx_dst_va is ioremap_wc() mem, add mb to make sure complete skb->data
 	 * written to dst before adding it to full buffer
 	 */
-	mb();
+	smp_mb();
 #endif
 
 	/* Push dst to EP2H full ring */

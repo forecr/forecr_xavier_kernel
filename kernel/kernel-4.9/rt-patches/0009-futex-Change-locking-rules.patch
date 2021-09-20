@@ -1,8 +1,7 @@
-From d82becf9236f600212b5fa07464af669fe4ab417 Mon Sep 17 00:00:00 2001
+From a336e4ecf6829700975543f48eb3fffd4a443c92 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Wed, 22 Mar 2017 11:35:52 +0100
-Subject: [PATCH 009/371] futex: Change locking rules
-X-NVConfidentiality: public
+Subject: [PATCH 009/352] futex: Change locking rules
 
 Upstream commit 734009e96d1983ad739e5b656e03430b3660c913
 
@@ -38,7 +37,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 132 insertions(+), 33 deletions(-)
 
 diff --git a/kernel/futex.c b/kernel/futex.c
-index c74e9b3..c393c4a 100644
+index cba509f..e7e5936 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
 @@ -972,6 +972,39 @@ void exit_pi_state_list(struct task_struct *curr)

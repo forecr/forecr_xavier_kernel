@@ -157,7 +157,7 @@ struct brcmf_usbdev_info {
 
 	struct usb_device *usbdev;
 	struct device *dev;
-	struct completion dev_init_done;
+	struct mutex dev_init_lock;
 
 	int ctl_in_pipe, ctl_out_pipe;
 	struct urb *ctl_urb; /* URB for control endpoint */
@@ -681,18 +681,12 @@ static int brcmf_usb_up(struct device *dev)
 
 static void brcmf_cancel_all_urbs(struct brcmf_usbdev_info *devinfo)
 {
-	int i;
-
 	if (devinfo->ctl_urb)
 		usb_kill_urb(devinfo->ctl_urb);
 	if (devinfo->bulk_urb)
 		usb_kill_urb(devinfo->bulk_urb);
-	if (devinfo->tx_reqs)
-		for (i = 0; i < devinfo->bus_pub.ntxq; i++)
-			usb_kill_urb(devinfo->tx_reqs[i].urb);
-	if (devinfo->rx_reqs)
-		for (i = 0; i < devinfo->bus_pub.nrxq; i++)
-			usb_kill_urb(devinfo->rx_reqs[i].urb);
+	brcmf_usb_free_q(&devinfo->tx_postq, true);
+	brcmf_usb_free_q(&devinfo->rx_postq, true);
 }
 
 static void brcmf_usb_down(struct device *dev)
@@ -1195,11 +1189,11 @@ static void brcmf_usb_probe_phase2(struct device *dev, int ret,
 	if (ret)
 		goto error;
 
-	complete(&devinfo->dev_init_done);
+	mutex_unlock(&devinfo->dev_init_lock);
 	return;
 error:
 	brcmf_dbg(TRACE, "failed: dev=%s, err=%d\n", dev_name(dev), ret);
-	complete(&devinfo->dev_init_done);
+	mutex_unlock(&devinfo->dev_init_lock);
 	device_release_driver(dev);
 }
 
@@ -1245,7 +1239,7 @@ static int brcmf_usb_probe_cb(struct brcmf_usbdev_info *devinfo)
 		if (ret)
 			goto fail;
 		/* we are done */
-		complete(&devinfo->dev_init_done);
+		mutex_unlock(&devinfo->dev_init_lock);
 		return 0;
 	}
 	bus->chip = bus_pub->devid;
@@ -1306,10 +1300,11 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
 
 	devinfo->usbdev = usb;
 	devinfo->dev = &usb->dev;
-	/* Init completion, to protect for disconnect while still loading.
+	/* Take an init lock, to protect for disconnect while still loading.
 	 * Necessary because of the asynchronous firmware load construction
 	 */
-	init_completion(&devinfo->dev_init_done);
+	mutex_init(&devinfo->dev_init_lock);
+	mutex_lock(&devinfo->dev_init_lock);
 
 	usb_set_intfdata(intf, devinfo);
 
@@ -1387,7 +1382,7 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	return 0;
 
 fail:
-	complete(&devinfo->dev_init_done);
+	mutex_unlock(&devinfo->dev_init_lock);
 	kfree(devinfo);
 	usb_set_intfdata(intf, NULL);
 	return ret;
@@ -1402,7 +1397,7 @@ brcmf_usb_disconnect(struct usb_interface *intf)
 	devinfo = (struct brcmf_usbdev_info *)usb_get_intfdata(intf);
 
 	if (devinfo) {
-		wait_for_completion(&devinfo->dev_init_done);
+		mutex_lock(&devinfo->dev_init_lock);
 		/* Make sure that devinfo still exists. Firmware probe routines
 		 * may have released the device and cleared the intfdata.
 		 */

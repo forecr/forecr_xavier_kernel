@@ -12,7 +12,6 @@
  */
 
 #include <t19x-common-platforms/tegra194-thermal.dtsi>
-#include <t19x-common-platforms/tegra194-thermal-userspace-alert.dtsi>
 / {
 	bpmp_i2c {
 		/delete-node/ temp-sensor@4c;
@@ -57,17 +56,5 @@
 				};
 			};
 		};
-	};
-
-	cpu_alert: cpu-throttle-alert {
-		status = "okay";
-	};
-
-	gpu_alert: gpu-throttle-alert {
-		status = "okay";
-	};
-
-	aux_alert: aux-throttle-alert {
-		status = "okay";
 	};
 };

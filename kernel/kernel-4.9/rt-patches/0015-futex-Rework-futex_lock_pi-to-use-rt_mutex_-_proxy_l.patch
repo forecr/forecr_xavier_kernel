@@ -1,9 +1,8 @@
-From 28b463d2246d8ea7e6405f432dfdf8bda78746a6 Mon Sep 17 00:00:00 2001
+From 6ddac63235f92b83a751eab111deacb9bdd09366 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Wed, 22 Mar 2017 11:35:58 +0100
-Subject: [PATCH 015/371] futex: Rework futex_lock_pi() to use
+Subject: [PATCH 015/352] futex: Rework futex_lock_pi() to use
  rt_mutex_*_proxy_lock()
-X-NVConfidentiality: public
 
 Upstream commit cfafcd117da0216520568c195cb2f6cd1980c4bb
 
@@ -89,7 +88,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  3 files changed, 62 insertions(+), 42 deletions(-)
 
 diff --git a/kernel/futex.c b/kernel/futex.c
-index a1934f8..2e00874 100644
+index 469ecb8..60221e5 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
 @@ -2148,20 +2148,7 @@ queue_unlock(struct futex_hash_bucket *hb)

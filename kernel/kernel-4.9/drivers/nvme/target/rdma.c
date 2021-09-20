@@ -137,10 +137,6 @@ static void nvmet_rdma_recv_done(struct ib_cq *cq, struct ib_wc *wc);
 static void nvmet_rdma_read_data_done(struct ib_cq *cq, struct ib_wc *wc);
 static void nvmet_rdma_qp_event(struct ib_event *event, void *priv);
 static void nvmet_rdma_queue_disconnect(struct nvmet_rdma_queue *queue);
-static void nvmet_rdma_free_rsp(struct nvmet_rdma_device *ndev,
-				struct nvmet_rdma_rsp *r);
-static int nvmet_rdma_alloc_rsp(struct nvmet_rdma_device *ndev,
-				struct nvmet_rdma_rsp *r);
 
 static struct nvmet_fabrics_ops nvmet_rdma_ops;
 
@@ -179,17 +175,9 @@ nvmet_rdma_get_rsp(struct nvmet_rdma_queue *queue)
 	spin_unlock_irqrestore(&queue->rsps_lock, flags);
 
 	if (unlikely(!rsp)) {
-		int ret;
-
-		rsp = kzalloc(sizeof(*rsp), GFP_KERNEL);
+		rsp = kmalloc(sizeof(*rsp), GFP_KERNEL);
 		if (unlikely(!rsp))
 			return NULL;
-		ret = nvmet_rdma_alloc_rsp(queue->dev, rsp);
-		if (unlikely(ret)) {
-			kfree(rsp);
-			return NULL;
-		}
-
 		rsp->allocated = true;
 	}
 
@@ -201,8 +189,7 @@ nvmet_rdma_put_rsp(struct nvmet_rdma_rsp *rsp)
 {
 	unsigned long flags;
 
-	if (unlikely(rsp->allocated)) {
-		nvmet_rdma_free_rsp(rsp->queue->dev, rsp);
+	if (rsp->allocated) {
 		kfree(rsp);
 		return;
 	}
@@ -537,7 +524,6 @@ static void nvmet_rdma_send_done(struct ib_cq *cq, struct ib_wc *wc)
 {
 	struct nvmet_rdma_rsp *rsp =
 		container_of(wc->wr_cqe, struct nvmet_rdma_rsp, send_cqe);
-	struct nvmet_rdma_queue *queue = cq->cq_context;
 
 	nvmet_rdma_release_rsp(rsp);
 
@@ -545,7 +531,7 @@ static void nvmet_rdma_send_done(struct ib_cq *cq, struct ib_wc *wc)
 		     wc->status != IB_WC_WR_FLUSH_ERR)) {
 		pr_err("SEND for CQE 0x%p failed with status %s (%d).\n",
 			wc->wr_cqe, ib_wc_status_msg(wc->status), wc->status);
-		nvmet_rdma_error_comp(queue);
+		nvmet_rdma_error_comp(rsp->queue);
 	}
 }
 

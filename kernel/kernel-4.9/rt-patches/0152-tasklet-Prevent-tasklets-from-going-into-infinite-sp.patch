@@ -1,9 +1,8 @@
-From 72dae6db8e64bc6e3de0ba5a2fbe32c0b4aa891f Mon Sep 17 00:00:00 2001
+From b5bcf14c3cfd10b260736c5a89ba9159593cb8f2 Mon Sep 17 00:00:00 2001
 From: Ingo Molnar <mingo@elte.hu>
 Date: Tue, 29 Nov 2011 20:18:22 -0500
-Subject: [PATCH 152/371] tasklet: Prevent tasklets from going into infinite
+Subject: [PATCH 152/352] tasklet: Prevent tasklets from going into infinite
  spin in RT
-X-NVConfidentiality: public
 
 When CONFIG_PREEMPT_RT_FULL is enabled, tasklets run as threads,
 and spinlocks turn are mutexes. But this can cause issues with

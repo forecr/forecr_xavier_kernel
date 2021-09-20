@@ -1,8 +1,7 @@
-From 67ee3c8c20a38c3a1771601de3e05b085f9ffd87 Mon Sep 17 00:00:00 2001
+From 4d512a25ca20f3ce37939e91ca1adc75c2b68305 Mon Sep 17 00:00:00 2001
 From: Ingo Molnar <mingo@elte.hu>
 Date: Fri, 3 Jul 2009 08:29:37 -0500
-Subject: [PATCH 100/371] mm: page_alloc: rt-friendly per-cpu pages
-X-NVConfidentiality: public
+Subject: [PATCH 100/352] mm: page_alloc: rt-friendly per-cpu pages
 
 rt-friendly per-cpu pages: convert the irqs-off per-cpu locking
 method into a preemptible, explicit-per-cpu-locks method.
@@ -11,7 +10,6 @@ Contains fixes from:
 	 Peter Zijlstra <a.p.zijlstra@chello.nl>
 	 Thomas Gleixner <tglx@linutronix.de>
 
-Change-Id: Ieb45a90e58ad4f681542880ff2b0ef7b853d594a
 Signed-off-by: Ingo Molnar <mingo@elte.hu>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
@@ -19,7 +17,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  1 file changed, 41 insertions(+), 16 deletions(-)
 
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 014b8dd..11fb35a 100644
+index 26ba311..c717779 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
 @@ -61,6 +61,7 @@
@@ -179,7 +177,7 @@ index 014b8dd..11fb35a 100644
  	return NULL;
  }
  
-@@ -6594,6 +6618,7 @@ static int page_alloc_cpu_notify(struct notifier_block *self,
+@@ -6602,6 +6626,7 @@ static int page_alloc_cpu_notify(struct notifier_block *self,
  void __init page_alloc_init(void)
  {
  	hotcpu_notifier(page_alloc_cpu_notify, 0);
@@ -187,7 +185,7 @@ index 014b8dd..11fb35a 100644
  }
  
  /*
-@@ -7435,7 +7460,7 @@ void zone_pcp_reset(struct zone *zone)
+@@ -7443,7 +7468,7 @@ void zone_pcp_reset(struct zone *zone)
  	struct per_cpu_pageset *pset;
  
  	/* avoid races with drain_pages()  */
@@ -196,7 +194,7 @@ index 014b8dd..11fb35a 100644
  	if (zone->pageset != &boot_pageset) {
  		for_each_online_cpu(cpu) {
  			pset = per_cpu_ptr(zone->pageset, cpu);
-@@ -7444,7 +7469,7 @@ void zone_pcp_reset(struct zone *zone)
+@@ -7452,7 +7477,7 @@ void zone_pcp_reset(struct zone *zone)
  		free_percpu(zone->pageset);
  		zone->pageset = &boot_pageset;
  	}

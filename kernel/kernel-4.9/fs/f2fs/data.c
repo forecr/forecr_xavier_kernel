@@ -438,10 +438,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
 	struct page *page = fio->encrypted_page ?
 			fio->encrypted_page : fio->page;
 
-	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
-			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
-		return -EFAULT;
-
+	verify_block_addr(fio, fio->new_blkaddr);
 	trace_f2fs_submit_page_bio(page, fio);
 	f2fs_trace_ios(fio, 0);
 
@@ -486,7 +483,7 @@ next:
 		spin_unlock(&io->io_lock);
 	}
 
-	if (__is_valid_data_blkaddr(fio->old_blkaddr))
+	if (fio->old_blkaddr != NEW_ADDR)
 		verify_block_addr(fio, fio->old_blkaddr);
 	verify_block_addr(fio, fio->new_blkaddr);
 
@@ -1046,13 +1043,7 @@ next_dnode:
 next_block:
 	blkaddr = datablock_addr(dn.inode, dn.node_page, dn.ofs_in_node);
 
-	if (__is_valid_data_blkaddr(blkaddr) &&
-		!f2fs_is_valid_blkaddr(sbi, blkaddr, DATA_GENERIC)) {
-		err = -EFAULT;
-		goto sync_out;
-	}
-
-	if (!is_valid_data_blkaddr(sbi, blkaddr)) {
+	if (blkaddr == NEW_ADDR || blkaddr == NULL_ADDR) {
 		if (create) {
 			if (unlikely(f2fs_cp_error(sbi))) {
 				err = -EIO;
@@ -1502,10 +1493,6 @@ got_it:
 				SetPageUptodate(page);
 				goto confused;
 			}
-
-			if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), block_nr,
-								DATA_GENERIC))
-				goto set_error_page;
 		} else {
 			zero_user_segment(page, 0, PAGE_SIZE);
 			if (!PageUptodate(page))
@@ -1769,12 +1756,6 @@ got_it:
 	if (err)
 		goto out_writepage;
 
-	if (__is_valid_data_blkaddr(fio->old_blkaddr) &&
-		!f2fs_is_valid_blkaddr(fio->sbi, fio->old_blkaddr,
-							DATA_GENERIC)) {
-		err = -EFAULT;
-		goto out_writepage;
-	}
 	set_page_writeback(page);
 	ClearPageError(page);
 

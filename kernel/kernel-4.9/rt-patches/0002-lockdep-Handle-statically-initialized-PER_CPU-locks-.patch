@@ -1,9 +1,8 @@
-From eff4294972c8a0785fee39e7e4d2e36cb40980d7 Mon Sep 17 00:00:00 2001
+From a2673b0d5081b466639e62edbbf25c996427712f Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 17 Feb 2017 19:44:39 +0100
-Subject: [PATCH 002/371] lockdep: Handle statically initialized PER_CPU locks
+Subject: [PATCH 002/352] lockdep: Handle statically initialized PER_CPU locks
  proper
-X-NVConfidentiality: public
 
 If a PER_CPU struct which contains a spin_lock is statically initialized
 via:
@@ -46,7 +45,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  5 files changed, 67 insertions(+), 36 deletions(-)
 
 diff --git a/include/linux/module.h b/include/linux/module.h
-index 49f0aae..ee6f07f 100644
+index 9d6fd1d..6694217 100644
 --- a/include/linux/module.h
 +++ b/include/linux/module.h
 @@ -501,6 +501,7 @@ static inline int module_is_live(struct module *mod)
@@ -70,7 +69,7 @@ index 56939d3..491b3f5 100644
  
  #if !defined(CONFIG_SMP) || !defined(CONFIG_HAVE_SETUP_PER_CPU_AREA)
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d7f4256..d331c6a 100644
+index 26fc428..3896f3e 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -658,6 +658,7 @@ look_up_lock_class(struct lockdep_map *lock, unsigned int subclass)
@@ -149,7 +148,7 @@ index d7f4256..d331c6a 100644
  			return 0;
  
  		/*
-@@ -4169,7 +4182,7 @@ void lockdep_reset_lock(struct lockdep_map *lock)
+@@ -4166,7 +4179,7 @@ void lockdep_reset_lock(struct lockdep_map *lock)
  		 * If the class exists we look it up and zap it:
  		 */
  		class = look_up_lock_class(lock, j);
@@ -159,7 +158,7 @@ index d7f4256..d331c6a 100644
  	}
  	/*
 diff --git a/kernel/module.c b/kernel/module.c
-index a9afb55..448cc92 100644
+index b63d342..97b04aa 100644
 --- a/kernel/module.c
 +++ b/kernel/module.c
 @@ -660,16 +660,7 @@ static void percpu_modcopy(struct module *mod,
@@ -216,7 +215,7 @@ index a9afb55..448cc92 100644
  
  static inline void __percpu *mod_percpu(struct module *mod)
 diff --git a/mm/percpu.c b/mm/percpu.c
-index 0462a2a..16bb5f5 100644
+index 3794cfc..a42fb6c 100644
 --- a/mm/percpu.c
 +++ b/mm/percpu.c
 @@ -1284,18 +1284,7 @@ void free_percpu(void __percpu *ptr)

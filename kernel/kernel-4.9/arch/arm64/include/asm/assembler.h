@@ -89,11 +89,6 @@
 	msr	daifclr, #(8 | 2)
 	.endm
 
-	/* IRQ is the lowest priority flag, unconditionally unmask the rest. */
-	.macro enable_da_f
-	msr     daifclr, #(8 | 4 | 1)
-	.endm
-
 /*
  * SMP data memory barrier
  */

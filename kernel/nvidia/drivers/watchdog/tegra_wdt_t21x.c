@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2020, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (c) 2014, NVIDIA CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -18,7 +18,6 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/watchdog.h>
-#include <linux/delay.h>
 
 /* minimum and maximum watchdog trigger timeout, in seconds */
 #define MIN_WDT_TIMEOUT			1
@@ -28,13 +27,14 @@
 #define WDT_CFG				0x0
 #define WDT_CFG_PERIOD_SHIFT		4
 #define WDT_CFG_PERIOD_MASK		0xff
+#define WDT_CFG_INT_EN			(1 << 12)
+#define WDT_CFG_FIQ_EN			(1 << 13)
 #define WDT_CFG_PMC2CAR_RST_EN		(1 << 15)
 #define WDT_STS				0x4
 #define WDT_STS_COUNT_SHIFT		4
 #define WDT_STS_COUNT_MASK		0xff
 #define WDT_STS_EXP_SHIFT		12
 #define WDT_STS_EXP_MASK		0x3
-#define WDT_STS_COUNTER_ACTIVE		0x01
 #define WDT_CMD				0x8
 #define WDT_CMD_START_COUNTER		(1 << 0)
 #define WDT_CMD_DISABLE_COUNTER		(1 << 1)
@@ -46,13 +46,20 @@
 #define TIMER_EN			(1 << 31)
 #define TIMER_PERIODIC			(1 << 30)
 
+/* Bit numbers for status flags */
+#define WDT_INIT_DAEMON_ACTIVE		0
+
 struct tegra_wdt {
 	struct watchdog_device	wdd;
-	struct device		*dev;
 	void __iomem		*wdt_regs;
 	void __iomem		*tmr_regs;
+	int			irq;
 	u8			timer_id;
+	unsigned long		status;
+	bool			enable_on_init;
 };
+
+static int tegra_wdt_ping(struct watchdog_device *wdd);
 
 /*
  * The total expiry count of Tegra WDTs is limited to HW design and depends
@@ -125,20 +132,43 @@ static int tegra_tmr_index(struct resource *tmr_res)
 	return timer_id;
 }
 
-static int tegra_wdt_start(struct watchdog_device *wdd)
+static irqreturn_t tegra_wdt_irq(int irq, void *data)
+{
+	struct tegra_wdt *wdt = data;
+
+	tegra_wdt_ping(&wdt->wdd);
+
+	return IRQ_HANDLED;
+}
+
+static void tegra_wdt_ref(struct watchdog_device *wdd)
+{
+	struct tegra_wdt *wdt = watchdog_get_drvdata(wdd);
+
+	if (wdt->irq <= 0)
+		return;
+
+	/*
+	 * Remove the interrupt handler if userspace is taking over WDT.
+	 */
+	if (wdt->enable_on_init &&
+		test_bit(WDT_INIT_DAEMON_ACTIVE, &wdt->status)) {
+		printk("%s disable irq\n", __func__);
+		disable_irq(wdt->irq);
+		clear_bit(WDT_INIT_DAEMON_ACTIVE, &wdt->status);
+	}
+}
+
+static int tegra_wdt_init(struct watchdog_device *wdd)
 {
 	struct tegra_wdt *wdt = watchdog_get_drvdata(wdd);
 	u32 val;
 
-	if (readl(wdt->wdt_regs + WDT_STS) & WDT_STS_COUNTER_ACTIVE) {
-		dev_info(wdt->dev, "tegra watchdog is already running\n");
-		return 0;
-	}
-
 	/*
 	 * The timeout needs to be divided by expiry_count here so as to
 	 * keep the ultimate watchdog reset timeout the same as the program
-	 * timeout requested by application.
+	 * timeout requested by application. The program timeout should make
+	 * sure WDT FIQ will never be asserted in a valid use case.
 	 */
 	val = (wdd->timeout * USEC_PER_SEC) / expiry_count;
 	val |= (TIMER_EN | TIMER_PERIODIC);
@@ -146,17 +176,60 @@ static int tegra_wdt_start(struct watchdog_device *wdd)
 
 	/*
 	 * Set number of periods and start counter.
+	 *
+	 * Interrupt handler is not required for user space
+	 * WDT accesses, since the caller is responsible to ping the
+	 * WDT to reset the counter before expiration, through ioctls.
 	 */
 	val = (wdt->timer_id) |
 	      (trigger_period << WDT_CFG_PERIOD_SHIFT) |
-		WDT_CFG_PMC2CAR_RST_EN;
+		WDT_CFG_INT_EN | WDT_CFG_FIQ_EN | WDT_CFG_PMC2CAR_RST_EN;
 	writel(val, wdt->wdt_regs + WDT_CFG);
 
 	writel(WDT_CMD_START_COUNTER, wdt->wdt_regs + WDT_CMD);
 
 	return 0;
+}
 
+/* Init, enable watchdog on WDT0 and create a thread to ping */
+static int tegra_wdt_daemon(struct watchdog_device *wdd)
+{
+	struct platform_device *pdev = to_platform_device(wdd->parent);
+	struct tegra_wdt *wdt = watchdog_get_drvdata(wdd);
+	int ret;
 
+	if (!wdt->enable_on_init)
+		return 0;
+
+	wdt->irq = platform_get_irq(pdev, 0);
+	if (wdt->irq <= 0) {
+		dev_err(&pdev->dev, "failed to get WDT IRQ\n");
+		return -ENXIO;
+	}
+
+	ret = devm_request_threaded_irq(&pdev->dev, wdt->irq, NULL,
+			tegra_wdt_irq, IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+			dev_name(&pdev->dev), wdt);
+	if (ret < 0) {
+		dev_err(&pdev->dev, "failed to register irq %d err %d\n",
+				wdt->irq, ret);
+		return ret;
+	}
+
+	tegra_wdt_init(wdd);
+	set_bit(WDT_INIT_DAEMON_ACTIVE, &wdt->status);
+
+	dev_info(&pdev->dev, "Tegra WDT enabled on probe."
+			" Timeout = %u seconds.\n", wdd->timeout);
+
+	return 0;
+}
+
+static int tegra_wdt_start(struct watchdog_device *wdd)
+{
+	tegra_wdt_init(wdd);
+	tegra_wdt_ref(wdd);
+	return 0;
 }
 
 static int tegra_wdt_stop(struct watchdog_device *wdd)
@@ -172,10 +245,19 @@ static int tegra_wdt_stop(struct watchdog_device *wdd)
 
 static int tegra_wdt_ping(struct watchdog_device *wdd)
 {
+	u32 val;
 	struct tegra_wdt *wdt = watchdog_get_drvdata(wdd);
 
-	if (readl(wdt->wdt_regs + WDT_STS) & WDT_STS_COUNTER_ACTIVE)
-		writel(WDT_CMD_START_COUNTER, wdt->wdt_regs + WDT_CMD);
+	/* Disable timer */
+	tegra_wdt_stop(wdd);
+
+	/* Load the timeout value */
+	val = (wdd->timeout * USEC_PER_SEC) / expiry_count;
+	val |= (TIMER_EN | TIMER_PERIODIC);
+	writel(val, wdt->tmr_regs + TIMER_PTV);
+
+	/* Restart */
+	writel(WDT_CMD_START_COUNTER, wdt->wdt_regs + WDT_CMD);
 
 	return 0;
 }
@@ -183,19 +265,12 @@ static int tegra_wdt_ping(struct watchdog_device *wdd)
 static int tegra_wdt_set_timeout(struct watchdog_device *wdd,
 				 unsigned int timeout)
 {
-	struct tegra_wdt *wdt = watchdog_get_drvdata(wdd);
-
 	wdd->timeout = timeout;
 
-	if (readl(wdt->wdt_regs + WDT_STS) & WDT_STS_COUNTER_ACTIVE) {
+	if (watchdog_active(wdd)) {
 		tegra_wdt_stop(wdd);
-		/* Sleep to give time for stop */
-		usleep_range(10, 100);
+		return tegra_wdt_init(wdd);
 	}
-
-	tegra_wdt_start(wdd);
-
-	dev_info(wdt->dev, "tegra wdt timeout %u is set\n", timeout);
 
 	return 0;
 }
@@ -222,13 +297,6 @@ static unsigned int tegra_wdt_get_timeleft(struct watchdog_device *wdd)
 	return (((3 - exp) * wdd->timeout) + count) / expiry_count;
 }
 
-unsigned int tegra_wdt_status(struct watchdog_device *wdd)
-{
-	struct tegra_wdt *wdt = watchdog_get_drvdata(wdd);
-
-	return readl(wdt->wdt_regs + WDT_STS);
-}
-
 static const struct watchdog_info tegra_wdt_info = {
 	.options	= WDIOF_SETTIMEOUT |
 			  WDIOF_MAGICCLOSE |
@@ -241,7 +309,6 @@ static struct watchdog_ops tegra_wdt_ops = {
 	.owner = THIS_MODULE,
 	.start = tegra_wdt_start,
 	.stop = tegra_wdt_stop,
-	.status = tegra_wdt_status,
 	.ping = tegra_wdt_ping,
 	.set_timeout = tegra_wdt_set_timeout,
 	.get_timeleft = tegra_wdt_get_timeleft,
@@ -281,7 +348,8 @@ static int tegra_wdt_probe(struct platform_device *pdev)
 	if (!wdt)
 		return -ENOMEM;
 
-	wdt->dev = &pdev->dev;
+	wdt->enable_on_init = of_property_read_bool(
+					np, "nvidia,enable-on-init");
 
 	/*
 	 * Get Timer index from (in decending priority):
@@ -294,8 +362,8 @@ static int tegra_wdt_probe(struct platform_device *pdev)
 	if (!ret) {
 		/*
 		 * If timer-index is provided then either corresponding
-		 * timer source address or timer base address should be
-		 * provided.
+		 * timer source address or timer base address address
+		 * should be provided.
 		 */
 		if (wdt->timer_id && (wdt->timer_id != pval)) {
 			dev_err(&pdev->dev, "Invalid Timer base address\n");
@@ -304,7 +372,7 @@ static int tegra_wdt_probe(struct platform_device *pdev)
 
 		/* Skip adjust resource if timer source address is provided */
 		if (!wdt->timer_id) {
-			/* Timer address corresponding to timer ID */
+			/* Timer timer address corresponding to timer ID */
 			tmr_addr = tegra_tmr_addr(pval, tmr_res);
 			ret = adjust_resource(tmr_res, tmr_addr,
 					resource_size(tmr_res));
@@ -340,16 +408,13 @@ static int tegra_wdt_probe(struct platform_device *pdev)
 
 	watchdog_set_drvdata(wdd, wdt);
 
-	if (readl(wdt->wdt_regs + WDT_STS) & WDT_STS_COUNTER_ACTIVE) {
-		dev_info(&pdev->dev, "Tegra WDT is already runnig\n");
-		set_bit(WDOG_HW_RUNNING, &wdd->status);
-	} else if (of_property_read_bool(np, "nvidia,enable-on-init")) {
-		/* start watchdog when "enable-on-init" flag is set */
-		tegra_wdt_start(wdd);
-		set_bit(WDOG_HW_RUNNING, &wdd->status);
-	}
-
+	watchdog_init_timeout(wdd, heartbeat, &pdev->dev);
 	watchdog_set_nowayout(wdd, nowayout);
+
+	/* Enable watchdog on WDT0 and create daemon to ping  */
+	ret = tegra_wdt_daemon(wdd);
+	if (ret)
+		return ret;
 
 	ret = watchdog_register_device(wdd);
 	if (ret) {
@@ -373,6 +438,9 @@ static int tegra_wdt_remove(struct platform_device *pdev)
 
 	tegra_wdt_stop(&wdt->wdd);
 
+	if (wdt->irq > 0)
+		devm_free_irq(&pdev->dev, wdt->irq, wdt);
+
 	watchdog_unregister_device(&wdt->wdd);
 
 	dev_info(&pdev->dev, "removed wdt\n");
@@ -386,7 +454,7 @@ static int tegra_wdt_runtime_suspend(struct device *dev)
 	struct tegra_wdt *wdt = dev_get_drvdata(dev);
 
 	if (watchdog_active(&wdt->wdd) ||
-		test_bit(WDOG_HW_RUNNING, &wdt->wdd.status))
+		test_bit(WDT_INIT_DAEMON_ACTIVE, &wdt->status))
 		tegra_wdt_stop(&wdt->wdd);
 
 	return 0;
@@ -397,8 +465,8 @@ static int tegra_wdt_runtime_resume(struct device *dev)
 	struct tegra_wdt *wdt = dev_get_drvdata(dev);
 
 	if (watchdog_active(&wdt->wdd) ||
-		test_bit(WDOG_HW_RUNNING, &wdt->wdd.status))
-		tegra_wdt_start(&wdt->wdd);
+		test_bit(WDT_INIT_DAEMON_ACTIVE, &wdt->status))
+		tegra_wdt_init(&wdt->wdd);
 
 	return 0;
 }

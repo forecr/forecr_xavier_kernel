@@ -623,7 +623,6 @@ struct gpu_ops {
 		void (*slcg_therm_load_gating_prod)(struct gk20a *g, bool prod);
 		void (*slcg_xbar_load_gating_prod)(struct gk20a *g, bool prod);
 		void (*slcg_hshub_load_gating_prod)(struct gk20a *g, bool prod);
-		void (*slcg_acb_load_gating_prod)(struct gk20a *g, bool prod);
 		void (*blcg_bus_load_gating_prod)(struct gk20a *g, bool prod);
 		void (*blcg_ce_load_gating_prod)(struct gk20a *g, bool prod);
 		void (*blcg_ctxsw_firmware_load_gating_prod)(struct gk20a *g, bool prod);

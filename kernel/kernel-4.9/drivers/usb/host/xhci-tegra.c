@@ -1475,14 +1475,11 @@ static irqreturn_t tegra_xusb_mbox_irq(int irq, void *data)
 {
 	struct tegra_xusb *tegra = data;
 	struct usb_hcd  *hcd = tegra->hcd;
-	u32 value, value2;
+	u32 value;
 
 	/* clear mailbox interrupts */
 	value = fpci_readl(tegra, XUSB_CFG_ARU_SMI_INTR);
 	fpci_writel(tegra, value, XUSB_CFG_ARU_SMI_INTR);
-
-	/* read again to avoid spurious ARU SMI interrupt */
-	value2 = fpci_readl(tegra, XUSB_CFG_ARU_SMI_INTR);
 
 	if (value & MBOX_SMI_INTR_FW_HANG) {
 		dev_err(tegra->dev, "controller firmware hang\n");
@@ -1490,12 +1487,7 @@ static irqreturn_t tegra_xusb_mbox_irq(int irq, void *data)
 		return IRQ_HANDLED;
 	}
 
-	if (value & MBOX_SMI_INTR_EN)
-		return IRQ_WAKE_THREAD;
-
-	dev_warn(tegra->dev, "unhandled mbox irq: %08x %08x\n", value, value2);
-
-	return value ? IRQ_HANDLED : IRQ_NONE;
+	return IRQ_WAKE_THREAD;
 }
 
 static void tegra_xusb_mbox_handle(struct tegra_xusb *tegra,
@@ -1649,7 +1641,7 @@ static irqreturn_t tegra_xusb_mbox_thread(int irq, void *data)
 
 	mutex_lock(&tegra->lock);
 
-	if (tegra->suspended || pm_runtime_suspended(tegra->dev)) {
+	if (tegra->suspended) {
 		mutex_unlock(&tegra->lock);
 		return IRQ_HANDLED;
 	}
@@ -2973,8 +2965,7 @@ static void tegra_xusb_probe_finish(const struct firmware *fw, void *context)
 
 		ret = devm_request_threaded_irq(dev, tegra->mbox_irq,
 						tegra_xusb_mbox_irq,
-						tegra_xusb_mbox_thread,
-						IRQF_ONESHOT,
+						tegra_xusb_mbox_thread, 0,
 						dev_name(dev), tegra);
 		if (ret < 0) {
 			dev_err(dev,
@@ -3731,8 +3722,6 @@ static void tegra_xusb_shutdown(struct platform_device *pdev)
 
 	if (!tegra->fw_loaded && !tegra->soc->is_xhci_vf)
 		return;
-
-	pm_runtime_get_sync(tegra->dev);
 
 	if (tegra->hcd)
 		xhci_shutdown(tegra->hcd);
@@ -5216,7 +5205,7 @@ static int tegra_xhci_hub_control(struct usb_hcd *hcd, u16 type_req,
 	int port = (index & 0xff) - 1;
 	u32 status;
 	unsigned long timeout;
-	int ret, wait;
+	int ret;
 
 	if (bus_state->resuming_ports && hcd->speed == HCD_USB2) {
 		__le32 __iomem **port_array;
@@ -5250,23 +5239,17 @@ static int tegra_xhci_hub_control(struct usb_hcd *hcd, u16 type_req,
 	ret = xhci_hub_control(hcd, type_req, value, index, buf, length);
 
 	if ((value == USB_PORT_FEAT_POWER) && !ret) {
-		u32 pp_stat = (hcd->speed == HCD_USB2) ? USB_PORT_STAT_POWER :
-			USB_SS_PORT_STAT_POWER;
 		timeout = jiffies + HZ;
-		wait = 5;
 		do {
 			xhci_hub_control(hcd, GetPortStatus, 0, index,
 				(char *) &status, sizeof(status));
 			if ((type_req == ClearPortFeature) &&
-				!(status & pp_stat))
+				!(status & USB_PORT_STAT_POWER))
 				break;
 			else if ((type_req == SetPortFeature) &&
-				(status & pp_stat))
+				(status & USB_PORT_STAT_POWER))
 				break;
-			if (--wait > 0)
-				usleep_range(10, 20);
-			else
-				msleep(200);
+			msleep(200);
 		} while (time_is_after_jiffies(timeout));
 	}
 

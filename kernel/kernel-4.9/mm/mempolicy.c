@@ -547,16 +547,11 @@ retry:
 			goto retry;
 		}
 
-		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
-			if (!vma_migratable(vma))
-				break;
-			migrate_page_add(page, qp->pagelist, flags);
-		} else
-			break;
+		migrate_page_add(page, qp->pagelist, flags);
 	}
 	pte_unmap_unlock(pte - 1, ptl);
 	cond_resched();
-	return addr != end ? -EIO : 0;
+	return 0;
 }
 
 static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
@@ -628,12 +623,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
 	unsigned long endvma = vma->vm_end;
 	unsigned long flags = qp->flags;
 
-	/*
-	 * Need check MPOL_MF_STRICT to return -EIO if possible
-	 * regardless of vma_migratable
-	 */
-	if (!vma_migratable(vma) &&
-	    !(flags & MPOL_MF_STRICT))
+	if (!vma_migratable(vma))
 		return 1;
 
 	if (endvma > end)
@@ -660,7 +650,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
 	}
 
 	/* queue pages from current vma */
-	if (flags & MPOL_MF_VALID)
+	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
 		return 0;
 	return 1;
 }
@@ -1338,7 +1328,7 @@ static int copy_nodes_to_user(unsigned long __user *mask, unsigned long maxnode,
 			      nodemask_t *nodes)
 {
 	unsigned long copy = ALIGN(maxnode-1, 64) / 8;
-	unsigned int nbytes = BITS_TO_LONGS(nr_node_ids) * sizeof(long);
+	const int nbytes = BITS_TO_LONGS(MAX_NUMNODES) * sizeof(long);
 
 	if (copy > nbytes) {
 		if (copy > PAGE_SIZE)
@@ -1499,7 +1489,7 @@ SYSCALL_DEFINE5(get_mempolicy, int __user *, policy,
 	int uninitialized_var(pval);
 	nodemask_t nodes;
 
-	if (nmask != NULL && maxnode < nr_node_ids)
+	if (nmask != NULL && maxnode < MAX_NUMNODES)
 		return -EINVAL;
 
 	err = do_get_mempolicy(&pval, &nodes, addr, flags);
@@ -1528,7 +1518,7 @@ COMPAT_SYSCALL_DEFINE5(get_mempolicy, int __user *, policy,
 	unsigned long nr_bits, alloc_size;
 	DECLARE_BITMAP(bm, MAX_NUMNODES);
 
-	nr_bits = min_t(unsigned long, maxnode-1, nr_node_ids);
+	nr_bits = min_t(unsigned long, maxnode-1, MAX_NUMNODES);
 	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
 
 	if (nmask)

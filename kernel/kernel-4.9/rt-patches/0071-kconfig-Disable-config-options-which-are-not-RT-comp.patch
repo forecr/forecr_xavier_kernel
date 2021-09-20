@@ -1,9 +1,8 @@
-From 620bed9c209f2c12fefdde769253a7641431a506 Mon Sep 17 00:00:00 2001
+From bf940587933a38fca7a2d5f7ed408f8e3a5fdae2 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sun, 24 Jul 2011 12:11:43 +0200
-Subject: [PATCH 071/371] kconfig: Disable config options which are not RT
+Subject: [PATCH 071/352] kconfig: Disable config options which are not RT
  compatible
-X-NVConfidentiality: public
 
 Disable stuff which is known to have issues on RT
 

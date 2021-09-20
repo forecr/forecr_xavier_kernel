@@ -56,6 +56,7 @@ source "net/bluetooth/hidp/Kconfig"
 config BT_HS
 	bool "Bluetooth High Speed (HS) features"
 	depends on BT_BREDR
+	default y
 
 config BT_LE
 	bool "Bluetooth Low Energy (LE) features"

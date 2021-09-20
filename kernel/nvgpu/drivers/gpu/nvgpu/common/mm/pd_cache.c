@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2020, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@
  * to have 4 of these PDs in one page. This is even more pronounced for 256 byte
  * PD tables.
  *
- * The pd cache is basically a slab allocator. Each instance of the nvgpu
+ * The pd cache is basially just a slab allocator. Each instance of the nvgpu
  * driver makes one of these structs:
  *
  *   struct nvgpu_pd_cache {
@@ -52,18 +52,22 @@
  *      struct nvgpu_rbtree_node	*mem_tree;
  *   };
  *
- * There are two sets of lists used for cached allocations, the full and the
- * partial. The full lists contain pages of memory for which all the memory in
- * that entry is in use. The partial lists contain partially full blocks of
- * memory which can be used for more PD allocations. The cache works as follows:
+ * There are two sets of lists, the full and the partial. The full lists contain
+ * pages of memory for which all the memory in that page is in use. The partial
+ * lists contain partially full pages of memory which can be used for more PD
+ * allocations. There a couple of assumptions here:
  *
- *   1. PDs greater than NVGPU_PD_CACHE_SIZE bypass the pd cache.
+ *   1. PDs greater than or equal to the page size bypass the pd cache.
  *   2. PDs are always power of 2 and greater than %NVGPU_PD_CACHE_MIN bytes.
  *
+ * There are NVGPU_PD_CACHE_COUNT full lists and the same number of partial
+ * lists. For a 4Kb page NVGPU_PD_CACHE_COUNT is 4. This is enough space for
+ * 256, 512, 1024, and 2048 byte PDs.
+ *
  * nvgpu_pd_alloc() will allocate a PD for the GMMU. It will check if the PD
- * size is NVGPU_PD_CACHE_SIZE or larger and choose the correct allocation
- * scheme - either from the PD cache or directly. Similarly nvgpu_pd_free()
- * will free a PD allocated by nvgpu_pd_alloc().
+ * size is page size or larger and choose the correct allocation scheme - either
+ * from the PD cache or directly. Similarly nvgpu_pd_free() will free a PD
+ * allocated by nvgpu_pd_alloc().
  *
  * Since the top level PD (the PDB) is a page aligned pointer but less than a
  * page size the direct functions must be used for allocating PDBs. Otherwise
@@ -75,11 +79,11 @@ static u32 nvgpu_pd_cache_nr(u32 bytes)
 	return ilog2(bytes >> (NVGPU_PD_CACHE_MIN_SHIFT - 1U));
 }
 
-static u32 nvgpu_pd_cache_get_nr_entries(struct nvgpu_pd_mem_entry *pentry)
+static u32 nvgpu_pd_cache_get_mask(struct nvgpu_pd_mem_entry *pentry)
 {
-	BUG_ON(pentry->pd_size == 0);
+	u32 mask_offset = 1 << (PAGE_SIZE / pentry->pd_size);
 
-	return NVGPU_PD_CACHE_SIZE / pentry->pd_size;
+	return mask_offset - 1U;
 }
 
 int nvgpu_pd_cache_init(struct gk20a *g)
@@ -197,8 +201,6 @@ static int nvgpu_pd_cache_alloc_new(struct gk20a *g,
 				    u32 bytes)
 {
 	struct nvgpu_pd_mem_entry *pentry;
-	unsigned long flags = 0;
-	int err;
 
 	pd_dbg(g, "PD-Alloc [C]   New: offs=0");
 
@@ -208,21 +210,8 @@ static int nvgpu_pd_cache_alloc_new(struct gk20a *g,
 		return -ENOMEM;
 	}
 
-	if (!nvgpu_iommuable(g) && (NVGPU_PD_CACHE_SIZE > PAGE_SIZE)) {
-		flags = NVGPU_DMA_FORCE_CONTIGUOUS;
-	}
-
-	err = nvgpu_dma_alloc_flags(g, flags,
-				    NVGPU_PD_CACHE_SIZE, &pentry->mem);
-	if (err != 0) {
+	if (nvgpu_dma_alloc(g, PAGE_SIZE, &pentry->mem)) {
 		nvgpu_kfree(g, pentry);
-
-		/* Not enough contiguous space, but a direct
-		 * allocation may work
-		 */
-		if (err == -ENOMEM) {
-			return nvgpu_pd_cache_alloc_direct(g, pd, bytes);
-		}
 		nvgpu_err(g, "Unable to DMA alloc!");
 		return -ENOMEM;
 	}
@@ -235,8 +224,7 @@ static int nvgpu_pd_cache_alloc_new(struct gk20a *g,
 	 * This allocates the very first PD table in the set of tables in this
 	 * nvgpu_pd_mem_entry.
 	 */
-	set_bit(0U, pentry->alloc_map);
-	pentry->allocs = 1;
+	pentry->alloc_map = 1;
 
 	/*
 	 * Now update the nvgpu_gmmu_pd to reflect this allocation.
@@ -258,21 +246,20 @@ static int nvgpu_pd_cache_alloc_from_partial(struct gk20a *g,
 {
 	unsigned long bit_offs;
 	u32 mem_offs;
-	u32 nr_bits = nvgpu_pd_cache_get_nr_entries(pentry);
+	u32 pentry_mask = nvgpu_pd_cache_get_mask(pentry);
 
 	/*
 	 * Find and allocate an open PD.
 	 */
-	bit_offs = find_first_zero_bit(pentry->alloc_map, nr_bits);
+	bit_offs = ffz(pentry->alloc_map);
 	mem_offs = bit_offs * pentry->pd_size;
 
 	/* Bit map full. Somethings wrong. */
-	if (WARN_ON(bit_offs >= nr_bits)) {
+	if (WARN_ON(bit_offs >= ffz(pentry_mask))) {
 		return -ENOMEM;
 	}
 
-	set_bit(bit_offs, pentry->alloc_map);
-	pentry->allocs++;
+	pentry->alloc_map |= 1 << bit_offs;
 
 	pd_dbg(g, "PD-Alloc [C]   Partial: offs=%lu", bit_offs);
 
@@ -286,7 +273,7 @@ static int nvgpu_pd_cache_alloc_from_partial(struct gk20a *g,
 	/*
 	 * Now make sure the pentry is in the correct list (full vs partial).
 	 */
-	if (pentry->allocs >= nr_bits) {
+	if ((pentry->alloc_map & pentry_mask) == pentry_mask) {
 		pd_dbg(g, "Adding pentry to full list!");
 		nvgpu_list_del(&pentry->list_entry);
 		nvgpu_list_add(&pentry->list_entry,
@@ -327,7 +314,7 @@ static int nvgpu_pd_cache_alloc(struct gk20a *g, struct nvgpu_pd_cache *cache,
 	pd_dbg(g, "PD-Alloc [C] %u bytes", bytes);
 
 	if ((bytes & (bytes - 1U)) != 0U ||
-	    (bytes >= NVGPU_PD_CACHE_SIZE ||
+	    (bytes >= PAGE_SIZE ||
 	     bytes < NVGPU_PD_CACHE_MIN)) {
 		pd_dbg(g, "PD-Alloc [C]   Invalid (bytes=%u)!", bytes);
 		return -EINVAL;
@@ -352,18 +339,16 @@ static int nvgpu_pd_cache_alloc(struct gk20a *g, struct nvgpu_pd_cache *cache,
  * cache logistics. Since on Parker and later GPUs some of the page  directories
  * are smaller than a page packing these PDs together saves a lot of memory.
  */
-int nvgpu_pd_alloc(struct vm_gk20a *vm,
-		   struct nvgpu_gmmu_pd *pd,
-		   u32 bytes)
+int nvgpu_pd_alloc(struct vm_gk20a *vm, struct nvgpu_gmmu_pd *pd, u32 bytes)
 {
 	struct gk20a *g = gk20a_from_vm(vm);
 	int err;
 
 	/*
-	 * Simple case: PD is bigger than or equal to NVGPU_PD_CACHE_SIZE so
-	 * just do a regular DMA alloc.
+	 * Simple case: PD is bigger than a page so just do a regular DMA
+	 * alloc.
 	 */
-	if (bytes >= NVGPU_PD_CACHE_SIZE) {
+	if (bytes >= PAGE_SIZE) {
 		err = nvgpu_pd_cache_alloc_direct(g, pd, bytes);
 		if (err) {
 			return err;
@@ -411,35 +396,17 @@ static void nvgpu_pd_cache_do_free(struct gk20a *g,
 				   struct nvgpu_pd_mem_entry *pentry,
 				   struct nvgpu_gmmu_pd *pd)
 {
-	u32 bit = pd->mem_offs / pentry->pd_size;
+	u32 index = pd->mem_offs / pentry->pd_size;
+	u32 bit = 1 << index;
 
 	/* Mark entry as free. */
-	clear_bit(bit, pentry->alloc_map);
-	pentry->allocs--;
+	pentry->alloc_map &= ~bit;
 
-	if (pentry->allocs > 0U) {
+	if (pentry->alloc_map & nvgpu_pd_cache_get_mask(pentry)) {
 		/*
 		 * Partially full still. If it was already on the partial list
 		 * this just re-adds it.
-		 *
-		 * Since the memory used for the entries is still mapped, if
-		 * iommu is being used,  make sure PTE entries in particular
-		 * are invalidated so that the hw doesn't accidentally try to
-		 * prefetch non-existent fb memory.
-		 *
-		 * Notes:
-		 *   - The check for NVGPU_PD_CACHE_SIZE > PAGE_SIZE effectively
-		 *     determines whether PTE entries use the cache.
-		 *   - In the case where PTE entries ues the cache, we also
-		 *     end up invalidating the PDE entries, but that's a minor
-		 *     performance hit, as there are far fewer of those
-		 *     typically than there are PTE entries.
 		 */
-		if (nvgpu_iommuable(g) && (NVGPU_PD_CACHE_SIZE > PAGE_SIZE)) {
-			memset((void *)((u64)pd->mem->cpu_va + pd->mem_offs), 0,
-					pentry->pd_size);
-		}
-
 		nvgpu_list_del(&pentry->list_entry);
 		nvgpu_list_add(&pentry->list_entry,
 			&cache->partial[nvgpu_pd_cache_nr(pentry->pd_size)]);
@@ -447,8 +414,6 @@ static void nvgpu_pd_cache_do_free(struct gk20a *g,
 		/* Empty now so free it. */
 		nvgpu_pd_cache_free_mem_entry(g, cache, pentry);
 	}
-
-	pd->mem = NULL;
 }
 
 static struct nvgpu_pd_mem_entry *nvgpu_pd_cache_look_up(

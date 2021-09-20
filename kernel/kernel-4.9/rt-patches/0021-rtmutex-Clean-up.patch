@@ -1,8 +1,7 @@
-From d66b319fe86d7c42fdff59a431005c6b2a272b6d Mon Sep 17 00:00:00 2001
+From b80d5776e2d8d94a0f3b0cc91172727f4d776740 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Thu, 23 Mar 2017 15:56:10 +0100
-Subject: [PATCH 021/371] rtmutex: Clean up
-X-NVConfidentiality: public
+Subject: [PATCH 021/352] rtmutex: Clean up
 
 Upstream commit aa2bfe55366552cb7e93e8709d66e698d79ccc47
 
@@ -26,7 +25,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  3 files changed, 18 insertions(+), 19 deletions(-)
 
 diff --git a/kernel/futex.c b/kernel/futex.c
-index 20e14bf..d03dcdf 100644
+index 7ceef4c..c4ff5027 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
 @@ -1393,7 +1393,7 @@ static int wake_futex_pi(u32 __user *uaddr, u32 uval, struct futex_pi_state *pi_

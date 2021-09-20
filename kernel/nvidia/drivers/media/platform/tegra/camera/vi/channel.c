@@ -1560,7 +1560,7 @@ static void tegra_channel_free_sensor_properties(
 	if (sensor_sd == NULL)
 		return;
 
-	s_data = to_camera_common_data(sensor_sd->dev);
+	s_data = container_of(sensor_sd, struct camera_common_data, subdev);
 	if (s_data == NULL)
 		return;
 
@@ -1610,16 +1610,18 @@ static int tegra_channel_connect_sensor(
 		csi_chan_of_node =
 			of_graph_get_remote_port_parent(ep_node);
 
-		list_for_each_entry(csi_chan, &csi_device->csi_chans, list) {
-			if (csi_chan->of_node == csi_chan_of_node) {
-				csi_chan->s_data =
-					to_camera_common_data(chan->subdev_on_csi->dev);
-				csi_chan->sensor_sd = chan->subdev_on_csi;
+		list_for_each_entry(csi_chan, &csi_device->csi_chans, list)
+			if (csi_chan->of_node == csi_chan_of_node)
 				break;
-			}
-		}
 
 		of_node_put(csi_chan_of_node);
+
+		if (!csi_chan)
+			continue;
+
+		csi_chan->s_data =
+			to_camera_common_data(chan->subdev_on_csi->dev);
+		csi_chan->sensor_sd = chan->subdev_on_csi;
 
 	}
 
@@ -1708,30 +1710,20 @@ static void tegra_channel_populate_dev_info(struct tegra_camera_dev_info *cdev,
 			struct tegra_channel *chan)
 {
 	u64 pixelclock = 0;
-	struct camera_common_data *s_data =
-			to_camera_common_data(chan->subdev_on_csi->dev);
 
-	if (s_data != NULL) {
-		/* camera sensors */
+	if (chan->pg_mode)
+		cdev->sensor_type = SENSORTYPE_VIRTUAL;
+	else if (v4l2_subdev_has_op(chan->subdev_on_csi,
+				video, g_dv_timings)) {
+		cdev->sensor_type = SENSORTYPE_OTHER;
+		pixelclock = tegra_channel_get_max_source_rate();
+	} else {
 		cdev->sensor_type = tegra_channel_get_sensor_type(chan);
 		pixelclock = tegra_channel_get_max_pixelclock(chan);
 		/* Multiply by CPHY symbols to pixels factor. */
 		if (cdev->sensor_type == SENSORTYPE_CPHY)
 			pixelclock *= 16/7;
 		cdev->lane_num = tegra_channel_get_num_lanes(chan);
-	} else {
-		if (chan->pg_mode) {
-			/* TPG mode */
-			cdev->sensor_type = SENSORTYPE_VIRTUAL;
-		} else if (v4l2_subdev_has_op(chan->subdev_on_csi,
-						video, g_dv_timings)) {
-			/* HDMI-IN */
-			cdev->sensor_type = SENSORTYPE_OTHER;
-			pixelclock = tegra_channel_get_max_source_rate();
-		} else {
-			/* Focusers, no pixel clk and ISO BW, just bail out */
-			return;
-		}
 	}
 
 	cdev->pixel_rate = pixelclock;
@@ -2294,8 +2286,8 @@ int tegra_channel_init_video(struct tegra_channel *chan)
 	return ret;
 
 ctrl_init_error:
-	media_entity_cleanup(&chan->video->entity);
 	video_device_release(chan->video);
+	media_entity_cleanup(&chan->video->entity);
 	v4l2_ctrl_handler_free(&chan->ctrl_handler);
 	return ret;
 }
@@ -2330,7 +2322,6 @@ int tegra_channel_init(struct tegra_channel *chan)
 	init_waitqueue_head(&chan->dequeue_wait);
 	spin_lock_init(&chan->dequeue_lock);
 	mutex_init(&chan->stop_kthread_lock);
-	init_rwsem(&chan->reset_lock);
 	atomic_set(&chan->is_streaming, DISABLE);
 	spin_lock_init(&chan->capture_state_lock);
 	spin_lock_init(&chan->buffer_lock);

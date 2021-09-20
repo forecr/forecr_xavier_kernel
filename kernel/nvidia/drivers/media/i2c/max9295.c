@@ -311,11 +311,9 @@ int max9295_setup_control(struct device *dev)
 
 	g_ctx = priv->g_client.g_ctx;
 
-	if (prim_priv__) {
-		/* update address reassingment */
-		max9295_write_reg(&prim_priv__->i2c_client->dev,
-				MAX9295_DEV_ADDR, (g_ctx->ser_reg << 1));
-	}
+	/* update address reassingment */
+	max9295_write_reg(&prim_priv__->i2c_client->dev,
+			MAX9295_DEV_ADDR, (g_ctx->ser_reg << 1));
 
 	if (g_ctx->serdes_csi_link == GMSL_SERDES_CSI_LINK_A)
 		err = max9295_write_reg(dev, MAX9295_CTRL0_ADDR, 0x21);
@@ -350,15 +348,14 @@ int max9295_setup_control(struct device *dev)
 		i2c_ovrd[i+1] += (i < 4) ? offset1 : offset2;
 
 		/* i2c passthrough2 must be configured once for all devices */
-		if ((i2c_ovrd[i] == 0x8B) && prim_priv__ && prim_priv__->pst2_ref)
+		if ((i2c_ovrd[i] == 0x8B) && prim_priv__->pst2_ref)
 			continue;
 
 		max9295_write_reg(dev, i2c_ovrd[i], i2c_ovrd[i+1]);
 	}
 
 	/* dev addr pass-through2 ref */
-	if (prim_priv__)
-		prim_priv__->pst2_ref++;
+	prim_priv__->pst2_ref++;
 
 	max9295_write_reg(dev, MAX9295_I2C4_ADDR, (g_ctx->sdev_reg << 1));
 	max9295_write_reg(dev, MAX9295_I2C5_ADDR, (g_ctx->sdev_def << 1));
@@ -387,16 +384,13 @@ int max9295_reset_control(struct device *dev)
 		goto error;
 	}
 
+	prim_priv__->pst2_ref--;
 	priv->g_client.st_done = false;
 
-	if (prim_priv__) {
-		prim_priv__->pst2_ref--;
+	max9295_write_reg(dev, MAX9295_DEV_ADDR, (prim_priv__->def_addr << 1));
 
-		max9295_write_reg(dev, MAX9295_DEV_ADDR, (prim_priv__->def_addr << 1));
-
-		max9295_write_reg(&prim_priv__->i2c_client->dev,
-					MAX9295_CTRL0_ADDR, MAX9295_RESET_ALL);
-	}
+	max9295_write_reg(&prim_priv__->i2c_client->dev,
+				MAX9295_CTRL0_ADDR, MAX9295_RESET_ALL);
 
 error:
 	mutex_unlock(&priv->lock);

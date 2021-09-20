@@ -1,8 +1,7 @@
-From 1374b3e562ca69a07bb15b8a0e810695c9ab67b9 Mon Sep 17 00:00:00 2001
+From 552c5414e222783b3517719a79d1fc7e1dc439b0 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 18 Mar 2011 09:18:52 +0100
-Subject: [PATCH 093/371] buffer_head: Replace bh_uptodate_lock for -rt
-X-NVConfidentiality: public
+Subject: [PATCH 093/352] buffer_head: Replace bh_uptodate_lock for -rt
 
 Wrap the bit_spin_lock calls into a separate inline and add the RT
 replacements with a real spinlock.
@@ -15,10 +14,10 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  3 files changed, 44 insertions(+), 21 deletions(-)
 
 diff --git a/fs/buffer.c b/fs/buffer.c
-index a89be97..7da89d5 100644
+index 5d8f496..48074bd 100644
 --- a/fs/buffer.c
 +++ b/fs/buffer.c
-@@ -302,8 +302,7 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
+@@ -301,8 +301,7 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
  	 * decide that the page is now completely done.
  	 */
  	first = page_buffers(page);
@@ -28,7 +27,7 @@ index a89be97..7da89d5 100644
  	clear_buffer_async_read(bh);
  	unlock_buffer(bh);
  	tmp = bh;
-@@ -316,8 +315,7 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
+@@ -315,8 +314,7 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
  		}
  		tmp = tmp->b_this_page;
  	} while (tmp != bh);
@@ -38,7 +37,7 @@ index a89be97..7da89d5 100644
  
  	/*
  	 * If none of the buffers had errors and they are all
-@@ -329,9 +327,7 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
+@@ -328,9 +326,7 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
  	return;
  
  still_busy:
@@ -49,7 +48,7 @@ index a89be97..7da89d5 100644
  }
  
  /*
-@@ -359,8 +355,7 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
+@@ -358,8 +354,7 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
  	}
  
  	first = page_buffers(page);
@@ -59,7 +58,7 @@ index a89be97..7da89d5 100644
  
  	clear_buffer_async_write(bh);
  	unlock_buffer(bh);
-@@ -372,15 +367,12 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
+@@ -371,15 +366,12 @@ void end_buffer_async_write(struct buffer_head *bh, int uptodate)
  		}
  		tmp = tmp->b_this_page;
  	}
@@ -77,7 +76,7 @@ index a89be97..7da89d5 100644
  }
  EXPORT_SYMBOL(end_buffer_async_write);
  
-@@ -3391,6 +3383,7 @@ struct buffer_head *alloc_buffer_head(gfp_t gfp_flags)
+@@ -3383,6 +3375,7 @@ struct buffer_head *alloc_buffer_head(gfp_t gfp_flags)
  	struct buffer_head *ret = kmem_cache_zalloc(bh_cachep, gfp_flags);
  	if (ret) {
  		INIT_LIST_HEAD(&ret->b_assoc_buffers);

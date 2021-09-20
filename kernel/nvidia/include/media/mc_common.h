@@ -33,7 +33,6 @@
 #include <media/csi.h>
 #include <linux/workqueue.h>
 #include <linux/semaphore.h>
-#include <linux/rwsem.h>
 
 #define MAX_FORMAT_NUM	64
 #define	MAX_SUBDEVICES	4
@@ -261,9 +260,6 @@ struct tegra_channel {
 	int is_interlaced;
 	enum interlaced_type interlace_type;
 	int interlace_bplfactor;
-
-	atomic_t syncpt_depth;
-	struct rw_semaphore reset_lock;
 };
 
 #define to_tegra_channel(vdev) \

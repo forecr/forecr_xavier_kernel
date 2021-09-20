@@ -124,7 +124,7 @@ static void mem_abort_decode(unsigned int esr)
 }
 
 /*
- * Dump out the page tables associated with 'addr' in the currently active mm.
+ * Dump out the page tables associated with 'addr' in mm 'mm'.
  */
 void show_pte(unsigned long addr)
 {
@@ -257,8 +257,8 @@ static inline bool is_permission_fault(unsigned int esr, struct pt_regs *regs,
 /*
  * The kernel tried to access some page that wasn't present.
  */
-static void __do_kernel_fault(unsigned long addr, unsigned int esr,
-			      struct pt_regs *regs)
+static void __do_kernel_fault(struct mm_struct *mm, unsigned long addr,
+			      unsigned int esr, struct pt_regs *regs)
 {
 	const char *msg;
 
@@ -355,6 +355,7 @@ static void __do_user_fault(struct task_struct *tsk, unsigned long addr,
 static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *regs)
 {
 	struct task_struct *tsk = current;
+	struct mm_struct *mm = tsk->active_mm;
 	const struct fault_info *inf;
 
 	/*
@@ -365,7 +366,7 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
 		inf = esr_to_fault_info(esr);
 		__do_user_fault(tsk, addr, esr, inf->sig, inf->code, regs);
 	} else
-		__do_kernel_fault(addr, esr, regs);
+		__do_kernel_fault(mm, addr, esr, regs);
 }
 
 #define VM_FAULT_BADMAP		0x010000
@@ -491,7 +492,7 @@ retry:
 	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current)) {
 		if (!user_mode(regs))
 			goto no_context;
-		return 0;
+		goto return0;
 	}
 
 	/*
@@ -529,7 +530,7 @@ retry:
 	 */
 	if (likely(!(fault & (VM_FAULT_ERROR | VM_FAULT_BADMAP |
 			      VM_FAULT_BADACCESS))))
-		return 0;
+		goto return0;
 
 	/*
 	 * If we are in kernel mode at this point, we have no context to
@@ -545,7 +546,7 @@ retry:
 		 * oom-killed).
 		 */
 		pagefault_out_of_memory();
-		return 0;
+		goto return0;
 	}
 
 	if (fault & VM_FAULT_SIGBUS) {
@@ -566,10 +567,12 @@ retry:
 	}
 
 	__do_user_fault(tsk, addr, esr, sig, code, regs);
-	return 0;
+	goto return0;
 
 no_context:
-	__do_kernel_fault(addr, esr, regs);
+	__do_kernel_fault(mm, addr, esr, regs);
+return0:
+	trace_pagefault_exit(addr);
 	return 0;
 }
 
@@ -787,12 +790,11 @@ void __init hook_debug_fault_code(int nr,
 	debug_fault_info[nr].name	= name;
 }
 
-asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
+asmlinkage int __exception do_debug_exception(unsigned long addr,
 					      unsigned int esr,
 					      struct pt_regs *regs)
 {
 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
-	unsigned long pc = instruction_pointer(regs);
 	struct siginfo info;
 	int rv;
 
@@ -803,19 +805,19 @@ asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
 	if (interrupts_enabled(regs))
 		trace_hardirqs_off();
 
-	if (user_mode(regs) && pc > TASK_SIZE)
+	if (user_mode(regs) && instruction_pointer(regs) > TASK_SIZE)
 		arm64_apply_bp_hardening();
 
-	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
+	if (!inf->fn(addr, esr, regs)) {
 		rv = 1;
 	} else {
 		pr_alert("Unhandled debug exception: %s (0x%08x) at 0x%016lx\n",
-			 inf->name, esr, pc);
+			 inf->name, esr, addr);
 
 		info.si_signo = inf->sig;
 		info.si_errno = 0;
 		info.si_code  = inf->code;
-		info.si_addr  = (void __user *)pc;
+		info.si_addr  = (void __user *)addr;
 		arm64_notify_die("", regs, &info, 0);
 		rv = 0;
 	}

@@ -1,8 +1,7 @@
-From f4e9be00ff5f31120225ec7e8a1cfc585c4184c6 Mon Sep 17 00:00:00 2001
+From 760a84b9f8decfd186e9611866fafecb37ee885e Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 3 Jul 2009 08:44:56 -0500
-Subject: [PATCH 054/371] signals: Allow rt tasks to cache one sigqueue struct
-X-NVConfidentiality: public
+Subject: [PATCH 054/352] signals: Allow rt tasks to cache one sigqueue struct
 
 To avoid allocation allow rt tasks to cache one sigqueue struct in
 task struct.
@@ -17,10 +16,10 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  5 files changed, 69 insertions(+), 5 deletions(-)
 
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 47479e6..6ea6fd9 100644
+index 4559d0e..6ab5c04 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -1864,6 +1864,7 @@ struct task_struct {
+@@ -1863,6 +1863,7 @@ struct task_struct {
  /* signal handlers */
  	struct signal_struct *signal;
  	struct sighand_struct *sighand;
@@ -41,7 +40,7 @@ index 5308304..aa9c1a6 100644
  /* Test if 'sig' is valid signal. Use this instead of testing _NSIG directly */
  static inline int valid_signal(unsigned long sig)
 diff --git a/kernel/exit.c b/kernel/exit.c
-index 145aba7..71ceb78 100644
+index dde0e5d..60eea1f 100644
 --- a/kernel/exit.c
 +++ b/kernel/exit.c
 @@ -146,7 +146,7 @@ static void __exit_signal(struct task_struct *tsk)
@@ -54,7 +53,7 @@ index 145aba7..71ceb78 100644
  	spin_unlock(&sighand->siglock);
  
 diff --git a/kernel/fork.c b/kernel/fork.c
-index a34d2b8..edd682b 100644
+index a200ccc..897a4c6 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -1594,6 +1594,7 @@ static __latent_entropy struct task_struct *copy_process(
@@ -66,7 +65,7 @@ index a34d2b8..edd682b 100644
  	p->utime = p->stime = p->gtime = 0;
  	p->utimescaled = p->stimescaled = 0;
 diff --git a/kernel/signal.c b/kernel/signal.c
-index 3f1158d..e09170d 100644
+index d0b3c0e..f5465ea 100644
 --- a/kernel/signal.c
 +++ b/kernel/signal.c
 @@ -14,6 +14,7 @@
@@ -197,7 +196,7 @@ index 3f1158d..e09170d 100644
  	/* We only dequeue private signals from ourselves, we don't let
  	 * signalfd steal them
  	 */
-@@ -1541,7 +1601,8 @@ EXPORT_SYMBOL(kill_pid);
+@@ -1499,7 +1559,8 @@ EXPORT_SYMBOL(kill_pid);
   */
  struct sigqueue *sigqueue_alloc(void)
  {

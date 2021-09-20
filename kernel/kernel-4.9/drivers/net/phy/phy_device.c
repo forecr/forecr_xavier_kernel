@@ -163,8 +163,11 @@ static int mdio_bus_phy_restore(struct device *dev)
 	if (ret < 0)
 		return ret;
 
-	if (phydev->attached_dev && phydev->adjust_link)
-		phy_start_machine(phydev);
+	/* The PHY needs to renegotiate. */
+	phydev->link = 0;
+	phydev->state = PHY_UP;
+
+	phy_start_machine(phydev);
 
 	return 0;
 }
@@ -673,9 +676,6 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
 {
 	int rc;
 
-	if (!dev)
-		return -EINVAL;
-
 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
 	if (rc)
 		return rc;
@@ -967,9 +967,6 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
 	struct phy_device *phydev;
 	struct device *d;
 	int rc;
-
-	if (!dev)
-		return ERR_PTR(-EINVAL);
 
 	/* Search the list of PHY devices on the mdio bus for the
 	 * PHY with the requested name
@@ -1582,17 +1579,20 @@ static int gen10g_resume(struct phy_device *phydev)
 
 static int __set_phy_supported(struct phy_device *phydev, u32 max_speed)
 {
+	phydev->supported &= ~(PHY_1000BT_FEATURES | PHY_100BT_FEATURES |
+			       PHY_10BT_FEATURES);
+
 	switch (max_speed) {
-	case SPEED_10:
-		phydev->supported &= ~PHY_100BT_FEATURES;
-		/* fall through */
-	case SPEED_100:
-		phydev->supported &= ~PHY_1000BT_FEATURES;
-		break;
-	case SPEED_1000:
-		break;
 	default:
 		return -ENOTSUPP;
+	case SPEED_1000:
+		phydev->supported |= PHY_1000BT_FEATURES;
+		/* fall through */
+	case SPEED_100:
+		phydev->supported |= PHY_100BT_FEATURES;
+		/* fall through */
+	case SPEED_10:
+		phydev->supported |= PHY_10BT_FEATURES;
 	}
 
 	return 0;

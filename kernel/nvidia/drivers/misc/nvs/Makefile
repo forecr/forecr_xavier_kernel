@@ -3,16 +3,8 @@
 #
 obj-$(CONFIG_NVS) += nvs.o
 
-nvs-objs :=	nvs_vreg.o nvs_of_dt.o nvs_timestamp.o nvs_gte.o \
-		nvs_dsm.o nvs_auto.o
-
-ifneq (,$(filter $(CONFIG_NVS_GTE),y m))
-CFLAGS_nvs_gte.o += -DNVS_GTE=1
-endif
-
-ifneq (,$(filter $(CONFIG_NVS_ON_CHANGE),y m))
-nvs-objs += nvs_on_change.o
-endif
+nvs-objs :=	nvs_vreg.o nvs_of_dt.o nvs_timestamp.o nvs_dsm.o \
+		nvs_auto.o
 
 ifneq (,$(filter $(CONFIG_NVS_LIGHT),y m))
 nvs-objs += nvs_light.o

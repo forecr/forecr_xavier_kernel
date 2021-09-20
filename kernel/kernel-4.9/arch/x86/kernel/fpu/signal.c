@@ -342,10 +342,10 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
 			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
 		}
 
-		local_bh_disable();
 		fpu->fpstate_active = 1;
+		preempt_disable();
 		fpu__restore(fpu);
-		local_bh_enable();
+		preempt_enable();
 
 		return err;
 	} else {

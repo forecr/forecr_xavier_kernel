@@ -260,7 +260,8 @@ static long media_device_get_topology(struct media_device *mdev, void *arg)
 		memset(&kentity, 0, sizeof(kentity));
 		kentity.id = entity->graph_obj.id;
 		kentity.function = entity->function;
-		strlcpy(kentity.name, entity->name, sizeof(kentity.name));
+		strncpy(kentity.name, entity->name,
+			sizeof(kentity.name));
 
 		if (copy_to_user(uentity, &kentity, sizeof(kentity)))
 			ret = -EFAULT;
@@ -473,7 +474,6 @@ static long media_device_enum_links32(struct media_device *mdev,
 {
 	struct media_links_enum links;
 	compat_uptr_t pads_ptr, links_ptr;
-	int ret;
 
 	memset(&links, 0, sizeof(links));
 
@@ -485,14 +485,7 @@ static long media_device_enum_links32(struct media_device *mdev,
 	links.pads = compat_ptr(pads_ptr);
 	links.links = compat_ptr(links_ptr);
 
-	ret = media_device_enum_links(mdev, &links);
-	if (ret)
-		return ret;
-
-	if (copy_to_user(ulinks->reserved, links.reserved,
-			 sizeof(ulinks->reserved)))
-		return -EFAULT;
-	return 0;
+	return media_device_enum_links(mdev, &links);
 }
 
 #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
