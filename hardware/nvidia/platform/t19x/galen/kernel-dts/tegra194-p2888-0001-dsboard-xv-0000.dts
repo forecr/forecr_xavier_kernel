@@ -1,0 +1,122 @@
+/*
+ * Top level DTS file for CVM:P2888-0001 and CVB:DSBOARD-XV.
+ *
+ * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+#include "common/tegra194-p2888-0001-p2822-0000-common.dtsi"
+#include "common/tegra194-p2822-camera-modules.dtsi"
+#include "t19x-common-modules/tegra194-camera-plugin-manager.dtsi"
+
+/ {
+	ether_qos@2490000 {
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <0x1>;
+				#size-cells = <0x0>;
+
+				ethernet-phy@0 {
+					reg = <0x0>;
+					interrupt-parent = <0x13>;
+					interrupts = <0x34 0x8>;
+					/delete-property/  marvell,copper-mode;
+					/delete-property/  marvell,reg-init;
+					ti,rx-internal-delay = <0x5>;
+					ti,tx-internal-delay = <0x5>;
+					ti,fifo-depth = <0x3>;
+					max-speed = <0x64>;
+					linux,phandle = <0x1b>;
+					phandle = <0x1b>;
+				};
+			};
+	};
+	
+	i2c@c240000 {
+			ucsi_ccg@8 {
+					status = "disabled";
+			};
+	};
+
+	sound {
+			status = "disabled";
+	};
+
+	host1x {
+
+			nvdisplay@15200000 {
+					/delete-property/  extcon-cables;
+					/delete-property/  extcon-cable-names;
+					/delete-property/  #extcon-cells;
+			};
+
+			nvdisplay@15210000 {
+					/delete-property/  extcon-cables;
+					/delete-property/  extcon-cable-names;
+					/delete-property/  #extcon-cells;
+			};
+
+			nvdisplay@15220000 {
+					/delete-property/  extcon-cables;
+					/delete-property/  extcon-cable-names;
+					/delete-property/  #extcon-cells;
+			};
+
+			sor {
+					/delete-property/  nvidia,typec-port;
+			};
+
+			sor1 {
+					status = "disabled";
+					/delete-property/  nvidia,typec-port;
+
+					dp-display {
+						status = "disabled";
+					};
+			};
+
+			sor2 {
+					status = "disabled";
+					/delete-property/  nvidia,typec-port;
+
+					hdmi-display {
+						status = "disabled";
+					};
+			};
+	};
+
+	xusb_padctl@3520000 {
+
+		ports {
+			usb2-0 {
+				status = "okay";
+				vbus-supply = <0x1c>;
+				mode = "host";
+			};
+		};
+	};
+
+	xudc@3550000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+	};
+
+	xhci@3610000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+	};
+
+	/delete-node/ usb_cd;
+
+};	
+
+
