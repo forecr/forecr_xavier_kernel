@@ -42,14 +42,12 @@
 		reg = <0x0 0x80000000 0x0 0x70000000>;
 	};
 
-	tegra_sound: sound {
-		hdr40_i2c1: i2c@c240000 {
-			pcf8574a: gpio@38 {
-				compatible = "nxp,pcf8574a";
-				reg = <0x38>;
-				gpio-controller;
-				#gpio-cells = <2>;
-			};
+	i2c@c240000 {
+		pcf8574a: gpio@38 {
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			gpio-controller;
+			#gpio-cells = <2>;
 		};
 	};
 
