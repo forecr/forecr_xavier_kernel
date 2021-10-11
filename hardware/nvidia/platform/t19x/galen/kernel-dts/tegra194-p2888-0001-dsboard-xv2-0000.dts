@@ -1,5 +1,5 @@
 /*
- * Top level DTS file for CVM:P2888-0001 and CVB:MILBOARD-XV.
+ * Top level DTS file for CVM:P2888-0001 and CVB:DSBOARD-XV2.
  *
  * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
  *
@@ -13,75 +13,73 @@
  * more details.
  */
 #include "common/tegra194-p2888-0001-p2822-0000-common.dtsi"
-#include "common/tegra194-p2822-camera-modules.dtsi"
-#include "t19x-common-modules/tegra194-camera-plugin-manager.dtsi"
+#include "common/tegra194-p2822-0000-camera-dsboard-xv2-a00.dtsi"
 
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 
 	i2c@c240000 {
-			ucsi_ccg@8 {
-					status = "disabled";
-			};
-			pcf8574a: gpio@38 {
-				compatible = "nxp,pcf8574a";
-				reg = <0x38>;
-				gpio-controller;
-				#gpio-cells = <2>;
-			};
+		ucsi_ccg@8 {
+			status = "disabled";
+		};
+		pcf8574a: gpio@38 {
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
 	};
 
 	i2c@c250000 {
-			rt5659.7-001a@1a {
-					status = "disabled";
-			};
+		rt5659.7-001a@1a {
+			status = "disabled";
+		};
 	};
 
 	sound {
-			status = "disabled";
+		status = "disabled";
 	};
 
 	host1x {
 
-			nvdisplay@15200000 {
-					/delete-property/  extcon-cables;
-					/delete-property/  extcon-cable-names;
-					/delete-property/  #extcon-cells;
+		nvdisplay@15200000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+		};
+
+		nvdisplay@15210000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+			status="disabled";
+		};
+
+		nvdisplay@15220000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+			status="disabled";
+		};
+
+		sor {
+			status = "disabled";
+			/delete-property/  nvidia,typec-port;
+
+			dp-display {
+				status = "disabled";
 			};
+		};
 
-			nvdisplay@15210000 {
-					/delete-property/  extcon-cables;
-					/delete-property/  extcon-cable-names;
-					/delete-property/  #extcon-cells;
-					status="disabled";
+		sor1 {
+			status = "disabled";
+			/delete-property/  nvidia,typec-port;
+
+			dp-display {
+				status = "disabled";
 			};
-
-			nvdisplay@15220000 {
-					/delete-property/  extcon-cables;
-					/delete-property/  extcon-cable-names;
-					/delete-property/  #extcon-cells;
-					status="disabled";
-			};
-
-			sor {
-					status = "disabled";
-					/delete-property/  nvidia,typec-port;
-
-
-					dp-display {
-						status = "disabled";
-					};
-			};
-
-			sor1 {
-					status = "disabled";
-					/delete-property/  nvidia,typec-port;
-
-					dp-display {
-						status = "disabled";
-					};
-			};
+		};
 
 	};
 
@@ -102,15 +100,15 @@
 	};
 
 	xudc@3550000 {
-			/delete-property/  extcon-cables;
-			/delete-property/  extcon-cable-names;
-			/delete-property/  #extcon-cells;
+		/delete-property/  extcon-cables;
+		/delete-property/  extcon-cable-names;
+		/delete-property/  #extcon-cells;
 	};
 
 	xhci@3610000 {
-			/delete-property/  extcon-cables;
-			/delete-property/  extcon-cable-names;
-			/delete-property/  #extcon-cells;
+		/delete-property/  extcon-cables;
+		/delete-property/  extcon-cable-names;
+		/delete-property/  #extcon-cells;
 	};
 
 	/delete-node/ usb_cd;
