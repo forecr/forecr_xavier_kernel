@@ -6,6 +6,10 @@ source ../../environment_nvidia
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv tegra_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv -j$(($(nproc)-1))
 
+#DSBOARD_XV2 for AGX Xavier
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 dsboard_xv2_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 -j$(($(nproc)-1))
+
 #DSBOARD_NX2 for Xavier NX
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
@@ -13,3 +17,4 @@ make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
 #MILBOARD_XV for AGX Xavier
 make ARCH=arm64 O=$HOME/kernel_out_milboard_xv milboard_xv_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_milboard_xv -j$(($(nproc)-1))
+
