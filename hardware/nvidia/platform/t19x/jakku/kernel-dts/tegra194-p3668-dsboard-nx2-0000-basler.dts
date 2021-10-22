@@ -1,0 +1,60 @@
+/*
+ * Top level DTS file for CVM:P3668-0001 and CVB:DSBOARD-NX2.
+ *
+ * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+
+/dts-v1/;
+#include "common/tegra194-p3668-common.dtsi"
+#include "common/tegra194-p3509-0000-a00-basler.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+
+	compatible = "nvidia,p3449-0000+p3668-0000", "nvidia,p3449-0000+p3668-0001", "nvidia,p3509-0000+p3668-0000", "nvidia,p3509-0000+p3668-0001", "nvidia,tegra194";
+
+	hdr40_i2c1: i2c@31e0000 {
+		pcf8574a: gpio@38 {
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			//interrupt-parent = <&irqpin2>;
+			//interrupts = <3 0>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			//interrupt-controller;
+			//#interrupt-cells = <2>;
+		};
+	};
+
+  pcie@141a0000{
+		nvidia,max-speed = <2>;
+	};
+
+	sdhci@3440000 {
+    cd-gpios = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Q, 2) 0>;
+		nvidia,vmmc-always-on;
+		disable-wp;
+		status = "okay";
+	};
+
+	gpio@c2f0000 {
+		w-disable1 {
+			gpio-hog;
+			output-high;
+			gpios = <TEGRA194_AON_GPIO(CC, 2) GPIO_ACTIVE_LOW>;
+			label = "w-disable1";
+			status = "disabled";
+		};
+	};
+};
+
