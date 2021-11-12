@@ -1,5 +1,5 @@
 /*
- * Top level DTS file for CVM:P2888-0001 and CVB:DSBOARD-XV.
+ * Top level DTS file for CVM:P2888-0001 and CVB:MILBOARD-XV.
  *
  * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
  *
@@ -20,6 +20,8 @@
 
 
 / {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
 
 	i2c@c240000 {
 			ucsi_ccg@8 {

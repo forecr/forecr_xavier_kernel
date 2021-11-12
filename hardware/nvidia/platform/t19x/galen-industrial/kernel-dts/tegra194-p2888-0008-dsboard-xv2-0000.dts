@@ -1,5 +1,5 @@
 /*
- * Top level DTS file for CVM:P2888-0008 and CVB:DSBOARD-XV
+ * Top level DTS file for CVM:P2888-0008 and CVB:DSBOARD-XV2
  *
  * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
  *
@@ -13,7 +13,7 @@
  * more details.
  */
 
-#include "../../galen/kernel-dts/tegra194-p2888-0001-dsboard-xv-0000.dts"
+#include "../../galen/kernel-dts/tegra194-p2888-0001-dsboard-xv2-0000.dts"
 #include "common/tegra194-p2888-0008-p2822-0000.dtsi"
 #include "common/tegra194-thermal-p2888-0008.dtsi"
 

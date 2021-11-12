@@ -25,6 +25,7 @@
 	compatible = "nvidia,p3509-0000+p3636-0001", "nvidia,tegra186";
 
 	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
 	nvidia,boardids = "3636:0001:A0";
 	nvidia,proc-boardid = "3636:0001:A0";
 	nvidia,fastboot-usb-vid = <0x0955>;

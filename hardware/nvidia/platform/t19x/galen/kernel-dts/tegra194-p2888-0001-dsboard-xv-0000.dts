@@ -17,6 +17,9 @@
 #include "t19x-common-modules/tegra194-camera-plugin-manager.dtsi"
 
 / {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+
 	ether_qos@2490000 {
 			mdio {
 				compatible = "nvidia,eqos-mdio";
