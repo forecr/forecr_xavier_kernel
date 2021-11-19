@@ -39,7 +39,7 @@
 		};
 	};
 
-  pcie@141a0000{
+	pcie@141a0000{
 		nvidia,max-speed = <2>;
 	};
 
@@ -48,7 +48,7 @@
 	};
 
 	sdhci@3440000 {
-    cd-gpios = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Q, 2) 0>;
+		cd-gpios = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Q, 2) 0>;
 		nvidia,vmmc-always-on;
 		disable-wp;
 		status = "okay";
@@ -64,17 +64,4 @@
 		};
 	};
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -21,61 +21,61 @@
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 
 	i2c@c240000 {
-			ucsi_ccg@8 {
-					status = "disabled";
-			};
+		ucsi_ccg@8 {
+				status = "disabled";
+		};
 	};
 
 	i2c@c250000 {
-			rt5659.7-001a@1a {
-					status = "disabled";
-			};
+		rt5659.7-001a@1a {
+				status = "disabled";
+		};
 	};
 
 	sound {
-			status = "disabled";
+		status = "disabled";
 	};
 
 	host1x {
 
-			nvdisplay@15200000 {
-					/delete-property/  extcon-cables;
-					/delete-property/  extcon-cable-names;
-					/delete-property/  #extcon-cells;
+		nvdisplay@15200000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+		};
+
+		nvdisplay@15210000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+			status="disabled";
+		};
+
+		nvdisplay@15220000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+			status="disabled";
+		};
+
+		sor {
+			status = "disabled";
+			/delete-property/  nvidia,typec-port;
+
+
+			dp-display {
+				status = "disabled";
 			};
+		};
 
-			nvdisplay@15210000 {
-					/delete-property/  extcon-cables;
-					/delete-property/  extcon-cable-names;
-					/delete-property/  #extcon-cells;
-					status="disabled";
+		sor1 {
+			status = "disabled";
+			/delete-property/  nvidia,typec-port;
+
+			dp-display {
+				status = "disabled";
 			};
-
-			nvdisplay@15220000 {
-					/delete-property/  extcon-cables;
-					/delete-property/  extcon-cable-names;
-					/delete-property/  #extcon-cells;
-					status="disabled";
-			};
-
-			sor {
-					status = "disabled";
-					/delete-property/  nvidia,typec-port;
-
-
-					dp-display {
-						status = "disabled";
-					};
-			};
-
-			sor1 {
-					status = "disabled";
-					/delete-property/  nvidia,typec-port;
-
-					dp-display {
-						status = "disabled";
-					};
-			};
+		};
 
 	};
 
@@ -84,28 +84,29 @@
 		ports {
 			usb2-0 {
 				status = "okay";
-				vbus-supply = <0x1c>;
+				vbus-supply = <&battery_reg>;
 				mode = "host";
 			};
 			usb2-3 {
 				status = "okay";
-				vbus-supply = <0x1c>;
+				vbus-supply = <&battery_reg>;
 				mode = "host";
 			};
 		};
 	};
 
 	xudc@3550000 {
-			/delete-property/  extcon-cables;
-			/delete-property/  extcon-cable-names;
-			/delete-property/  #extcon-cells;
+		/delete-property/  extcon-cables;
+		/delete-property/  extcon-cable-names;
+		/delete-property/  #extcon-cells;
 	};
 
 	xhci@3610000 {
-			/delete-property/  extcon-cables;
-			/delete-property/  extcon-cable-names;
-			/delete-property/  #extcon-cells;
+		/delete-property/  extcon-cables;
+		/delete-property/  extcon-cable-names;
+		/delete-property/  #extcon-cells;
 	};
+
 
 	/delete-node/ usb_cd;
 	
