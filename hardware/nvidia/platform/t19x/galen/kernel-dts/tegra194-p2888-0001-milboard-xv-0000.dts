@@ -118,7 +118,7 @@
 
 		regulator@0 {
 			/delete-property/	regulator-always-on;
-			gpio = <0x13 0xc9 0x0>;
+			gpio = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Z, 1) 0x0>;
 			enable-active-high;
 		};
 	};
