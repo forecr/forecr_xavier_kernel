@@ -141,5 +141,11 @@
 		nvidia,max-speed = <2>;
 	};
 
+	clocks-init {
+		disable {
+			/delete-property/ clocks;
+		};
+	};
+
 };	
 

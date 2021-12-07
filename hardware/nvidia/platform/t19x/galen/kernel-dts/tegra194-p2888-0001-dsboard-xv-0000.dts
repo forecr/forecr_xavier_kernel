@@ -120,6 +120,12 @@
 
 	/delete-node/ usb_cd;
 
+	clocks-init {
+		disable {
+			/delete-property/ clocks;
+		};
+	};
+
 };	
 
 

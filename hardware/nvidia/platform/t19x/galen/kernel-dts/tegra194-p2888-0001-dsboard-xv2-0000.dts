@@ -126,6 +126,12 @@
 		};
 	};
 
+	clocks-init {
+		disable {
+			/delete-property/ clocks;
+		};
+	};
+
 };	
 
 
