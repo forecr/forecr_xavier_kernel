@@ -11,7 +11,7 @@
 any_failure=0
 apply_rt_patches()
 {
-	count=$(ls ../arch/arm64/configs/.tmp.tegra*defconfig 2>/dev/null| wc -l)
+	count=$(ls ../arch/arm64/configs/.tmp.*defconfig 2>/dev/null| wc -l)
 	if [ $count -gt 0 ]; then
 		echo "The PREEMPT RT patches are already applied to the kernel!"
 	else
@@ -44,12 +44,35 @@ apply_rt_patches()
 			--disable CPU_FREQ_GOV_SCHEDUTIL \
 			--disable CPU_FREQ_GOV_INTERACTIVE || any_failure=1
 		echo "PREEMPT RT patches successfully applied for L4T!"
+
+		#make temporary copy of the Forecr's defconfig files
+		cp ../arch/arm64/configs/dsboard_nx2_defconfig\
+			../arch/arm64/configs/.tmp.dsboard_nx2_defconfig
+		 ./config --file ../arch/arm64/configs/dsboard_nx2_defconfig\
+			--enable PREEMPT_RT_FULL \
+			--disable DEBUG_PREEMPT \
+			--disable CPU_IDLE_TEGRA18X \
+			--disable CPU_FREQ_TIMES \
+			--disable CPU_FREQ_GOV_SCHEDUTIL \
+			--disable CPU_FREQ_GOV_INTERACTIVE || any_failure=1
+		echo "PREEMPT RT patches successfully applied for DSBOARD-NX2!"
+
+		cp ../arch/arm64/configs/milboard_xv_defconfig\
+			../arch/arm64/configs/.tmp.milboard_xv_defconfig
+		 ./config --file ../arch/arm64/configs/milboard_xv_defconfig\
+			--enable PREEMPT_RT_FULL \
+			--disable DEBUG_PREEMPT \
+			--disable CPU_IDLE_TEGRA18X \
+			--disable CPU_FREQ_TIMES \
+			--disable CPU_FREQ_GOV_SCHEDUTIL \
+			--disable CPU_FREQ_GOV_INTERACTIVE || any_failure=1
+		echo "PREEMPT RT patches successfully applied for MILBOARD-XV!"
 	fi
 }
 
 revert_rt_patches()
 {
-	count=$(ls ../arch/arm64/configs/.tmp.tegra*defconfig 2>/dev/null| wc -l)
+	count=$(ls ../arch/arm64/configs/.tmp.*defconfig 2>/dev/null| wc -l)
 	if [ $count -gt 0 ]; then
 		file_list=`find ../rt-patches -name \*.patch -type f | sort -r`
 		for p in $file_list; do
@@ -63,6 +86,14 @@ revert_rt_patches()
 		cp ../arch/arm64/configs/.tmp.tegra_defconfig\
 			../arch/arm64/configs/tegra_defconfig
 		rm -rf ../arch/arm64/configs/.tmp.tegra_defconfig
+
+		cp ../arch/arm64/configs/.tmp.dsboard_nx2_defconfig\
+			../arch/arm64/configs/dsboard_nx2_defconfig
+		rm -rf ../arch/arm64/configs/.tmp.dsboard_nx2_defconfig
+
+		cp ../arch/arm64/configs/.tmp.milboard_xv_defconfig\
+			../arch/arm64/configs/milboard_xv_defconfig
+		rm -rf ../arch/arm64/configs/.tmp.milboard_xv_defconfig
 		echo "The PREEMPT RT patches have been successfully reverted!"
 	else
 		echo "The PREEMPT RT patches are not applied to the kernel!"
