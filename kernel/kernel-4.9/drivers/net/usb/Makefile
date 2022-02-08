@@ -26,7 +26,13 @@ obj-$(CONFIG_USB_NET_RNDIS_HOST)	+= rndis_host.o
 obj-$(CONFIG_USB_NET_CDC_SUBSET_ENABLE)	+= cdc_subset.o
 obj-$(CONFIG_USB_NET_ZAURUS)	+= zaurus.o
 obj-$(CONFIG_USB_NET_MCS7830)	+= mcs7830.o
+
+ifneq (,$(filter $(CONFIG_USB_NET_QMI_WWAN),y m))
 obj-$(CONFIG_USB_USBNET)	+= usbnet.o qmi_wwan_simcom.o
+else
+obj-$(CONFIG_USB_USBNET)	+= usbnet.o
+endif
+
 obj-$(CONFIG_USB_NET_INT51X1)	+= int51x1.o
 obj-$(CONFIG_USB_CDC_PHONET)	+= cdc-phonet.o
 obj-$(CONFIG_USB_NET_KALMIA)	+= kalmia.o
