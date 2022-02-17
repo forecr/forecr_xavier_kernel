@@ -1,5 +1,5 @@
 /*
- * Top level DTS file for CVM:P2888-0001 and CVB:DSBOARD-XV.
+ * Top level DTS file for CVM:P2888-0001 and CVB:DSBOARD-XV2.
  *
  * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
  *
@@ -13,37 +13,26 @@
  * more details.
  */
 #include "common/tegra194-p2888-0001-p2822-0000-common.dtsi"
-#include "common/tegra194-p2822-camera-modules.dtsi"
-#include "t19x-common-modules/tegra194-camera-plugin-manager.dtsi"
+#include "common/tegra194-p2822-0000-camera-dsboard-xv2-a00.dtsi"
 
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 
-	ether_qos@2490000 {
-		mdio {
-			compatible = "nvidia,eqos-mdio";
-			#address-cells = <0x1>;
-			#size-cells = <0x0>;
-
-			ethernet-phy@0 {
-				reg = <0x0>;
-				interrupt-parent = <0x13>;
-				interrupts = <0x34 0x8>;
-				/delete-property/  marvell,copper-mode;
-				/delete-property/  marvell,reg-init;
-				ti,rx-internal-delay = <0x5>;
-				ti,tx-internal-delay = <0x5>;
-				ti,fifo-depth = <0x3>;
-				max-speed = <0x64>;
-				linux,phandle = <0x1b>;
-				phandle = <0x1b>;
-			};
-		};
-	};
-	
 	i2c@c240000 {
 		ucsi_ccg@8 {
+			status = "disabled";
+		};
+		pcf8574a: gpio@38 {
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
+	};
+
+	i2c@c250000 {
+		rt5659.7-001a@1a {
 			status = "disabled";
 		};
 	};
@@ -64,16 +53,23 @@
 			/delete-property/  extcon-cables;
 			/delete-property/  extcon-cable-names;
 			/delete-property/  #extcon-cells;
+			status="disabled";
 		};
 
 		nvdisplay@15220000 {
 			/delete-property/  extcon-cables;
 			/delete-property/  extcon-cable-names;
 			/delete-property/  #extcon-cells;
+			status="disabled";
 		};
 
 		sor {
+			status = "disabled";
 			/delete-property/  nvidia,typec-port;
+
+			dp-display {
+				status = "disabled";
+			};
 		};
 
 		sor1 {
@@ -85,14 +81,6 @@
 			};
 		};
 
-		sor2 {
-			status = "disabled";
-			/delete-property/  nvidia,typec-port;
-
-			hdmi-display {
-				status = "disabled";
-			};
-		};
 	};
 
 	xusb_padctl@3520000 {
@@ -100,7 +88,12 @@
 		ports {
 			usb2-0 {
 				status = "okay";
-				vbus-supply = <0x1c>;
+				vbus-supply = <&battery_reg>;
+				mode = "host";
+			};
+			usb2-3 {
+				status = "okay";
+				vbus-supply = <&battery_reg>;
 				mode = "host";
 			};
 		};
@@ -119,6 +112,25 @@
 	};
 
 	/delete-node/ usb_cd;
+	
+	fixed-regulators {
+		regulator@114 {
+			/delete-property/	gpio;
+			/delete-property/	enable-active-high;
+		};
+
+		regulator@0 {
+			/delete-property/	regulator-always-on;
+			gpio = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Z, 1) 0x0>;
+			enable-active-high;
+		};
+	};
+
+	clocks-init {
+		disable {
+			/delete-property/ clocks;
+		};
+	};
 
 };	
 
