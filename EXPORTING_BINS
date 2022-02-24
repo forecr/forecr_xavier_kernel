@@ -12,9 +12,11 @@ cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0
 mkdir $HOME/kernel_out_dsboard_nx2_tx2
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_tx2/Image
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_tx2/tegra186-p3636-0001-p3509-0000-a01.dtb 
-wget https://github.com/mistelektronik/forecr_blog_files/blob/master/tegra186-bpmp-p3636-0001-a00-00.zip?raw=true -O $HOME/kernel_out_dsboard_nx2_tx2/tegra186-bpmp-p3636-0001-a00-00.zip
-unzip $HOME/kernel_out_dsboard_nx2_tx2/tegra186-bpmp-p3636-0001-a00-00.zip
-rm $HOME/kernel_out_dsboard_nx2_tx2/tegra186-bpmp-p3636-0001-a00-00.zip 
+cd $HOME/kernel_out_dsboard_nx2_tx2/
+wget https://github.com/mistelektronik/forecr_blog_files/blob/master/tegra186-bpmp-p3636-0001-a00-00.zip?raw=true -O tegra186-bpmp-p3636-0001-a00-00.zip
+unzip tegra186-bpmp-p3636-0001-a00-00.zip
+rm tegra186-bpmp-p3636-0001-a00-00.zip 
+cd $OLDPWD
 
 # For MILBOARD_XV with AGX Xavier SoM, type these commands below:
 mkdir $HOME/kernel_out_milboard_xv_agx
