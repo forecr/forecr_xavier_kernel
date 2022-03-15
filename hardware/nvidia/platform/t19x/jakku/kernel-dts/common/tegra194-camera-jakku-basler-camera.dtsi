@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2018-2020, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "tegra194-camera-basler-camera.dtsi"
+
+#define CAM0_PWDN	TEGRA194_MAIN_GPIO(P, 4)
+#define CAM1_PWDN	TEGRA194_MAIN_GPIO(P, 5)
+
+#define CAM_I2C_MUX 	TEGRA194_MAIN_GPIO(Q, 6)
+
+/ {
+	cam_i2cmux{
+		compatible = "i2c-mux-gpio";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+		i2c-parent = <&cam_i2c>;
+		mux-gpios = <&tegra_main_gpio CAM_I2C_MUX GPIO_ACTIVE_HIGH>;
+		i2c@0 {
+			status = "okay";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			basler_camera0: basler_camera@36 {
+				reg = <0x36>;
+			};
+		};
+		i2c@1 {
+			status = "okay";
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			basler_camera1: basler_camera@36 {
+				reg = <0x36>;
+			};
+		};
+	};
+
+	gpio@2200000 {
+		camera-control-output-low {
+			gpio-hog;
+			output-low;
+			gpios = <CAM0_PWDN 0 CAM1_PWDN 0>;
+			label = "cam0-pwdn","cam1-pwdn";
+		};
+	};
+};
