@@ -184,8 +184,16 @@ static void tegra_channel_fmt_align(struct tegra_channel *chan,
 	if (chan->vi->fops->vi_stride_align)
 		chan->vi->fops->vi_stride_align(&bpl);
 
+#ifdef CONFIG_VIDEO_ECAM
+	/* Always update bytesperline value,if not it is causing streaming problem
+	 * in some supported resolutions which have stride length not divisible by
+	 * default RM_SURFACE_ALIGNMENT
+	 */
+	*bytesperline = bpl;
+#else
 	if (!*bytesperline)
 		*bytesperline = bpl;
+#endif
 
 	/* Don't clamp the width based on bpl as stride and width can be
 	 * different. Aligned width also may force a sensor mode change other
@@ -568,6 +576,10 @@ void tegra_channel_ring_buffer(struct tegra_channel *chan,
 #else
 		/* TODO: granular time code information */
 		vb->timecode.seconds = ts->tv_sec;
+#ifdef CONFIG_VIDEO_ECAM
+		/* update time stamp of the buffer :  We are using this time stamp for synchronization*/
+		vb->vb2_buf.timestamp = timespec_to_ns(ts);
+#endif
 #endif
 	}
 
@@ -2066,6 +2078,27 @@ static long tegra_channel_default_ioctl(struct file *file, void *fh,
 	return ret;
 }
 
+#ifdef CONFIG_VIDEO_ECAM
+/* Implemented vidioc_s_parm and vidioc_g_parm ioctl for v4l2-complience test */
+static int tegra_channel_s_parm(struct file *file, void *fh,
+               struct v4l2_streamparm *a)
+{
+	struct tegra_channel *chan = video_drvdata(file);
+	struct v4l2_subdev *sd = chan->subdev_on_csi;	
+
+    return v4l2_subdev_call(sd, video, s_parm, a);
+}
+
+static int tegra_channel_g_parm(struct file *file, void *fh,
+               struct v4l2_streamparm *a)
+{
+	struct tegra_channel *chan = video_drvdata(file);
+	struct v4l2_subdev *sd = chan->subdev_on_csi;	
+
+	return v4l2_subdev_call(sd, video, g_parm, a);
+}
+#endif
+
 #ifdef CONFIG_COMPAT
 static long tegra_channel_compat_ioctl(struct file *filp,
 	       unsigned int cmd, unsigned long arg)
@@ -2120,6 +2153,11 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
 	.vidioc_s_input			= tegra_channel_s_input,
 	.vidioc_log_status		= tegra_channel_log_status,
 	.vidioc_default			= tegra_channel_default_ioctl,
+#ifdef CONFIG_VIDEO_ECAM
+/* Implemented vidioc_s_parm and vidioc_g_parm ioctl for v4l2-complience test */
+	.vidioc_s_parm                  = tegra_channel_s_parm,
+	.vidioc_g_parm                  = tegra_channel_g_parm,
+#endif	
 };
 
 static int tegra_channel_close(struct file *fp);

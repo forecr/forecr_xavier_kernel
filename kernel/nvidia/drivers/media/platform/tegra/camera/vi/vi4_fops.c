@@ -1086,7 +1086,12 @@ static int vi4_channel_start_streaming(struct vb2_queue *vq, u32 count)
 	}
 
 	chan->sequence = 0;
+#ifdef CONFIG_VIDEO_ECAM
+	/* econ camera module supported with upto 1 Second exposure time variation */ 
+	chan->timeout = msecs_to_jiffies(1000);
+#else
 	chan->timeout = msecs_to_jiffies(200);
+#endif	
 	if (!chan->low_latency)
 		tegra_channel_init_ring_buffer(chan);
 
