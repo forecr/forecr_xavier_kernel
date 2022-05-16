@@ -59,11 +59,11 @@
 		status = "okay";
 	};
 
-  serial@c280000 {
+	serial@c280000 {
 		status = "okay";
 	};
 
-  sdhci@3440000 {
+	sdhci@3440000 {
 		status = "okay";
 		cd-inverted;
 		cd-gpios = <&tegra_main_gpio TEGRA_MAIN_GPIO(X, 4) 0>;
@@ -242,6 +242,11 @@
 			status = "okay";
 		};
 	};
+
+	pwm-fan {
+		status = "disabled";
+	};
+
 };
 #if LINUX_VERSION >= 414
 #include <tegra186-linux-4.14.dtsi>
