@@ -44,6 +44,10 @@
 		status = "okay";
 	};
 
+	pwm-fan {
+		status = "disabled";
+	};
+
 	gpio@c2f0000 {
 		w-disable1 {
 			gpio-hog;
