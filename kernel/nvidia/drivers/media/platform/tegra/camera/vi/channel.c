@@ -1215,8 +1215,9 @@ int tegra_channel_s_ctrl(struct v4l2_ctrl *ctrl)
 			dev_dbg(&chan->video->dev,
 				"because the VI/CSI is in bypass mode\n");
 			chan->bypass = true;
-		} else
+		} else {
 			chan->bypass = false;
+		}
 		break;
 	case TEGRA_CAMERA_CID_OVERRIDE_ENABLE:
 		{
@@ -2079,7 +2080,7 @@ static long tegra_channel_default_ioctl(struct file *file, void *fh,
 }
 
 #ifdef CONFIG_VIDEO_ECAM
-/* Implemented vidioc_s_parm and vidioc_g_parm ioctl for v4l2-complience test */
+/* Implemented vidioc_s_parm and vidioc_g_parm ioctl for v4l2-compliance test */
 static int tegra_channel_s_parm(struct file *file, void *fh,
                struct v4l2_streamparm *a)
 {
@@ -2154,7 +2155,7 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
 	.vidioc_log_status		= tegra_channel_log_status,
 	.vidioc_default			= tegra_channel_default_ioctl,
 #ifdef CONFIG_VIDEO_ECAM
-/* Implemented vidioc_s_parm and vidioc_g_parm ioctl for v4l2-complience test */
+/* Implemented vidioc_s_parm and vidioc_g_parm ioctl for v4l2-compliance test */
 	.vidioc_s_parm                  = tegra_channel_s_parm,
 	.vidioc_g_parm                  = tegra_channel_g_parm,
 #endif	

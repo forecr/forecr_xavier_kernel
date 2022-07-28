@@ -134,10 +134,8 @@ static const struct tegra_video_format vi5_video_formats[] = {
 	TEGRA_VIDEO_FORMAT(YUV422, 16, UYVY8_1X16, 1, 1, T_Y8__V8U8_N422,
 				YUV422_8, NV16, "NV16"),
 #ifndef CONFIG_VIDEO_ECAM
-	/*
-	 * Fixed v4l2-compliance test issue
-	 * Duplicate UYVY Format enumeration for the same device 
-	 */
+	/* Fixed v4l2-compliance test issue
+	 * Duplicate UYVY Format enumeration for same device */
 	TEGRA_VIDEO_FORMAT(YUV422, 16, UYVY8_2X8, 2, 1, T_U8_Y8__V8_Y8,
 				YUV422_8, UYVY, "YUV 4:2:2 UYVY"),
 #endif

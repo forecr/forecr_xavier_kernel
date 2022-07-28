@@ -39,6 +39,11 @@
 #define TEGRA_CAMERA_CID_EXPOSURE_SHORT		(TEGRA_CAMERA_CID_BASE+12)
 #define TEGRA_CAMERA_CID_STEREO_EEPROM		(TEGRA_CAMERA_CID_BASE+13)
 
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+#define TEGRA_CAMERA_CID_MASTER_SLAVE_SELECT	(TEGRA_CAMERA_CID_BASE+21)
+#define TEGRA_CAMERA_CID_FRAME_SYNC		(TEGRA_CAMERA_CID_BASE+22)
+#endif
+
 #define TEGRA_CAMERA_CID_SENSOR_CONFIG		(TEGRA_CAMERA_CID_BASE+50)
 #define TEGRA_CAMERA_CID_SENSOR_MODE_BLOB	(TEGRA_CAMERA_CID_BASE+51)
 #define TEGRA_CAMERA_CID_SENSOR_CONTROL_BLOB	(TEGRA_CAMERA_CID_BASE+52)
@@ -136,6 +141,9 @@ struct sensor_control_properties {
 	__u32 gain_factor;
 	__u32 framerate_factor;
 	__u32 inherent_gain;
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+	__u32 max_sync_modes;
+#endif
 	__u32 min_gain_val;
 	__u32 max_gain_val;
 	__u32 min_hdr_ratio;

@@ -209,6 +209,15 @@ struct tegracam_ctrl_ops {
 			struct sensor_blob *blob, s64 val);
 	int (*set_group_hold_ex)(struct tegracam_device *tc_dev,
 			struct sensor_blob *blob, bool val);
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+/* e-con function callback to set custom controls */
+	int (*set_master_mode)(struct tegracam_device *tc_dev,s32 val);
+	int (*set_master_mode_ex)(struct tegracam_device *tc_dev,
+			struct sensor_blob *blob, s64 val);
+	int (*set_frame_sync_mode)(struct tegracam_device *tc_dev,s64 val);
+	int (*set_frame_sync_mode_ex)(struct tegracam_device *tc_dev,
+			struct sensor_blob *blob, s64 val);
+#endif
 };
 
 struct tegracam_ctrl_handler {
@@ -252,6 +261,11 @@ struct camera_common_data {
 	int	fmt_width, fmt_height;
 	int	sensor_mode_id;
 	bool	use_sensor_mode_id;
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+	bool	master_slave_id;
+	bool	use_master_slave_mode;
+	uint16_t master_slave_gpio;
+#endif
 	bool	override_enable;
 	u32	version;
 };

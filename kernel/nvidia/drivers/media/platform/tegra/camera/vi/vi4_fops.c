@@ -36,7 +36,11 @@
 /* 256 byte alignment in accordance to NvRmSurface Pitch alignment.
  * It is the worst case scenario considering VIC engine requirements
  */
+#ifdef CONFIG_VIDEO_ECAM
+#define RM_SURFACE_ALIGNMENT 64
+#else
 #define RM_SURFACE_ALIGNMENT 256
+#endif
 
 static void tegra_channel_error_recovery(struct tegra_channel *chan);
 static void tegra_channel_stop_kthreads(struct tegra_channel *chan);

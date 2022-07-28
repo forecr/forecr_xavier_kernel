@@ -2174,7 +2174,7 @@
 		*/
 		num_csi_lanes = <10>;
 		max_lane_speed = <2500000>;
-		min_bits_per_pixel = <10>;
+		min_bits_per_pixel = <16>; //<10>;
 		vi_peak_byte_per_pixel = <2>;
 		vi_bw_margin_pct = <67>;
 		//max_pixel_rate = <240000>;
