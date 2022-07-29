@@ -26,3 +26,8 @@ make ARCH=arm64 O=$HOME/kernel_out_milboard_xv -j$(($(nproc)-1))
 #For example:
 sudo make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_4.5.1_Linux_JETSON_XAVIER_NX/Linux_for_Tegra/rootfs/
 
+
+#TUVE Camera driver for Xavier NX
+#Get $HOME/kernel_out_dsboard_nx2/drivers/media/i2c/ov5693.ko
+#sudo cp ov5693.ko /lib/modules/4.9.201-tegra/kernel/drivers/media/i2c/ov5693.ko
+

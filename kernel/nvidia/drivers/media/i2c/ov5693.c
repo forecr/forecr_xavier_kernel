@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#define DEBUG
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/gpio.h>
@@ -37,13 +37,13 @@
 #include <trace/events/ov5693.h>
 
 #define OV5693_MAX_COARSE_DIFF		6
-#define OV5693_MAX_FRAME_LENGTH	(0x7fff)
+#define OV5693_MAX_FRAME_LENGTH   	(0x01E0)
 #define OV5693_MIN_EXPOSURE_COARSE	(0x0002)
 #define OV5693_MAX_EXPOSURE_COARSE	\
 	(OV5693_MAX_FRAME_LENGTH-OV5693_MAX_COARSE_DIFF)
-#define OV5693_DEFAULT_LINE_LENGTH	(0xA80)
-#define OV5693_DEFAULT_PIXEL_CLOCK	(160)
-#define OV5693_DEFAULT_FRAME_LENGTH	(0x07C0)
+#define OV5693_DEFAULT_LINE_LENGTH	(0x500)
+#define OV5693_DEFAULT_PIXEL_CLOCK	(54)
+#define OV5693_DEFAULT_FRAME_LENGTH	(0x01E0)
 #define OV5693_DEFAULT_EXPOSURE_COARSE	\
 	(OV5693_DEFAULT_FRAME_LENGTH-OV5693_MAX_COARSE_DIFF)
 
@@ -65,11 +65,12 @@ struct ov5693 {
 	struct i2c_client		*i2c_client;
 	struct v4l2_subdev		*subdev;
 	u8				fuse_id[OV5693_FUSE_ID_SIZE];
+#ifdef STREAM_DEBUGFS
 	const char			*devname;
 	struct dentry			*debugfs_dir;
+#endif
 	struct mutex			streaming_lock;
 	bool				streaming;
-
 	s32				group_hold_prev;
 	u32				frame_length;
 	bool				group_hold_en;
@@ -86,42 +87,50 @@ static struct regmap_config ov5693_regmap_config = {
 static inline void ov5693_get_frame_length_regs(ov5693_reg *regs,
 				u32 frame_length)
 {
+#ifdef I2C_ENB
 	regs->addr = OV5693_FRAME_LENGTH_ADDR_MSB;
 	regs->val = (frame_length >> 8) & 0xff;
 	(regs + 1)->addr = OV5693_FRAME_LENGTH_ADDR_LSB;
 	(regs + 1)->val = (frame_length) & 0xff;
+#endif
 }
 
 static inline void ov5693_get_coarse_time_regs(ov5693_reg *regs,
 				u32 coarse_time)
 {
+#ifdef I2C_ENB
 	regs->addr = OV5693_COARSE_TIME_ADDR_1;
 	regs->val = (coarse_time >> 12) & 0xff;
 	(regs + 1)->addr = OV5693_COARSE_TIME_ADDR_2;
 	(regs + 1)->val = (coarse_time >> 4) & 0xff;
 	(regs + 2)->addr = OV5693_COARSE_TIME_ADDR_3;
 	(regs + 2)->val = (coarse_time & 0xf) << 4;
+#endif
 }
 
 static inline void ov5693_get_coarse_time_short_regs(ov5693_reg *regs,
 				u32 coarse_time)
 {
+#ifdef I2C_ENB
 	regs->addr = OV5693_COARSE_TIME_SHORT_ADDR_1;
 	regs->val = (coarse_time >> 12) & 0xff;
 	(regs + 1)->addr = OV5693_COARSE_TIME_SHORT_ADDR_2;
 	(regs + 1)->val = (coarse_time >> 4) & 0xff;
 	(regs + 2)->addr = OV5693_COARSE_TIME_SHORT_ADDR_3;
 	(regs + 2)->val = (coarse_time & 0xf) << 4;
+#endif
 }
 
 static inline void ov5693_get_gain_regs(ov5693_reg *regs,
 				u16 gain)
 {
+#ifdef I2C_ENB
 	regs->addr = OV5693_GAIN_ADDR_MSB;
 	regs->val = (gain >> 8) & 0xff;
 
 	(regs + 1)->addr = OV5693_GAIN_ADDR_LSB;
 	(regs + 1)->val = (gain) & 0xff;
+#endif
 }
 
 static int test_mode;
@@ -131,14 +140,16 @@ static inline int ov5693_read_reg(struct camera_common_data *s_data,
 				u16 addr, u8 *val)
 {
 	int err = 0;
+#ifdef I2C_ENB
 	u32 reg_val = 0;
 
 	err = regmap_read(s_data->regmap, addr, &reg_val);
 	*val = reg_val & 0xFF;
-
+#endif
 	return err;
 }
 
+#ifdef I2C_ENB
 static int ov5693_write_reg(struct camera_common_data *s_data, u16 addr, u8 val)
 {
 	int err;
@@ -282,9 +293,11 @@ power_off_done:
 	pw->state = SWITCH_OFF;
 	return 0;
 }
+#endif
 
 static int ov5693_power_put(struct tegracam_device *tc_dev)
 {
+#ifdef I2C_ENB
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct camera_common_power_rail *pw = s_data->power;
 	struct camera_common_pdata *pdata = s_data->pdata;
@@ -301,7 +314,7 @@ static int ov5693_power_put(struct tegracam_device *tc_dev)
 		if (gpio_is_valid(pw->reset_gpio))
 			gpio_free(pw->reset_gpio);
 	}
-
+#endif
 	return 0;
 }
 
@@ -314,7 +327,7 @@ static int ov5693_power_get(struct tegracam_device *tc_dev)
 	const char *mclk_name;
 	const char *parentclk_name;
 	struct clk *parent;
-	int err = 0, ret = 0;
+	int err = 0;
 
 	if (!pdata) {
 		dev_err(dev, "pdata missing\n");
@@ -338,6 +351,8 @@ static int ov5693_power_get(struct tegracam_device *tc_dev)
 			clk_set_parent(pw->mclk, parent);
 	}
 
+#ifdef I2C_ENB
+	int ret = 0;
 	/* analog 2.8v */
 	err |= camera_common_regulator_get(dev,
 			&pw->avdd, pdata->regulators.avdd);
@@ -374,6 +389,7 @@ static int ov5693_power_get(struct tegracam_device *tc_dev)
 	}
 
 	pw->state = SWITCH_OFF;
+#endif
 	return err;
 }
 
@@ -391,6 +407,7 @@ static const struct of_device_id ov5693_of_match[] = {
 
 static int ov5693_set_group_hold(struct tegracam_device *tc_dev, bool val)
 {
+#ifdef I2C_ENB
 	int err;
 	struct ov5693 *priv = tc_dev->priv;
 	int gh_prev = switch_ctrl_qmenu[priv->group_hold_prev];
@@ -431,10 +448,13 @@ static int ov5693_set_group_hold(struct tegracam_device *tc_dev, bool val)
 fail:
 	dev_dbg(dev, "%s: Group hold control error\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static int ov5693_set_gain(struct tegracam_device *tc_dev, s64 val)
 {
+#ifdef I2C_ENB
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct ov5693 *priv = (struct ov5693 *)tc_dev->priv;
 	struct device *dev = tc_dev->dev;
@@ -467,10 +487,13 @@ static int ov5693_set_gain(struct tegracam_device *tc_dev, s64 val)
 fail:
 	dev_dbg(dev, "%s: GAIN control error\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static int ov5693_set_frame_rate(struct tegracam_device *tc_dev, s64 val)
 {
+#ifdef I2C_ENB
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct device *dev = tc_dev->dev;
 	struct ov5693 *priv = tc_dev->priv;
@@ -505,10 +528,13 @@ static int ov5693_set_frame_rate(struct tegracam_device *tc_dev, s64 val)
 fail:
 	dev_dbg(dev, "%s: FRAME_LENGTH control error\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static int ov5693_set_exposure(struct tegracam_device *tc_dev, s64 val)
 {
+#ifdef I2C_ENB
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct device *dev = tc_dev->dev;
 	struct ov5693 *priv = tc_dev->priv;
@@ -545,10 +571,13 @@ static int ov5693_set_exposure(struct tegracam_device *tc_dev, s64 val)
 fail:
 	dev_dbg(dev, "%s: COARSE_TIME control error\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static int ov5693_set_exposure_short(struct tegracam_device *tc_dev, s64 val)
 {
+#ifdef I2C_ENB
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct device *dev = tc_dev->dev;
 	struct ov5693 *priv = tc_dev->priv;
@@ -595,11 +624,14 @@ static int ov5693_set_exposure_short(struct tegracam_device *tc_dev, s64 val)
 fail:
 	dev_dbg(dev, "%s: COARSE_TIME_SHORT control error\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static int ov5693_fill_string_ctrl(struct tegracam_device *tc_dev,
 				struct v4l2_ctrl *ctrl)
 {
+#ifdef I2C_ENB
 	struct ov5693 *priv = tc_dev->priv;
 	int i;
 
@@ -623,9 +655,10 @@ static int ov5693_fill_string_ctrl(struct tegracam_device *tc_dev,
 		return -EINVAL;
 	}
 	ctrl->p_cur.p_char = ctrl->p_new.p_char;
+#endif
 	return 0;
 }
-
+#ifdef I2C_ENB 
 static int ov5693_eeprom_device_release(struct ov5693 *priv)
 {
 	int i;
@@ -779,7 +812,7 @@ static int ov5693_fuse_id_setup(struct ov5693 *priv)
 ret:
 	return err;
 }
-
+#endif
 MODULE_DEVICE_TABLE(of, ov5693_of_match);
 
 static struct camera_common_pdata *ov5693_parse_dt(struct tegracam_device
@@ -867,6 +900,7 @@ error:
 
 static int ov5693_set_mode(struct tegracam_device *tc_dev)
 {
+#ifdef I2C_ENB
 	struct ov5693 *priv = (struct ov5693 *)tegracam_get_privdata(tc_dev);
 	struct camera_common_data *s_data = tc_dev->s_data;
 	int err;
@@ -874,12 +908,13 @@ static int ov5693_set_mode(struct tegracam_device *tc_dev)
 	err = ov5693_write_table(priv, mode_table[s_data->mode_prop_idx]);
 	if (err)
 		return err;
-
+#endif
 	return 0;
 }
 
 static int ov5693_start_streaming(struct tegracam_device *tc_dev)
 {
+#ifdef I2C_ENB
 	struct ov5693 *priv = (struct ov5693 *)tegracam_get_privdata(tc_dev);
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct camera_common_pdata *pdata = s_data->pdata;
@@ -919,10 +954,13 @@ static int ov5693_start_streaming(struct tegracam_device *tc_dev)
 exit:
 	dev_err(dev, "%s: error starting stream\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static int ov5693_stop_streaming(struct tegracam_device *tc_dev)
 {
+#ifdef I2C_ENB
 	struct camera_common_data *s_data = tc_dev->s_data;
 	struct ov5693 *priv = (struct ov5693 *)tegracam_get_privdata(tc_dev);
 	struct device *dev = s_data->dev;
@@ -957,15 +995,19 @@ static int ov5693_stop_streaming(struct tegracam_device *tc_dev)
 exit:
 	dev_err(dev, "%s: error stopping stream\n", __func__);
 	return err;
+#endif
+	return 0;
 }
 
 static struct camera_common_sensor_ops ov5693_common_ops = {
 	.numfrmfmts = ARRAY_SIZE(ov5693_frmfmt),
 	.frmfmt_table = ov5693_frmfmt,
+#ifdef I2C_ENB
 	.power_on = ov5693_power_on,
 	.power_off = ov5693_power_off,
 	.write_reg = ov5693_write_reg,
 	.read_reg = ov5693_read_reg,
+#endif
 	.parse_dt = ov5693_parse_dt,
 	.power_get = ov5693_power_get,
 	.power_put = ov5693_power_put,
@@ -973,7 +1015,7 @@ static struct camera_common_sensor_ops ov5693_common_ops = {
 	.start_streaming = ov5693_start_streaming,
 	.stop_streaming = ov5693_stop_streaming,
 };
-
+#ifdef STREAM_DEBUGFS
 static int ov5693_debugfs_streaming_show(void *data, u64 *val)
 {
 	struct ov5693 *priv = data;
@@ -1050,7 +1092,7 @@ error:
 
 	return -ENOMEM;
 }
-
+#endif
 static struct tegracam_ctrl_ops ov5693_ctrl_ops = {
 	.numctrls = ARRAY_SIZE(ctrl_cid_list),
 	.ctrl_cid_list = ctrl_cid_list,
@@ -1069,25 +1111,25 @@ static int ov5693_board_setup(struct ov5693 *priv)
 {
 	struct camera_common_data *s_data = priv->s_data;
 	struct device *dev = s_data->dev;
-	bool eeprom_ctrl = 0;
 	int err = 0;
 
 	dev_dbg(dev, "%s++\n", __func__);
-
+#ifdef I2C_ENB
+	bool eeprom_ctrl = 0;
 	/* eeprom interface */
 	err = ov5693_eeprom_device_init(priv);
 	if (err && s_data->pdata->has_eeprom)
 		dev_err(dev,
 			"Failed to allocate eeprom reg map: %d\n", err);
 	eeprom_ctrl = !err;
-
+#endif
 	err = camera_common_mclk_enable(s_data);
 	if (err) {
 		dev_err(dev,
 			"Error %d turning on mclk\n", err);
 		return err;
 	}
-
+#ifdef I2C_ENB
 	err = ov5693_power_on(s_data);
 	if (err) {
 		dev_err(dev,
@@ -1121,15 +1163,16 @@ static int ov5693_board_setup(struct ov5693 *priv)
 error:
 	ov5693_power_off(s_data);
 	camera_common_mclk_disable(s_data);
+#endif
 	return err;
 }
-
+#ifdef STREAM_DEBUGFS
 static void ov5693_debugfs_remove(struct ov5693 *priv)
 {
 	debugfs_remove_recursive(priv->debugfs_dir);
 	priv->debugfs_dir = NULL;
 }
-
+#endif
 static int ov5693_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
@@ -1192,7 +1235,6 @@ static int ov5693_probe(struct i2c_client *client,
 	priv->subdev = &tc_dev->s_data->subdev;
 	tegracam_set_privdata(tc_dev, (void *)priv);
 	mutex_init(&priv->streaming_lock);
-
 	err = ov5693_board_setup(priv);
 		if (err) {
 			tegracam_device_unregister(tc_dev);
@@ -1205,14 +1247,14 @@ static int ov5693_probe(struct i2c_client *client,
 		dev_err(dev, "tegra camera subdev registration failed\n");
 		return err;
 	}
-
+#ifdef STREAM_DEBUGFS
 	err = ov5693_debugfs_create(priv);
 	if (err) {
 		dev_err(dev, "error creating debugfs interface");
 		ov5693_debugfs_remove(priv);
 		return err;
 	}
-
+#endif
 	dev_dbg(dev, "Detected OV5693 sensor\n");
 
 	return 0;
@@ -1223,16 +1265,16 @@ ov5693_remove(struct i2c_client *client)
 {
 	struct camera_common_data *s_data = to_camera_common_data(&client->dev);
 	struct ov5693 *priv = (struct ov5693 *)s_data->priv;
-
+#ifdef STREAM_DEBUGFS
 	ov5693_debugfs_remove(priv);
-
+#endif
 	tegracam_v4l2subdev_unregister(priv->tc_dev);
 	ov5693_power_put(priv->tc_dev);
 	tegracam_device_unregister(priv->tc_dev);
+#ifdef I2C_ENB
 	ov5693_eeprom_device_release(priv);
-
+#endif
 	mutex_destroy(&priv->streaming_lock);
-
 	return 0;
 }
 

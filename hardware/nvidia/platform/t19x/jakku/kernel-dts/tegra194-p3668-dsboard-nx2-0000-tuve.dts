@@ -1,0 +1,244 @@
+/*
+ * Top level DTS file for CVM:P3668-0001 and CVB:DSBOARD-NX2.
+ *
+ * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+
+/dts-v1/;
+#include "common/tegra194-p3668-common.dtsi"
+#include "common/tegra194-p3509-0000-a00.dtsi"
+
+#undef CAM_I2C_MUX
+#define CAM_I2C_MUX 	TEGRA194_MAIN_GPIO(Q, 6)
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+
+	compatible = "nvidia,p3449-0000+p3668-0000", "nvidia,p3449-0000+p3668-0001", "nvidia,p3509-0000+p3668-0000", "nvidia,p3509-0000+p3668-0001", "nvidia,tegra194";
+
+	hdr40_i2c1: i2c@31e0000 {
+		pcf8574a: gpio@38 {
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			//interrupt-parent = <&irqpin2>;
+			//interrupts = <3 0>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			//interrupt-controller;
+			//#interrupt-cells = <2>;
+		};
+	};
+
+	pcie@141a0000{
+		nvidia,max-speed = <2>;
+	};
+
+	cam_i2cmux{
+		mux-gpios = <&tegra_main_gpio CAM_I2C_MUX GPIO_ACTIVE_HIGH>;
+	};
+
+	sdhci@3440000 {
+		cd-gpios = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Q, 2) 0>;
+		nvidia,vmmc-always-on;
+		disable-wp;
+		status = "okay";
+	};
+
+	pwm-fan {
+		status = "disabled";
+	};
+
+	gpio@c2f0000 {
+		w-disable1 {
+			gpio-hog;
+			output-high;
+			gpios = <TEGRA194_AON_GPIO(CC, 2) GPIO_ACTIVE_LOW>;
+			label = "w-disable1";
+			status = "disabled";
+		};
+	};
+
+	// TUVE camera implementation
+	i2c@3180000 {
+		ov5693_c@36 {
+			compatible = "nvidia,ov5693";
+			reg = <0x36>;
+			devnode = "video0";
+			physical_w = "3.674";
+			physical_h = "2.738";
+			sensor_model = "ov5693";
+			use_sensor_mode_id = "true";
+			vana-supply = <0x16e>;
+			vif-supply = <0x16c>;
+			avdd-reg = "vana";
+			iovdd-reg = "vif";
+			reset-gpios = <0x13 0x7d 0x0>;
+			clocks = <0x4 0x25 0x4 0x66>;
+			clock-names = "extperiph2", "pllp_grtba";
+			mclk = "extperiph2";
+			clock-frequency = <0x16e3600>;
+			linux,phandle = <0x187>;
+			phandle = <0x187>;
+			status = "okay";
+
+			mode0 {
+				tegra_sinterface = "serial_c";
+				pix_clk_hz = "54000000";
+				active_h = "480";
+				active_w = "1280";
+				line_length = "1280";
+				discontinuous_clk = "no";
+				num_lanes = "1";
+				phy_mode = "DPHY";
+				mode_type = "yuv";
+				pixel_phase = "yuyv";
+				csi_pixel_bit_depth = "16";
+
+				framerate_factor = "1000000";
+				min_framerate = "1816577";
+				max_framerate = "30000000";
+				step_framerate = [31 00];
+				default_framerate = "30000000";
+				cil_settletime = [30 00];
+
+				gain_factor = "10";
+				min_gain_val = "10";
+				max_gain_val = "160";
+				step_gain_val = [31 00];
+				default_gain = "10";
+
+				min_hdr_ratio = [31 00];
+				max_hdr_ratio = [31 00];
+				exposure_factor = "1000000";
+				min_exp_time = "34";
+				max_exp_time = "550385";
+				step_exp_time = [31 00];
+				default_exp_time = "33334";
+
+				mclk_khz = "24000";
+				mclk_multiplier = "6.67";
+
+				readout_orientation = "90";
+				dpcm_enable = "false";
+				inherent_gain = [31 00];
+				embedded_metadata_height = [30 00];
+			};
+
+			ports {
+				#address-cells = <0x1>;
+				#size-cells = <0x0>;
+
+				port@0 {
+					reg = <0x0>;
+
+					tnb_tuve_out0: endpoint {
+						status = "okay";
+						port-index = <0x2>;
+						bus-width = <0x1>;
+						remote-endpoint = <&tnb_tuve_csi_in0>;
+					};
+				};
+			};
+		};
+	};
+
+	host1x {
+		vi@15c10000  {
+			num-channels = <1>;
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				vi_port0: port@0 {
+					reg = <0>;
+					tnb_tuve_vi_in0: endpoint {
+						port-index = <2>;
+						bus-width = <1>;
+						remote-endpoint = <&tnb_tuve_csi_out0>;
+					};
+				};
+			};
+		};
+
+		nvcsi@15a00000 {
+			num-channels = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			csi_chan0: channel@0 {
+				reg = <0>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					csi_chan0_port0: port@0 {
+						reg = <0>;
+						tnb_tuve_csi_in0: endpoint@0 {
+							port-index = <2>;
+							bus-width = <1>;
+							remote-endpoint = <&tnb_tuve_out0>;
+						};
+					};
+					csi_chan0_port1: port@1 {
+						reg = <1>;
+						tnb_tuve_csi_out0: endpoint@1 {
+							remote-endpoint = <&tnb_tuve_vi_in0>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	cam_i2cmux {
+		status = "disabled";
+
+		i2c@0 {
+			status = "disabled";
+
+			rbpcv2_imx219_a@10 {
+				status = "disabled";
+			};
+		};
+
+		i2c@1 {
+			status = "disabled";
+
+			rbpcv2_imx219_c@10 {
+				status = "disabled";
+			};
+		};
+	};
+
+	tegra-camera-platform {
+		num_csi_lanes = <0x1>;
+
+		modules {
+			module0 {
+				badge = "tnb_front_tuvi";
+				position = "front";
+				orientation = [31 00];
+
+				drivernode0 {
+					pcl_id = "v4l2_sensor";
+					devname = "ov5693 2-0036";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/ov5693_c@36";
+				};
+
+				drivernode1 {
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/lens_imx219@RBPCV2/";
+				};
+			};
+		};
+	};
+
+};
+
