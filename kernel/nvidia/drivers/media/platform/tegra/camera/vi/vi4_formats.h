@@ -147,6 +147,10 @@ static const struct tegra_video_format vi4_video_formats[] = {
 				YUV422_8, YUYV, "YUV 4:2:2 YUYV"),
 	TEGRA_VIDEO_FORMAT(YUV422, 16, YVYU8_2X8, 2, 1, T_Y8_V8__Y8_U8,
 				YUV422_8, YVYU, "YUV 4:2:2 YVYU"),
+
+	/* YUV420 */
+	TEGRA_VIDEO_FORMAT(YUV420, 12, UYYVYY8_0_5X24, 1, 1, T_Y8__V8U8_N420,
+				YUV420_8, NV12, "NV12"),
 };
 
 #endif

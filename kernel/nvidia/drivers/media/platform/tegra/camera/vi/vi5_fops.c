@@ -52,6 +52,7 @@ static const struct vi_capture_setup default_setup = {
 	| CAPTURE_CHANNEL_FLAG_RAW
 	| CAPTURE_CHANNEL_FLAG_EMBDATA
 	| CAPTURE_CHANNEL_FLAG_LINETIMER
+	| CAPTURE_CHANNEL_FLAG_SEMI_PLANAR
 	,
 
 	.vi_channel_mask = ~0ULL,
@@ -314,6 +315,12 @@ static void vi5_setup_surface(struct tegra_channel *chan,
 	desc_memoryinfo->surface[0].base_address = offset;
 	desc_memoryinfo->surface[0].size = chan->format.bytesperline * height;
 	desc->ch_cfg.atomp.surface_stride[0] = bpl;
+ 
+	if (format == TEGRA_IMAGE_FORMAT_T_Y8__U8V8_N420 || format == TEGRA_IMAGE_FORMAT_T_Y8__V8U8_N420) {
+		desc_memoryinfo->surface[1].base_address = offset + chan->format.bytesperline * height;
+		desc_memoryinfo->surface[1].size = chan->format.bytesperline * height;
+		desc->ch_cfg.atomp.surface_stride[1] = bpl;
+	}
 
 	if (chan->embedded_data_height > 0) {
 		desc->ch_cfg.embdata_enable = 1;

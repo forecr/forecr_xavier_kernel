@@ -284,6 +284,9 @@ static void tegra_channel_update_format(struct tegra_channel *chan,
 
 	if (fourcc == V4L2_PIX_FMT_NV16)
 		chan->format.sizeimage *= 2;
+
+	if (fourcc == V4L2_PIX_FMT_NV12)
+		chan->format.sizeimage = (chan->format.sizeimage * 3 / 2);
 }
 
 static void tegra_channel_fmts_bitmap_init(struct tegra_channel *chan)
@@ -1933,6 +1936,9 @@ __tegra_channel_try_format(struct tegra_channel *chan,
 			pix->bytesperline, pix->height);
 	if (chan->fmtinfo->fourcc == V4L2_PIX_FMT_NV16)
 		pix->sizeimage *= 2;
+
+	if (chan->fmtinfo->fourcc == V4L2_PIX_FMT_NV12)
+		pix->sizeimage = (pix->sizeimage * 3 / 2);
 
 	return ret;
 }
