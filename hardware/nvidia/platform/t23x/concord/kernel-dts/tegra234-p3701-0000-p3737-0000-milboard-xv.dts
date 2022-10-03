@@ -19,8 +19,6 @@
 #include "tegra234-power-tree-p3701-0000-p3737-0000.dtsi"
 #include "tegra234-dcb-p3701-0000-a02-p3737-0000-a01_hdmi.dtsi"
 #include <tegra234-soc/mods-simple-bus.dtsi>
-//#include "cvb/tegra234-p3737-camera-modules.dtsi"
-#include "cvb/tegra234-p3737-0000-camera-dsboard-xv2-a00.dtsi"
 
 #include <t234-common-cvm/tegra234-thermal.dtsi>
 #include <t234-common-cvm/tegra234-thermal-cooling.dtsi>
@@ -33,6 +31,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Orin for MILBOARD-XV";
 
 	compatible = "nvidia,p3737-0000+p3701-0000", "nvidia,p3737-0000+p3701-0004", "nvidia,tegra234", "nvidia,tegra23x";
 
@@ -58,23 +57,14 @@
 				/delete-node/ port;
 			};
 		};
-		pcf8574a: gpio@38 {
-			compatible = "nxp,pcf8574a";
-			reg = <0x38>;
-			gpio-controller;
-			#gpio-cells = <2>;
-			/*
-			pcf8574a_outlow {
-				gpio-hog;
-				gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
-				output-low;
-			};
-			*/
-		};
 	};
 
-	serial@3110000 {
-		status = "okay";
+	pcie@141a0000 {
+		nvidia,max-speed = <2>;
+	};
+
+	pcie_ep@141a0000 {
+		nvidia,max-speed = <2>;
 	};
 
 	/* PCIe x8 (C7) */

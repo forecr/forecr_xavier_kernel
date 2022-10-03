@@ -46,3 +46,12 @@
 	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-milboard-xv-0000.dtb $HOME/kernel_out_milboard_xv_agxi/tegra194-p2888-0008-p2822-0000.dtb
 
 
+# For MILBOARD_XV with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_xv_agx_orin
+	cp $HOME/kernel_out_milboard_xv/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_xv_agx_orin/
+	echo "Linux_for_Tegra/rootfs/usr/lib/modules/\$(uname -r)/kernel/drivers/gpu/nvgpu/nvgpu.ko" > $HOME/kernel_out_milboard_xv_agx_orin/mv_nvgpu_ko.txt
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agx_orin/Image 
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-milboard-xv.dtb $HOME/kernel_out_milboard_xv_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+
+
+
