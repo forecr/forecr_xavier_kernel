@@ -77,5 +77,22 @@
 	};
 #endif
 
+	spi@3210000{
+		status = "okay";
+		nvidia,clock-always-on;
+		spi@0 {
+			status = "okay";
+			compatible = "spidev";
+			reg = <0x0>;
+			spi-max-frequency = <20000000>;
+			nvidia,enable-hw-based-cs;
+			nvidia,enable-hw-based-cs;
+			nvidia,cs-setup-clk-count = <0x1e>;
+			nvidia,cs-hold-clk-count = <0x1e>;
+			nvidia,rx-clk-tap-delay = <0x1f>;
+			nvidia,tx-clk-tap-delay = <0x0>;
+		};
+	};
+
 };
 
