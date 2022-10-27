@@ -19,6 +19,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Xavier for DSBOARD-XV";
 
 	ether_qos@2490000 {
 		mdio {
