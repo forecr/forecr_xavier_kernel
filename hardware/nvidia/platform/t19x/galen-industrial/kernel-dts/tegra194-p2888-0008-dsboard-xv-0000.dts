@@ -22,7 +22,7 @@
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 
 	compatible = "nvidia,jetson-xavier-industrial", "nvidia,tegra194";
-	model = "Jetson-AGXi";
+	model = "Jetson AGXi for DSBOARD-XV";
 
 	sce@b000000 {
 		status = "okay";
