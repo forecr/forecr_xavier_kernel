@@ -2417,7 +2417,7 @@ void serialxr_unregister_port(int line)
 	mutex_unlock(&serial_mutex);
 }
 
-void pciserial_remove_ports(struct serial_private *priv)
+void pciserial_remove_ports_xr17v35x(struct serial_private *priv)
 {
 	struct pci_serial_quirk *quirk;
 	int i;
@@ -2452,7 +2452,7 @@ static void __devexit remove_one_xrpciserialcard(struct pci_dev *dev)
 
 	pci_set_drvdata(dev, NULL);
 
-	pciserial_remove_ports(priv);
+	pciserial_remove_ports_xr17v35x(priv);
 
 	pci_disable_device(dev);
 }
