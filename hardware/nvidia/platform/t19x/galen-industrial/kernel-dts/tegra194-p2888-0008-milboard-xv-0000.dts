@@ -24,6 +24,19 @@
 	compatible = "nvidia,jetson-xavier-industrial", "nvidia,tegra194";
 	model = "Jetson AGXi for MILBOARD-XV";
 
+	/*
+	bpmp_i2c {
+		spmic@3c {
+			backup-battery {
+				status = "okay";
+				backup-battery-charging-current = <800>;
+				backup-battery-charging-voltage = <3000000>;
+				backup-battery-output-resister = <100>;
+			};
+		};
+	};
+	*/
+
 	sce@b000000 {
 		status = "okay";
 		hsp {
