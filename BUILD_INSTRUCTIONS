@@ -13,6 +13,10 @@ make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv -j$(($(nproc)-1))
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 dsboard_xv2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 -j$(($(nproc)-1))
 
+#DSBOARD_AGX for AGX Xavier
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx dsboard_agx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx -j$(($(nproc)-1))
+
 #DSBOARD_NX2 for Xavier NX
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
