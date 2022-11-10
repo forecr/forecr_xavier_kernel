@@ -32,6 +32,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Orin for DSBOARD-AGX";
 
 	compatible = "nvidia,p3737-0000+p3701-0004", "nvidia,tegra234", "nvidia,tegra23x";
 
