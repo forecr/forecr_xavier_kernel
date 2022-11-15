@@ -19,7 +19,8 @@
 #include "tegra234-power-tree-p3701-0000-p3737-0000.dtsi"
 #include "tegra234-dcb-p3701-0000-a02-p3737-0000-a01_hdmi.dtsi"
 #include <tegra234-soc/mods-simple-bus.dtsi>
-#include "cvb/tegra234-p3737-camera-modules.dtsi"
+//#include "cvb/tegra234-p3737-camera-modules.dtsi"
+#include "cvb/tegra234-p3737-0000-camera-imx185-a00.dtsi"
 
 #include <t234-common-cvm/tegra234-cpuidle.dtsi>
 #include <t234-common-cvm/tegra234-thermal.dtsi>
