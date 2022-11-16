@@ -56,6 +56,13 @@ enum tegra_image_dt {
 	TEGRA_IMAGE_DT_RAW10,
 	TEGRA_IMAGE_DT_RAW12,
 	TEGRA_IMAGE_DT_RAW14,
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+    TEGRA_IMAGE_DT_ARB_DT1 = 48,
+    TEGRA_IMAGE_DT_ARB_DT2,
+    TEGRA_IMAGE_DT_ARB_DT3,
+    TEGRA_IMAGE_DT_ARB_DT4,
+#endif
 };
 
 /* Supported CSI to VI Data Formats */

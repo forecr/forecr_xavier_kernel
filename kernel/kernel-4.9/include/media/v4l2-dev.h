@@ -242,6 +242,12 @@ struct video_device
 	u16 num;
 	unsigned long flags;
 	int index;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	char if_name[32];
+	char bus_info[32];
+	char flush;
+	int open_count;
+#endif
 
 	/* V4L2 file handles */
 	spinlock_t		fh_lock;

@@ -410,6 +410,24 @@ static int tegra_vi_graph_notify_complete(struct v4l2_async_notifier *notifier)
 
 	chan->link_status++;
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	if (chan->subdev_on_csi->flags & V4L2_SUBDEV_FL_IS_I2C) {
+		struct i2c_client *client = v4l2_get_subdevdata(chan->subdev_on_csi);
+		/* libcsi library requires this format,
+		 * hence doubled adapter number
+		 */
+		sprintf(chan->video->bus_info, "%d:%d:%x",
+				client->adapter->nr,
+				client->adapter->nr,
+				client->addr);
+	}
+
+	/* libcsi library requires interface with number 1,
+	 * this may be subject to change in future
+	 */
+	sprintf(chan->video->if_name, "avt_csi2_if%d", chan->port[0] + 1);
+#endif
+
 	return 0;
 
 graph_error:

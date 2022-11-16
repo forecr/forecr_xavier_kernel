@@ -93,6 +93,17 @@ static void csi4_stream_init(struct tegra_csi_channel *chan, int csi_port)
 	csi4_stream_write(chan, csi_port, ERR_INTR_MASK, 0x0);
 }
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static void csi4_bypass_datatype(struct tegra_csi_channel *chan, int port_idx)
+{
+	if(chan->bypass_dt)
+		csi4_stream_write(chan, port_idx, VC0_DT_OVERRIDE,
+			CFG_VC0_DT_OVERRIDE_EN | 0x22);
+	else
+		csi4_stream_write(chan, port_idx, VC0_DT_OVERRIDE, 0);
+}
+#endif
+
 static void csi4_stream_config(struct tegra_csi_channel *chan, int port_idx)
 {
 	struct tegra_csi_device *csi = chan->csi;
@@ -104,7 +115,11 @@ static void csi4_stream_config(struct tegra_csi_channel *chan, int port_idx)
 	csi4_stream_write(chan, port_idx, PH_CHK_CTRL,
 			CFG_PH_CRC_CHK_EN | CFG_PH_ECC_CHK_EN);
 	csi4_stream_write(chan, port_idx, VC0_DPCM_CTRL, 0);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	csi4_bypass_datatype(chan, port_idx);
+#else
 	csi4_stream_write(chan, port_idx, VC0_DT_OVERRIDE, 0);
+#endif
 
 	val = csi4_stream_read(chan, port_idx, VC0_DPCM_CTRL);
 	dev_dbg(csi->dev, "%s (%d) read VC0_DPCM_CTRL = %08x\n",
@@ -352,28 +367,48 @@ static void csi4_stream_check_status(struct tegra_csi_channel *chan,
 	dev_dbg(csi->dev, "%s\n", __func__);
 	if (!chan->pg_mode) {
 		status = csi4_stream_read(chan, port_idx, ERROR_STATUS2VI_VC0);
-		if (status)
+		if (status) {
 			dev_err(csi->dev,
 				"%s (%d) ERROR_STATUS2VI_VC0 = 0x%08x\n",
 				__func__, port_idx, status);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+			if (status & PD_CRC_ERR_VC0)
+				chan->packet_crc_error++;
+#endif
+		}
 
 		status = csi4_stream_read(chan, port_idx, ERROR_STATUS2VI_VC1);
-		if (status)
+		if (status) {
 			dev_err(csi->dev,
 				"%s (%d) ERROR_STATUS2VI_VC1 = 0x%08x\n",
 				__func__, port_idx, status);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+			if (status & PD_CRC_ERR_VC0)
+				chan->packet_crc_error++;
+#endif
+		}
 
 		status = csi4_stream_read(chan, port_idx, ERROR_STATUS2VI_VC2);
-		if (status)
+		if (status) {
 			dev_err(csi->dev,
 				"%s (%d) ERROR_STATUS2VI_VC2 = 0x%08x\n",
 				__func__, port_idx, status);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+			if (status & PD_CRC_ERR_VC0)
+				chan->packet_crc_error++;
+#endif
+		}
 
 		status = csi4_stream_read(chan, port_idx, ERROR_STATUS2VI_VC3);
-		if (status)
+		if (status) {
 			dev_err(csi->dev,
 				"%s (%d) ERROR_STATUS2VI_VC2 = 0x%08x\n",
 				__func__, port_idx, status);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+			if (status & PD_CRC_ERR_VC0)
+				chan->packet_crc_error++;
+#endif
+		}
 	}
 
 	status = csi4_stream_read(chan, port_idx, INTR_STATUS);
@@ -689,6 +724,9 @@ struct tegra_csi_fops csi4_fops = {
 	.csi_stop_streaming = csi4_stop_streaming,
 	.csi_override_format = csi4_override_format,
 	.csi_error_recover = csi4_error_recover,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	.csi_check_status = csi4_stream_check_status,
+#endif
 	.mipical = csi4_mipi_cal,
 	.hw_init = csi4_hw_init,
 };

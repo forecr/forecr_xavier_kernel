@@ -462,7 +462,11 @@ static int rvin_cropcap(struct file *file, void *priv,
 	if (crop->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	return v4l2_subdev_call(sd, video, cropcap, crop);
+#else
 	return v4l2_subdev_call(sd, video, g_pixelaspect, &crop->pixelaspect);
+#endif
 }
 
 static int rvin_enum_input(struct file *file, void *priv,

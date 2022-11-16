@@ -157,6 +157,11 @@
 
 #define DT_OVERRIDE					0x02c
 #define OVRD_DT						(0x3f << 1)
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+#define OVRD_DT_SHIFT				1
+#endif
+
 #define DT_OVRD_EN					(0x1 << 0)
 
 #define FRAME_X						0x030

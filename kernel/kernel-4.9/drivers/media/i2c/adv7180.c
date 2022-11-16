@@ -763,6 +763,23 @@ static int adv7180_g_mbus_config(struct v4l2_subdev *sd,
 	return 0;
 }
 
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static int adv7180_cropcap(struct v4l2_subdev *sd, struct v4l2_cropcap *cropcap)
+{
+	struct adv7180_state *state = to_state(sd);
+
+	if (state->curr_norm & V4L2_STD_525_60) {
+		cropcap->pixelaspect.numerator = 11;
+		cropcap->pixelaspect.denominator = 10;
+	} else {
+		cropcap->pixelaspect.numerator = 54;
+		cropcap->pixelaspect.denominator = 59;
+	}
+
+	return 0;
+}
+#else
 static int adv7180_g_pixelaspect(struct v4l2_subdev *sd, struct v4l2_fract *aspect)
 {
 	struct adv7180_state *state = to_state(sd);
@@ -777,6 +794,7 @@ static int adv7180_g_pixelaspect(struct v4l2_subdev *sd, struct v4l2_fract *aspe
 
 	return 0;
 }
+#endif
 
 static int adv7180_g_tvnorms(struct v4l2_subdev *sd, v4l2_std_id *norm)
 {
@@ -825,7 +843,11 @@ static const struct v4l2_subdev_video_ops adv7180_video_ops = {
 	.g_input_status = adv7180_g_input_status,
 	.s_routing = adv7180_s_routing,
 	.g_mbus_config = adv7180_g_mbus_config,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	.cropcap = adv7180_cropcap,
+#else
 	.g_pixelaspect = adv7180_g_pixelaspect,
+#endif
 	.g_tvnorms = adv7180_g_tvnorms,
 	.s_stream = adv7180_s_stream,
 };

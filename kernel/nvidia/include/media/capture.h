@@ -156,6 +156,9 @@ int vi_capture_request(struct tegra_vi_channel *chan,
 		struct vi_capture_req *req);
 int vi_capture_status(struct tegra_vi_channel *chan,
 		int32_t timeout_ms);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int vi_stop_waiting(struct tegra_vi_channel *chan);
+#endif
 int vi_capture_set_compand(struct tegra_vi_channel *chan,
 		struct vi_capture_compand *compand);
 long vi_capture_ioctl(struct file *file, void *fh,

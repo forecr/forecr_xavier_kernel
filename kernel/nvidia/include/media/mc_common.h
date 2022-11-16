@@ -35,6 +35,10 @@
 #include <linux/semaphore.h>
 #include <linux/rwsem.h>
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+#include <uapi/linux/libcsi_ioctl.h>
+#endif
+
 #define MAX_FORMAT_NUM	64
 #define	MAX_SUBDEVICES	4
 #define	QUEUED_BUFFERS	4
@@ -47,6 +51,10 @@
 
 #define TEGRA_MEM_FORMAT 0
 #define TEGRA_ISP_FORMAT 1
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+#define CAPTURE_TIMEOUT_MS	12000
+#endif
 
 enum channel_capture_state {
 	CAPTURE_IDLE = 0,
@@ -263,6 +271,23 @@ struct tegra_channel {
 
 	atomic_t syncpt_depth;
 	struct rw_semaphore reset_lock;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	struct v4l2_stats_t stream_stats;
+	uint64_t qbuf_count;
+	uint64_t dqbuf_count;
+	bool incomplete_flag;
+
+	bool trigger_mode;
+	bool pending_trigger;
+	uint64_t start_frame_jiffies;
+	unsigned int avt_cam_mode;
+	int created_bufs;
+    struct v4l2_pix_format prev_format;
+    atomic_t stop_streaming;
+
+	bool bypass_dt;
+#endif
 };
 
 #define to_tegra_channel(vdev) \
@@ -382,6 +407,11 @@ int tegra_channel_write_blobs(struct tegra_channel *chan);
 void tegra_channel_ring_buffer(struct tegra_channel *chan,
 			       struct vb2_v4l2_buffer *vb,
 			       struct timespec *ts, int state);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+void tegra_channel_update_statistics(struct tegra_channel *chan);
+#endif
+
 struct tegra_channel_buffer *dequeue_buffer(struct tegra_channel *chan,
 	bool requeue);
 struct tegra_channel_buffer *dequeue_dequeue_buffer(struct tegra_channel *chan);
@@ -428,6 +458,12 @@ struct tegra_csi_fops {
 		int port_idx);
 	void (*csi_override_format)(struct tegra_csi_channel *chan,
 		int port_idx);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	void (*csi_check_status)(struct tegra_csi_channel *chan,
+		int port_idx);
+#endif
+
 	int (*csi_error_recover)(struct tegra_csi_channel *chan, int port_idx);
 	int (*mipical)(struct tegra_csi_channel *chan);
 	int (*hw_init)(struct tegra_csi_device *csi);

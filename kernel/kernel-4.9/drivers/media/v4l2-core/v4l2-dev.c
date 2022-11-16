@@ -31,6 +31,10 @@
 #include <media/v4l2-device.h>
 #include <media/v4l2-ioctl.h>
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+#include <media/videobuf2-core.h>
+#endif
+
 #define VIDEO_NUM_DEVICES	256
 #define VIDEO_NAME              "video4linux"
 
@@ -80,10 +84,68 @@ static ssize_t name_show(struct device *cd,
 }
 static DEVICE_ATTR_RO(name);
 
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static ssize_t if_name_show(struct device *cd,
+		struct device_attribute *attr, char *buf)
+{
+	struct video_device *vdev = to_video_device(cd);
+
+	return sprintf(buf, "%s\n", vdev->if_name);
+}
+static DEVICE_ATTR_RO(if_name);
+
+static ssize_t bus_info_show(struct device *cd,
+		struct device_attribute *attr, char *buf)
+{
+	struct video_device *vdev = to_video_device(cd);
+
+	return sprintf(buf, "%s\n", vdev->bus_info);
+}
+static DEVICE_ATTR_RO(bus_info);
+
+static ssize_t flush_show(struct device *cd,
+		struct device_attribute *attr, char *buf)
+{
+	struct video_device *vdev = to_video_device(cd);
+
+	return sprintf(buf, "%s\n", &vdev->flush);
+}
+static DEVICE_ATTR_RO(flush);
+
+static ssize_t availability_show(struct device *cd,
+				 struct device_attribute *attr,
+				 char *buf)
+{
+	struct video_device *vdev = to_video_device(cd);
+
+	return sprintf(buf, "%d\n", vdev->open_count > 0 ? 0 : 1);
+}
+static DEVICE_ATTR_RO(availability);
+
+static ssize_t streamoff_show(struct device *cd,
+			struct device_attribute *attr, char *buf)
+{
+	struct video_device *vdev = to_video_device(cd);
+	struct vb2_queue *q = vdev->queue;
+
+	return sprintf(buf, "%d\n", q->streamoff_state);
+}
+static DEVICE_ATTR_RO(streamoff);
+#endif
+
 static struct attribute *video_device_attrs[] = {
 	&dev_attr_name.attr,
 	&dev_attr_dev_debug.attr,
 	&dev_attr_index.attr,
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	&dev_attr_if_name.attr,
+	&dev_attr_bus_info.attr,
+	&dev_attr_flush.attr,
+	&dev_attr_availability.attr,
+	&dev_attr_streamoff.attr,
+#endif
 	NULL,
 };
 ATTRIBUTE_GROUPS(video_device);
@@ -419,6 +481,12 @@ static int v4l2_open(struct inode *inode, struct file *filp)
 	}
 	/* and increase the device refcount */
 	video_get(vdev);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	if (vdev->open_count++ == 0) {
+		sysfs_notify(&vdev->dev.kobj, NULL, "availability");
+	}
+#endif
 	mutex_unlock(&videodev_lock);
 	if (vdev->fops->open) {
 		if (video_is_registered(vdev))
@@ -430,9 +498,18 @@ static int v4l2_open(struct inode *inode, struct file *filp)
 	if (vdev->dev_debug & V4L2_DEV_DEBUG_FOP)
 		printk(KERN_DEBUG "%s: open (%d)\n",
 			video_device_node_name(vdev), ret);
+
 	/* decrease the refcount in case of an error */
-	if (ret)
+	if (ret) {
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		mutex_lock(&videodev_lock);
+		if (--vdev->open_count == 0) {
+			sysfs_notify(&vdev->dev.kobj, NULL, "availability");
+		}
+		mutex_unlock(&videodev_lock);
+#endif
 		video_put(vdev);
+	}
 	return ret;
 }
 
@@ -447,6 +524,14 @@ static int v4l2_release(struct inode *inode, struct file *filp)
 	if (vdev->dev_debug & V4L2_DEV_DEBUG_FOP)
 		printk(KERN_DEBUG "%s: release\n",
 			video_device_node_name(vdev));
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	mutex_lock(&videodev_lock);
+	if (--vdev->open_count == 0) {
+		sysfs_notify(&vdev->dev.kobj, NULL, "availability");
+	}
+	mutex_unlock(&videodev_lock);
+#endif
 
 	/* decrease the refcount unconditionally since the release()
 	   return value is ignored. */

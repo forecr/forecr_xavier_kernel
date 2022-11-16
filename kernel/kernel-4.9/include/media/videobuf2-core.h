@@ -529,9 +529,16 @@ struct vb2_queue {
 
 	struct device			*alloc_devs[VB2_MAX_PLANES];
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	unsigned int			streamoff_state;
+#endif
+
 	unsigned int			streaming:1;
 	unsigned int			start_streaming_called:1;
 	unsigned int			error:1;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	unsigned int			buffer_error:1;
+#endif
 	unsigned int			waiting_for_buffers:1;
 	unsigned int			is_multiplanar:1;
 	unsigned int			is_output:1;
@@ -673,6 +680,10 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
  * @count: requested buffer count
  * @requested_planes: number of planes requested
  * @requested_sizes: array with the size of the planes
+ ** #if defined(CONFIG_VIDEO_AVT_CSI2)
+ * @req_index - true if specific index needs to be requested
+ * @index - number of requested index, only valid if req_index is true
+ ** #endif
  *
  * Should be called from VIDIOC_CREATE_BUFS() ioctl handler of a driver.
  * This function:
@@ -684,9 +695,20 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
  * Return: the return values from this function are intended to be directly
  * returned from VIDIOC_CREATE_BUFS() handler in driver.
  */
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+		unsigned int *count, unsigned requested_planes,
+		const unsigned requested_sizes[], bool req_index, int index);
+
+int vb2_core_create_single_buf(struct vb2_queue *q, enum vb2_memory memory,
+		unsigned int *count, unsigned requested_planes,
+		const unsigned requested_sizes[], bool req_index, int index);
+#else
 int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
 			 unsigned int *count, unsigned int requested_planes,
 			 const unsigned int requested_sizes[]);
+#endif
 
 /**
  * vb2_core_prepare_buf() - Pass ownership of a buffer from userspace
@@ -758,6 +780,10 @@ int vb2_core_dqbuf(struct vb2_queue *q, unsigned int *pindex, void *pb,
 
 int vb2_core_streamon(struct vb2_queue *q, unsigned int type);
 int vb2_core_streamoff(struct vb2_queue *q, unsigned int type);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int vb2_core_streamon_ex(struct vb2_queue *q, unsigned int type);
+int vb2_core_streamoff_ex(struct vb2_queue *q, unsigned int type, __u32 timeout);
+#endif
 
 /**
  * vb2_core_expbuf() - Export a buffer as a file descriptor
@@ -797,6 +823,10 @@ int vb2_core_queue_init(struct vb2_queue *q);
  * the vb2_queue structure itself.
  */
 void vb2_core_queue_release(struct vb2_queue *q);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+void vb2_core_queue_cancel(struct vb2_queue *q);
+#endif
 
 /**
  * vb2_queue_error() - signal a fatal error on the queue

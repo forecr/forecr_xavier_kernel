@@ -69,13 +69,22 @@ struct nvhost_syncpt {
 	struct nvhost_syncpt_attr invalid_syncpt_type_attr;
 	struct nvhost_syncpt_attr invalid_assigned_attr;
 #endif
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	atomic_t *stop_stream_called;
+	u32 stream_id;
+#endif
 };
 
 int nvhost_syncpt_init(struct platform_device *, struct nvhost_syncpt *);
 void nvhost_syncpt_deinit(struct nvhost_syncpt *);
 
 #define syncpt_to_dev(sp) container_of(sp, struct nvhost_master, syncpt)
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+#define SYNCPT_CHECK_PERIOD (20 * HZ)
+#else
 #define SYNCPT_CHECK_PERIOD (6 * HZ)
+#endif
 #define SYNCPT_POLL_PERIOD 1 /* msecs */
 #define MAX_STUCK_CHECK_COUNT 15
 

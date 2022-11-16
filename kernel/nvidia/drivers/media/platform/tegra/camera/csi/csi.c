@@ -949,6 +949,11 @@ static int tegra_csi_channel_init_one(struct tegra_csi_channel *chan)
 			media_entity_cleanup(&sd->entity);
 		}
 	}
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	chan->packet_crc_error = 0;
+#endif
+
 	return ret;
 }
 

@@ -15,7 +15,7 @@
 
 /dts-v1/;
 #include "common/tegra194-p3668-common.dtsi"
-#include "common/tegra194-p3509-0000-a00.dtsi"
+#include "common/tegra194-p3509-0000-a00-avt.dtsi"
 
 #undef CAM_I2C_MUX
 #define CAM_I2C_MUX 	TEGRA194_MAIN_GPIO(Q, 6)
@@ -23,7 +23,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
-	model = "Jetson Xavier NX for DSBOARD-NX2 (rev-1.21; 1.1 & 1.0)";
+	model = "Jetson Xavier NX for DSBOARD-NX2 (rev-1.22)";
 
 	compatible = "nvidia,p3449-0000+p3668-0000", "nvidia,p3449-0000+p3668-0001", "nvidia,p3509-0000+p3668-0000", "nvidia,p3509-0000+p3668-0001", "nvidia,tegra194";
 
@@ -31,12 +31,14 @@
 		pcf8574a: gpio@38 {
 			compatible = "nxp,pcf8574a";
 			reg = <0x38>;
-			//interrupt-parent = <&irqpin2>;
-			//interrupts = <3 0>;
 			gpio-controller;
 			#gpio-cells = <2>;
-			//interrupt-controller;
-			//#interrupt-cells = <2>;
+
+			pcf8574a_outlow {
+				gpio-hog;
+				gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				output-low;
+			};
 		};
 	};
 
@@ -49,14 +51,9 @@
 	};
 
 	sdhci@3440000 {
-		cd-gpios = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Q, 2) 0>;
 		nvidia,vmmc-always-on;
 		disable-wp;
 		status = "okay";
-	};
-
-	pwm-fan {
-		status = "disabled";
 	};
 
 	gpio@c2f0000 {
@@ -85,5 +82,6 @@
 			nvidia,tx-clk-tap-delay = <0x0>;
 		};
 	};
+
 };
 

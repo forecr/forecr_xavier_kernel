@@ -329,7 +329,11 @@ static void __setup_offsets(struct vb2_buffer *vb)
  */
 static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
 			     unsigned int num_buffers, unsigned int num_planes,
-			     const unsigned plane_sizes[VB2_MAX_PLANES])
+			     const unsigned plane_sizes[VB2_MAX_PLANES]
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+			     , bool req_index, int index
+#endif
+			     )
 {
 	unsigned int buffer, plane;
 	struct vb2_buffer *vb;
@@ -350,7 +354,11 @@ static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
 		vb->state = VB2_BUF_STATE_DEQUEUED;
 		vb->vb2_queue = q;
 		vb->num_planes = num_planes;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		vb->index = req_index ? index + buffer : q->num_buffers + buffer;
+#else
 		vb->index = q->num_buffers + buffer;
+#endif
 		vb->type = q->type;
 		vb->memory = memory;
 		for (plane = 0; plane < num_planes; ++plane) {
@@ -416,6 +424,24 @@ static void __vb2_free_mem(struct vb2_queue *q, unsigned int buffers)
 			__vb2_buf_userptr_put(vb);
 	}
 }
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static void __vb2_free_mem_single(struct vb2_queue *q, unsigned int index)
+{
+	struct vb2_buffer *vb;
+
+	vb = q->bufs[index];
+	if (!vb)
+		return;
+
+	if (q->memory == VB2_MEMORY_MMAP)
+		__vb2_buf_mem_free(vb);
+	else if (q->memory == VB2_MEMORY_DMABUF)
+		__vb2_buf_dmabuf_put(vb);
+	else
+		__vb2_buf_userptr_put(vb);
+}
+#endif
 
 /**
  * __vb2_queue_free() - free buffers at the end of the queue - video memory and
@@ -532,6 +558,46 @@ static int __vb2_queue_free(struct vb2_queue *q, unsigned int buffers)
 	}
 	return 0;
 }
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int vb2_buffer_free(struct vb2_queue *q, unsigned int index)
+{
+	struct vb2_buffer *vb = q->bufs[index];
+
+	/*
+	 * Sanity check: when preparing a buffer the queue lock is released for
+	 * a short while (see __buf_prepare for the details), which would allow
+	 * a race with a reqbufs which can call this function. Removing the
+	 * buffers from underneath __buf_prepare is obviously a bad idea, so we
+	 * check if any of the buffers is in the state PREPARING, and if so we
+	 * just return -EAGAIN.
+	 */
+	if (q->bufs[index] == NULL)
+			return -EINVAL;
+
+	if (q->bufs[index]->state == VB2_BUF_STATE_PREPARING) {
+		dprintk(1, "preparing buffers, cannot free\n");
+		return -EAGAIN;
+	}
+
+	if (vb && vb->planes[0].mem_priv)
+		call_void_vb_qop(vb, buf_cleanup, vb);
+
+	/* Release video buffer memory */
+	__vb2_free_mem_single(q, index);
+
+	kfree(q->bufs[index]);
+	q->bufs[index] = NULL;
+
+	q->num_buffers--;
+	if (!q->num_buffers) {
+		q->memory = 0;
+		INIT_LIST_HEAD(&q->queued_list);
+	}
+	return 0;
+}
+EXPORT_SYMBOL_GPL(vb2_buffer_free);
+#endif
 
 bool vb2_buffer_in_use(struct vb2_queue *q, struct vb2_buffer *vb)
 {
@@ -719,7 +785,11 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
 
 	/* Finally, allocate buffers and video memory */
 	allocated_buffers =
-		__vb2_queue_alloc(q, memory, num_buffers, num_planes, plane_sizes);
+		__vb2_queue_alloc(q, memory, num_buffers, num_planes, plane_sizes
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		                  , false, 0
+#endif
+		                  );
 	if (allocated_buffers == 0) {
 		dprintk(1, "memory allocation failed\n");
 		return -ENOMEM;
@@ -782,13 +852,87 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
 }
 EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
 
-int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int vb2_core_create_single_buf(struct vb2_queue *q, enum vb2_memory memory,
 		unsigned int *count, unsigned requested_planes,
-		const unsigned requested_sizes[])
+		const unsigned requested_sizes[], bool req_index, int index)
 {
 	unsigned int num_planes = 0, num_buffers, allocated_buffers;
 	unsigned plane_sizes[VB2_MAX_PLANES] = { };
 	int ret;
+
+	if (req_index && q->num_buffers > index)
+		return 0;
+
+	if (q->num_buffers == VB2_MAX_FRAME) {
+		dprintk(1, "maximum number of buffers already allocated\n");
+		return -ENOBUFS;
+	}
+
+	if (!q->num_buffers) {
+		memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
+		q->memory = memory;
+		q->waiting_for_buffers = !q->is_output;
+	}
+
+	num_buffers = min(*count, VB2_MAX_FRAME - q->num_buffers);
+
+	if (requested_planes && requested_sizes) {
+		num_planes = requested_planes;
+		memcpy(plane_sizes, requested_sizes, sizeof(plane_sizes));
+	}
+
+	/*
+	 * Ask the driver, whether the requested number of buffers, planes per
+	 * buffer and their sizes are acceptable
+	 */
+	ret = call_qop(q, queue_setup, q, &num_buffers,
+		       &num_planes, plane_sizes, q->alloc_devs);
+	if (ret)
+		return ret;
+
+	/* Finally, allocate buffers and video memory */
+	allocated_buffers = __vb2_queue_alloc(q, memory, *count,
+				num_planes, plane_sizes, req_index, index);
+	if (allocated_buffers == 0) {
+		dprintk(1, "memory allocation failed\n");
+		return -ENOMEM;
+	}
+	mutex_lock(&q->mmap_lock);
+	q->num_buffers += allocated_buffers;
+
+	if (ret < 0) {
+		/*
+		 * Note: __vb2_queue_free() will subtract 'allocated_buffers'
+		 * from q->num_buffers.
+		 */
+		__vb2_queue_free(q, allocated_buffers);
+		mutex_unlock(&q->mmap_lock);
+		return -ENOMEM;
+	}
+	mutex_unlock(&q->mmap_lock);
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(vb2_core_create_single_buf);
+#endif
+
+int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+		unsigned int *count, unsigned requested_planes,
+		const unsigned requested_sizes[]
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		, bool req_index, int index
+#endif
+		)
+{
+	unsigned int num_planes = 0, num_buffers, allocated_buffers;
+	unsigned plane_sizes[VB2_MAX_PLANES] = { };
+	int ret;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	if (req_index && q->num_buffers > index)
+		return 0;
+#endif
 
 	if (q->num_buffers == VB2_MAX_FRAME) {
 		dprintk(1, "maximum number of buffers already allocated\n");
@@ -819,7 +963,11 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
 
 	/* Finally, allocate buffers and video memory */
 	allocated_buffers = __vb2_queue_alloc(q, memory, num_buffers,
-				num_planes, plane_sizes);
+				num_planes, plane_sizes
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+				, req_index, index
+#endif
+				);
 	if (allocated_buffers == 0) {
 		dprintk(1, "memory allocation failed\n");
 		return -ENOMEM;
@@ -1459,10 +1607,19 @@ static int __vb2_wait_for_done_vb(struct vb2_queue *q, int nonblocking)
 	for (;;) {
 		int ret;
 
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		//if (!q->streaming) {
+		//	dprintk(1, "streaming off, will not wait for buffers\n");
+		//	pr_err("streaming off, will not wait for buffers\n");
+		//	return -EINVAL;
+		//}
+#else
 		if (!q->streaming) {
 			dprintk(1, "streaming off, will not wait for buffers\n");
 			return -EINVAL;
 		}
+#endif
 
 		if (q->error) {
 			dprintk(1, "Queue in error state, will not wait for buffers\n");
@@ -1603,9 +1760,15 @@ int vb2_core_dqbuf(struct vb2_queue *q, unsigned int *pindex, void *pb,
 	switch (vb->state) {
 	case VB2_BUF_STATE_DONE:
 		dprintk(3, "returning done buffer\n");
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		q->buffer_error = 0;
+#endif
 		break;
 	case VB2_BUF_STATE_ERROR:
 		dprintk(3, "returning done buffer with errors\n");
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		q->buffer_error = 1;
+#endif
 		break;
 	default:
 		dprintk(1, "invalid buffer state\n");
@@ -1638,6 +1801,15 @@ int vb2_core_dqbuf(struct vb2_queue *q, unsigned int *pindex, void *pb,
 }
 EXPORT_SYMBOL_GPL(vb2_core_dqbuf);
 
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+void vb2_core_queue_cancel(struct vb2_queue *q)
+{
+    __vb2_queue_cancel(q);
+}
+EXPORT_SYMBOL_GPL(vb2_core_queue_cancel);
+#endif
+
 /**
  * __vb2_queue_cancel() - cancel and stop (pause) streaming
  *
@@ -1647,6 +1819,9 @@ EXPORT_SYMBOL_GPL(vb2_core_dqbuf);
 static void __vb2_queue_cancel(struct vb2_queue *q)
 {
 	unsigned int i;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	int num_buffers = q->num_buffers;
+#endif
 
 	/*
 	 * Tell driver to stop all transactions and release all queued
@@ -1695,6 +1870,21 @@ static void __vb2_queue_cancel(struct vb2_queue *q)
 	 * call to __fill_user_buffer() after buf_finish(). That order can't
 	 * be changed, so we can't move the buf_finish() to __vb2_dqbuf().
 	 */
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	for (i = 0; i < num_buffers; ++i) {
+		struct vb2_buffer *vb = q->bufs[i];
+
+		if (q->bufs[i] != NULL) {
+			if (vb->state != VB2_BUF_STATE_DEQUEUED) {
+				vb->state = VB2_BUF_STATE_PREPARED;
+				call_void_vb_qop(vb, buf_finish, vb);
+			}
+			__vb2_dqbuf(vb);
+		}
+		else
+			num_buffers++;
+	}
+#else
 	for (i = 0; i < q->num_buffers; ++i) {
 		struct vb2_buffer *vb = q->bufs[i];
 
@@ -1704,11 +1894,97 @@ static void __vb2_queue_cancel(struct vb2_queue *q)
 		}
 		__vb2_dqbuf(vb);
 	}
+#endif
+
 }
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int vb2_core_streamon_ex(struct vb2_queue *q, unsigned int type)
+{
+	int ret;
+	int drv_count = 0;
+
+	drv_count = atomic_read(&q->owned_by_drv_count);
+
+	if (type != q->type) {
+		dprintk(1, "invalid stream type\n");
+		return -EINVAL;
+	}
+
+	if (q->streaming) {
+		dprintk(3, "already streaming\n");
+		return 0;
+	}
+
+	if (!q->num_buffers) {
+		dprintk(1, "no buffers have been allocated\n");
+		return -EINVAL;
+	}
+
+	if (q->num_buffers < q->min_buffers_needed) {
+		dprintk(1, "need at least %u allocated buffers\n",
+				q->min_buffers_needed);
+		return -EINVAL;
+	}
+
+	/*
+	 * Tell driver to start streaming provided sufficient buffers
+	 * are available.
+	 */
+	if (q->queued_count >= q->min_buffers_needed) {
+		ret = v4l_vb2q_enable_media_source(q);
+		if (ret)
+			return ret;
+		ret = vb2_start_streaming(q);
+	}
+
+	q->streaming = 1;
+	q->streamoff_state = 0;
+
+	return 0;
+}
+
+int vb2_core_streamoff_ex(struct vb2_queue *q, unsigned int type, __u32 timeout)
+{
+	int drv_count = 0;
+	if (type != q->type) {
+		dprintk(1, "invalid stream type\n");
+		return -EINVAL;
+	}
+
+	q->streamoff_state = 1;
+
+	/*
+	 * Following lines are modified content of __vb2_queue_cancel(q).
+	 */
+	/*
+	 * Tell driver to stop all transactions and release all queued
+	 * buffers.
+	 */
+	if (q->start_streaming_called)
+		call_void_qop(q, stop_streaming, q); // "stop streaming" should be modified too, driver should not clean its queue in this case
+
+	q->streaming = 0;
+	q->start_streaming_called = 0;
+	q->error = 0;
+
+	q->waiting_for_buffers = !q->is_output;
+	q->last_buffer_dequeued = false;
+	q->streamoff_state = 2;
+
+	drv_count = atomic_read(&q->owned_by_drv_count);
+	return 0;
+}
+#endif
 
 int vb2_core_streamon(struct vb2_queue *q, unsigned int type)
 {
 	int ret;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	int drv_count = 0;
+
+	drv_count = atomic_read(&q->owned_by_drv_count);
+#endif
 
 	if (type != q->type) {
 		dprintk(1, "invalid stream type\n");
@@ -1747,6 +2023,9 @@ int vb2_core_streamon(struct vb2_queue *q, unsigned int type)
 	}
 
 	q->streaming = 1;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	q->streamoff_state = 0;
+#endif
 
 	dprintk(3, "successful\n");
 	return 0;
@@ -1768,6 +2047,10 @@ int vb2_core_streamoff(struct vb2_queue *q, unsigned int type)
 		return -EINVAL;
 	}
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	q->streamoff_state = 1;
+#endif
+
 	/*
 	 * Cancel will pause streaming and remove all buffers from the driver
 	 * and videobuf, effectively returning control over them to userspace.
@@ -1780,6 +2063,9 @@ int vb2_core_streamoff(struct vb2_queue *q, unsigned int type)
 	__vb2_queue_cancel(q);
 	q->waiting_for_buffers = !q->is_output;
 	q->last_buffer_dequeued = false;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	q->streamoff_state = 2;
+#endif
 
 	dprintk(3, "successful\n");
 	return 0;

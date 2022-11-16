@@ -38,6 +38,20 @@ enum v4l2_subdev_format_whence {
 	V4L2_SUBDEV_FORMAT_ACTIVE = 1,
 };
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+/**
+ * enum v4l2_subdev_format_whence - Media bus format type
+ * @V4L2_SUBDEV_FRMIVAL_TYPE_DISCRETE: discrete frame intervals
+ * @V4L2_SUBDEV_FRMIVAL_TYPE_CONTINUOUS: continuous frame intervals
+ * @V4L2_SUBDEV_FRMIVAL_TYPE_STEPWISE: stepwise frame intervals
+ */
+enum v4l2_subdev_frame_interval_type{
+	V4L2_SUBDEV_FRMIVAL_TYPE_DISCRETE	= 0,
+	V4L2_SUBDEV_FRMIVAL_TYPE_CONTINUOUS	= 1,
+	V4L2_SUBDEV_FRMIVAL_TYPE_STEPWISE	= 2,
+};
+#endif
+
 /**
  * struct v4l2_subdev_format - Pad-level media bus format
  * @which: format type (from enum v4l2_subdev_format_whence)
@@ -116,8 +130,15 @@ struct v4l2_subdev_frame_interval {
  * @code: format code (MEDIA_BUS_FMT_ definitions)
  * @width: frame width in pixels
  * @height: frame height in pixels
- * @interval: frame interval in seconds
+ * @interval: frame interval in seconds, if the type is continuous or stepwise
+ * 		this field contains the minimum frame interval
  * @which: format type (from enum v4l2_subdev_format_whence)
+ ** #if defined(CONFIG_VIDEO_AVT_CSI2)
+ * @type: frame interval type (from enum v4l2_subdev_frame_interval_type)
+ * @max_interval: maximum frame interval in seconds, only valid for types
+ * 		continuous and stepwise
+ * @step_interval: frame interval step in seconds, only valid for type stepwise
+ ** #endif
  */
 struct v4l2_subdev_frame_interval_enum {
 	__u32 index;
@@ -127,7 +148,14 @@ struct v4l2_subdev_frame_interval_enum {
 	__u32 height;
 	struct v4l2_fract interval;
 	__u32 which;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	__u32 type;
+	struct v4l2_fract max_interval;
+	struct v4l2_fract step_interval;
+	__u32 reserved[3];
+#else
 	__u32 reserved[8];
+#endif
 };
 
 /**

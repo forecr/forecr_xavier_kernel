@@ -197,6 +197,34 @@ static int extract_pixel_format(
 {
 	size_t size = strnlen(pixel_t, OF_MAX_STR_LEN);
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	if (strncmp(pixel_t, "bayer_bggr10", size) == 0)
+		*format = V4L2_PIX_FMT_SBGGR16;
+	else if (strncmp(pixel_t, "bayer_rggb10", size) == 0)
+		*format = V4L2_PIX_FMT_SRGGB16;
+	else if (strncmp(pixel_t, "bayer_grbg10", size) == 0)
+		*format = V4L2_PIX_FMT_SGRBG16;
+	else if (strncmp(pixel_t, "bayer_gbrg10", size) == 0)
+		*format = V4L2_PIX_FMT_SGRBG16;
+	else if (strncmp(pixel_t, "bayer_bggr12", size) == 0)
+		*format = V4L2_PIX_FMT_SBGGR16;
+	else if (strncmp(pixel_t, "bayer_rggb12", size) == 0)
+		*format = V4L2_PIX_FMT_SRGGB16;
+	else if (strncmp(pixel_t, "bayer_gbrg12", size) == 0)
+		*format = V4L2_PIX_FMT_SGBRG16;
+	else if (strncmp(pixel_t, "bayer_grbg12", size) == 0)
+		*format = V4L2_PIX_FMT_SGRBG16;
+	else if (strncmp(pixel_t, "rgb_rgb88824", size) == 0)
+		*format = V4L2_PIX_FMT_RGB24;
+	else if (strncmp(pixel_t, "bayer_wdr_pwl_rggb12", size) == 0)
+		*format = V4L2_PIX_FMT_SRGGB16;
+	else if (strncmp(pixel_t, "bayer_wdr_pwl_gbrg12", size) == 0)
+		*format = V4L2_PIX_FMT_SGBRG16;
+	else if (strncmp(pixel_t, "bayer_wdr_pwl_grbg12", size) == 0)
+		*format = V4L2_PIX_FMT_SGRBG16;
+	else if (strncmp(pixel_t, "bayer_wdr_dol_rggb10", size) == 0)
+		*format = V4L2_PIX_FMT_SRGGB16;
+#else
 	if (strncmp(pixel_t, "bayer_bggr10", size) == 0)
 		*format = V4L2_PIX_FMT_SBGGR10;
 	else if (strncmp(pixel_t, "bayer_rggb10", size) == 0)
@@ -223,6 +251,7 @@ static int extract_pixel_format(
 		*format = V4L2_PIX_FMT_SGRBG12;
 	else if (strncmp(pixel_t, "bayer_wdr_dol_rggb10", size) == 0)
 		*format = V4L2_PIX_FMT_SRGGB10;
+#endif
 	else if (strncmp(pixel_t, "bayer_xbggr10p", size) == 0)
 		*format = V4L2_PIX_FMT_XBGGR10P;
 	else if (strncmp(pixel_t, "bayer_xrggb10p", size) == 0)

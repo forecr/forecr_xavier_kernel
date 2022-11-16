@@ -120,6 +120,11 @@ struct tegra_csi_channel {
 	atomic_t is_streaming;
 
 	struct device_node *of_node;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	unsigned int packet_crc_error;
+
+	bool bypass_dt;
+#endif
 };
 
 static inline struct tegra_csi_channel *to_csi_chan(struct v4l2_subdev *subdev)

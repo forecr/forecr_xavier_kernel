@@ -44,12 +44,20 @@ static const struct camera_common_colorfmt camera_common_color_fmts[] = {
 	{
 		MEDIA_BUS_FMT_SRGGB12_1X12,
 		V4L2_COLORSPACE_SRGB,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		V4L2_PIX_FMT_SRGGB16,
+#else
 		V4L2_PIX_FMT_SRGGB12,
+#endif
 	},
 	{
 		MEDIA_BUS_FMT_SGRBG12_1X12,
 		V4L2_COLORSPACE_SRGB,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		V4L2_PIX_FMT_SGRBG16,
+#else
 		V4L2_PIX_FMT_SGRBG12,
+#endif
 	},
 	{
 		MEDIA_BUS_FMT_SGBRG12_1X12,
@@ -59,12 +67,20 @@ static const struct camera_common_colorfmt camera_common_color_fmts[] = {
 	{
 		MEDIA_BUS_FMT_SRGGB10_1X10,
 		V4L2_COLORSPACE_SRGB,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		V4L2_PIX_FMT_SRGGB16,
+#else
 		V4L2_PIX_FMT_SRGGB10,
+#endif
 	},
 	{
 		MEDIA_BUS_FMT_SGRBG10_1X10,
 		V4L2_COLORSPACE_SRGB,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		V4L2_PIX_FMT_SGRBG16,
+#else
 		V4L2_PIX_FMT_SGRBG10,
+#endif
 	},
 	{
 		MEDIA_BUS_FMT_SGBRG10_1X10,
@@ -74,7 +90,11 @@ static const struct camera_common_colorfmt camera_common_color_fmts[] = {
 	{
 		MEDIA_BUS_FMT_SBGGR10_1X10,
 		V4L2_COLORSPACE_SRGB,
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		V4L2_PIX_FMT_SBGGR16,
+#else
 		V4L2_PIX_FMT_SBGGR10,
+#endif
 	},
 	{
 		MEDIA_BUS_FMT_SRGGB8_1X8,

@@ -12,10 +12,12 @@ make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv -j$(($(nproc)-1))
 #DSBOARD_XV2 for AGX Xavier
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 dsboard_xv2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 -j$(($(nproc)-1))
+--- for Allied Vision cameras, set CONFIG_VIDEO_AVT_CSI2=y in menuconfig
 
 #DSBOARD_NX2 for Xavier NX & TX2 NX
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
+--- for Allied Vision cameras, set CONFIG_VIDEO_AVT_CSI2=y in menuconfig
 
 #MILBOARD_XV for AGX Xavier
 make ARCH=arm64 O=$HOME/kernel_out_milboard_xv milboard_xv_defconfig

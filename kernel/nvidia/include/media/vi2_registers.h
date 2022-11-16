@@ -133,6 +133,10 @@
 #define TEGRA_CSI_PIXEL_PARSER_STATUS                   0x01c
 #define TEGRA_CSI_CSI_SW_SENSOR_RESET                   0x020
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+#define TEGRA_CSI_PIXEL_PARSER_PL_CRC_ERR               (0x1 << 4)
+#endif
+
 /* CSI PHY registers */
 /* CSI_PHY_CIL_COMMAND_0 offset 0x0d0 from TEGRA_CSI_PIXEL_PARSER_0_BASE */
 #define TEGRA_CSI_PHY_CIL_COMMAND                       0x0d0

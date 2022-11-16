@@ -209,9 +209,21 @@ static bool syncpt_update_min_is_expired(
 	u32 id,
 	u32 thresh)
 {
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	if (atomic_read(&sp->stop_stream_called[id]))
+		return true;
+#endif
+
 	syncpt_op().update_min(sp, id);
 	return nvhost_syncpt_is_expired(sp, id, thresh);
 }
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static bool syncpt_stop_waiting(struct nvhost_syncpt *sp,u32 id)
+{
+	return atomic_read(&sp->stop_stream_called[id]) ? true : false;
+}
+#endif
 
 /**
  * Main entrypoint for syncpoint value waits.
@@ -229,6 +241,12 @@ int nvhost_syncpt_wait_timeout(struct nvhost_syncpt *sp, u32 id,
 	bool (*syncpt_is_expired)(struct nvhost_syncpt *sp,
 			u32 id,
 			u32 thresh);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	bool (*syncpt_stop)(struct nvhost_syncpt *sp,u32 id);
+
+	syncpt_stop = syncpt_stop_waiting;
+#endif
 
 	sp = nvhost_get_syncpt_owner_struct(id, sp);
 	host = syncpt_to_dev(sp);
@@ -344,6 +362,13 @@ int nvhost_syncpt_wait_timeout(struct nvhost_syncpt *sp, u32 id,
 			remain = wait_event_interruptible_timeout(waiter->wq,
 				syncpt_is_expired(sp, id, thresh),
 				check);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		else if (id == sp->stream_id)
+			remain = wait_event_timeout(waiter->wq,
+				(syncpt_is_expired(sp, id, thresh) || syncpt_stop(sp, id)),
+				check);
+#endif
 		else
 			remain = wait_event_timeout(waiter->wq,
 				syncpt_is_expired(sp, id, thresh),
@@ -362,6 +387,50 @@ int nvhost_syncpt_wait_timeout(struct nvhost_syncpt *sp, u32 id,
 				}
 			}
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+			if (syncpt_stop(sp,id) && remain > 0)
+				err = -ECANCELED;
+			else
+				err = 0;
+
+			break;
+			}
+
+			if (timeout != NVHOST_NO_TIMEOUT) {
+				timeout -= check;
+
+				if (remain < 0) {
+					err = remain;
+					break;
+				}
+				if (timeout && check_count <= MAX_STUCK_CHECK_COUNT) {
+					new_val = syncpt_op().update_min(sp, id);
+					if (old_val == new_val) {
+						dev_warn(&syncpt_to_dev(sp)->dev->dev,
+							"%s: syncpoint id %d (%s) stuck waiting %d, timeout=%d\n",
+							 current->comm, id,
+							 syncpt_op().name(sp, id),
+							 thresh, timeout);
+						nvhost_syncpt_debug(sp);
+					} else {
+						old_val = new_val;
+						dev_info(&syncpt_to_dev(sp)->dev->dev,
+							"%s: syncpoint id %d (%s) progressing slowly %d, timeout=%d\n",
+							 current->comm, id,
+							 syncpt_op().name(sp, id),
+							 thresh, timeout);
+					}
+					if (check_count == MAX_STUCK_CHECK_COUNT) {
+						if (low_timeout) {
+							dev_warn(&syncpt_to_dev(sp)->dev->dev,
+								"is timeout %d too low?\n",
+								low_timeout);
+						}
+						nvhost_debug_dump(syncpt_to_dev(sp));
+					}
+					check_count++;
+			}
+#else
 			err = 0;
 			break;
 		}
@@ -397,6 +466,7 @@ int nvhost_syncpt_wait_timeout(struct nvhost_syncpt *sp, u32 id,
 				nvhost_debug_dump(syncpt_to_dev(sp));
 			}
 			check_count++;
+#endif
 		}
 	}
 
@@ -1127,6 +1197,9 @@ int nvhost_syncpt_init(struct platform_device *dev,
 	sp->last_used_by = kzalloc(sizeof(char *) * nb_pts, GFP_KERNEL);
 	sp->min_val = kzalloc(sizeof(atomic_t) * nb_pts, GFP_KERNEL);
 	sp->max_val = kzalloc(sizeof(atomic_t) * nb_pts, GFP_KERNEL);
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	sp->stop_stream_called = kzalloc(sizeof(atomic_t) * nb_pts, GFP_KERNEL);
+#endif
 	sp->lock_counts =
 		kzalloc(sizeof(atomic_t) * nvhost_syncpt_nb_mlocks(sp),
 			GFP_KERNEL);
@@ -1308,6 +1381,11 @@ void nvhost_syncpt_deinit(struct nvhost_syncpt *sp)
 	kfree(sp->assigned);
 	sp->assigned = NULL;
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	kfree(sp->stop_stream_called);
+	sp->stop_stream_called = NULL;
+#endif
+
 	nvhost_syncpt_deinit_timeline(sp);
 }
 
@@ -1454,6 +1532,44 @@ int nvhost_syncpt_wait_timeout_ext(struct platform_device *dev, u32 id,
 	return ret;
 }
 EXPORT_SYMBOL(nvhost_syncpt_wait_timeout_ext);
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+int nvhost_syncpt_stop_waiting_ext(struct platform_device *dev, u32 id)
+{
+	struct nvhost_master *master = nvhost_get_host(dev);
+	struct nvhost_syncpt *sp =
+		nvhost_get_syncpt_owner_struct(id, &master->syncpt);
+
+	atomic_set(&sp->stop_stream_called[id],1);
+
+	return 0;
+}
+EXPORT_SYMBOL(nvhost_syncpt_stop_waiting_ext);
+
+int nvhost_syncpt_restart_waiting_ext(struct platform_device *dev, u32 id)
+{
+	struct nvhost_master *master = nvhost_get_host(dev);
+	struct nvhost_syncpt *sp =
+		nvhost_get_syncpt_owner_struct(id, &master->syncpt);
+
+	atomic_set(&sp->stop_stream_called[id],0);
+
+	return 0;
+}
+EXPORT_SYMBOL(nvhost_syncpt_restart_waiting_ext);
+
+int nvhost_syncpt_remember_stream_id_ext(struct platform_device *dev, u32 id)
+{
+	struct nvhost_master *master = nvhost_get_host(dev);
+	struct nvhost_syncpt *sp =
+		nvhost_get_syncpt_owner_struct(id, &master->syncpt);
+
+	sp->stream_id = id;
+
+	return 0;
+}
+EXPORT_SYMBOL(nvhost_syncpt_remember_stream_id_ext);
+#endif
 
 int nvhost_syncpt_create_fence_single_ext(struct platform_device *dev,
 	u32 id, u32 thresh, const char *name, int *fence_fd)

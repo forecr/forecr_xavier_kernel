@@ -126,6 +126,30 @@ static void csi5_stream_close(struct tegra_csi_channel *chan, u32 stream_id,
 	tegra_capture_ivc_control_submit(&msg, sizeof(msg));
 }
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static void csi5_bypass_datatype(struct tegra_csi_channel *chan, u32 stream_id)
+{
+	struct tegra_csi_port *port = &chan->ports[0];
+	struct CAPTURE_CONTROL_MSG msg;
+
+	memset(&msg, 0, sizeof(msg));
+	msg.header.msg_id = CAPTURE_CSI_STREAM_SET_PARAM_REQ;
+	msg.header.channel_id = TEMP_CHANNEL_ID;
+
+	msg.csi_stream_set_param_req.stream_id = stream_id;
+	msg.csi_stream_set_param_req.virtual_channel_id = port->virtual_channel_id;
+	msg.csi_stream_set_param_req.param_type = NVCSI_PARAM_TYPE_DT_OVERRIDE;
+
+	if(chan->bypass_dt) {
+		msg.csi_stream_set_param_req.dt_override_config.enable_override = 1;
+		msg.csi_stream_set_param_req.dt_override_config.override_type = NVCSI_DATATYPE_YUV422_8;
+	} else
+		msg.csi_stream_set_param_req.dt_override_config.enable_override = 0;
+
+	tegra_capture_ivc_control_submit(&msg, sizeof(msg));
+}
+#endif
+
 static int csi5_stream_set_config(struct tegra_csi_channel *chan, u32 stream_id,
 	u32 csi_port, int csi_lanes)
 {
@@ -177,6 +201,10 @@ static int csi5_stream_set_config(struct tegra_csi_channel *chan, u32 stream_id,
 	msg.csi_stream_set_config_req.cil_config = cil_config;
 
 	tegra_capture_ivc_control_submit(&msg, sizeof(msg));
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	csi5_bypass_datatype(chan, stream_id);
+#endif
 
 	return 0;
 }

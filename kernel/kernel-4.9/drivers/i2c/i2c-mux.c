@@ -328,6 +328,9 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
 	priv->adap.retries = parent->retries;
 	priv->adap.timeout = parent->timeout;
 	priv->adap.quirks = parent->quirks;
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	priv->adap.bus_clk_rate = parent->bus_clk_rate;
+#endif
 	if (muxc->mux_locked)
 		priv->adap.lock_ops = &i2c_mux_lock_ops;
 	else

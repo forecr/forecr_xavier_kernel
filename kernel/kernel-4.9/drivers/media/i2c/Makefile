@@ -8,6 +8,7 @@ obj-y				+= soc_camera/
 
 obj-$(CONFIG_VIDEO_APTINA_PLL) += aptina-pll.o
 obj-$(CONFIG_VIDEO_TVAUDIO) += tvaudio.o
+obj-$(CONFIG_VIDEO_AVT_CSI2) += avt_csi2.o
 obj-$(CONFIG_VIDEO_TDA7432) += tda7432.o
 obj-$(CONFIG_VIDEO_SAA6588) += saa6588.o
 obj-$(CONFIG_VIDEO_TDA9840) += tda9840.o

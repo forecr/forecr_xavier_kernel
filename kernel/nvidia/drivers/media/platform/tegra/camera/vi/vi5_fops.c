@@ -33,7 +33,10 @@
 #define PG_BITRATE		32
 #define SLVSEC_STREAM_MAIN	0U
 
+#if !defined(CONFIG_VIDEO_AVT_CSI2)
 #define CAPTURE_TIMEOUT_MS	2500
+#endif
+
 #define CAPTURE_CORRECTABLE_ERRORS	\
 	(CAPTURE_STATUS_SUCCESS \
 	| CAPTURE_STATUS_CSIMUX_FRAME \
@@ -97,7 +100,22 @@ static int tegra_vi5_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 	struct camera_common_data *s_data =
 				to_camera_common_data(sd->dev);
 	struct tegracam_ctrl_handler *handler = s_data->tegracam_ctrl_hdl;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	struct tegracam_sensor_data *sensor_data;
+
+	if (handler == NULL) {
+		return 0;
+	}
+
+	sensor_data = &handler->sensor_data;
+
+	if (sensor_data == NULL) {
+		return 0;
+	}
+#else
 	struct tegracam_sensor_data *sensor_data = &handler->sensor_data;
+#endif
 
 	/* TODO: Support reading blobs for multiple devices */
 	switch (ctrl->id) {
@@ -241,6 +259,25 @@ done:
 	return ret;
 }
 
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+static void vi5_bypass_datatype(struct tegra_channel *chan,
+	struct capture_descriptor *desc)
+{
+	u32 data_type = chan->fmtinfo->img_dt;
+
+	if(chan->bypass_dt) {
+		desc->ch_cfg.match.datatype = 0x0;
+		desc->ch_cfg.match.datatype_mask = 0x0;
+		desc->ch_cfg.dt_enable = 1;
+		desc->ch_cfg.dt_override = data_type;
+	} else {
+		desc->ch_cfg.match.datatype = data_type;
+		desc->ch_cfg.match.datatype_mask = 0x3f;
+		desc->ch_cfg.dt_enable = 0;
+	}
+}
+#endif
+
 static int tegra_channel_capture_setup(struct tegra_channel *chan, unsigned int vi_port )
 {
 	struct vi_capture_setup setup = default_setup;
@@ -279,7 +316,9 @@ static void vi5_setup_surface(struct tegra_channel *chan,
 	u32 width = chan->format.width;
 	u32 format = chan->fmtinfo->img_fmt;
 	u32 bpl = chan->format.bytesperline;
+#if !defined(CONFIG_VIDEO_AVT_CSI2)
 	u32 data_type = chan->fmtinfo->img_dt;
+#endif
 	u32 nvcsi_stream = chan->port[vi_port];
 	struct capture_descriptor *desc = &chan->request[vi_port][descr_index];
 	struct capture_descriptor_memoryinfo *desc_memoryinfo =
@@ -299,10 +338,16 @@ static void vi5_setup_surface(struct tegra_channel *chan,
 	desc->ch_cfg.match.vc = (1u << chan->virtual_channel); /* one-hot bit encoding */
 	desc->ch_cfg.frame.frame_x = width;
 	desc->ch_cfg.frame.frame_y = height;
+#if !defined(CONFIG_VIDEO_AVT_CSI2)
 	desc->ch_cfg.match.datatype = data_type;
 	desc->ch_cfg.match.datatype_mask = 0x3f;
+#endif
 	desc->ch_cfg.pixfmt_enable = 1;
 	desc->ch_cfg.pixfmt.format = format;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	vi5_bypass_datatype(chan, desc);
+#endif
 
 	desc_memoryinfo->surface[0].base_address = offset;
 	desc_memoryinfo->surface[0].size = chan->format.bytesperline * height;
@@ -406,12 +451,20 @@ static void vi5_capture_dequeue(struct tegra_channel *chan,
 			goto rel_buf;
 
 		/* Dequeue a frame and check its capture status */
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		err = vi_capture_status(chan->tegra_vi_channel[vi_port], jiffies_to_msecs(chan->timeout));
+#else
 		err = vi_capture_status(chan->tegra_vi_channel[vi_port], CAPTURE_TIMEOUT_MS);
+#endif
 		if (err) {
 			if (err == -ETIMEDOUT) {
 				dev_err(vi->dev,
 					"uncorr_err: request timed out after %d ms\n",
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+					jiffies_to_msecs(chan->timeout));
+#else
 					CAPTURE_TIMEOUT_MS);
+#endif
 			} else {
 				dev_err(vi->dev, "uncorr_err: request err %d\n", err);
 			}
@@ -475,6 +528,9 @@ uncorr_err:
 	buf->vb2_state = VB2_BUF_STATE_ERROR;
 
 rel_buf:
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	tegra_channel_update_statistics(chan);
+#endif
 	vi5_release_buffer(chan, buf);
 }
 
@@ -841,6 +897,13 @@ static int vi5_channel_stop_streaming(struct vb2_queue *vq)
 	struct tegra_channel *chan = vb2_get_drv_priv(vq);
 	long err;
 	int vi_port = 0;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	for (vi_port = 0; vi_port < chan->valid_ports; vi_port++) {
+		vi_stop_waiting(chan->tegra_vi_channel[vi_port]);
+	}
+#endif
+
 	if (!chan->bypass)
 		vi5_channel_stop_kthreads(chan);
 

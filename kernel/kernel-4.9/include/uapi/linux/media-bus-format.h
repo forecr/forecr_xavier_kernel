@@ -139,7 +139,10 @@
 /* JPEG compressed formats - next is	0x4002 */
 #define MEDIA_BUS_FMT_JPEG_1X8			0x4001
 
-/* Vendor specific formats - next is	0x5002 */
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+/* Vendor specific formats - next is	0x5003 */
+#define MEDIA_BUS_FMT_CUSTOM        0x5002
+#endif
 
 /* S5C73M3 sensor specific interleaved UYVY and JPEG */
 #define MEDIA_BUS_FMT_S5C_UYVY_JPEG_1X8		0x5001

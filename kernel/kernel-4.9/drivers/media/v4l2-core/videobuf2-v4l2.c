@@ -558,7 +558,11 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
 		if (requested_sizes[i] == 0)
 			return -EINVAL;
 	return ret ? ret : vb2_core_create_bufs(q, create->memory,
-		&create->count, requested_planes, requested_sizes);
+		&create->count, requested_planes, requested_sizes
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+		, false, 0
+#endif
+		);
 }
 EXPORT_SYMBOL_GPL(vb2_create_bufs);
 
@@ -664,6 +668,10 @@ int vb2_queue_init(struct vb2_queue *q)
 	 * queues will always initialize waiting_for_buffers to false.
 	 */
 	q->quirk_poll_must_check_waiting_for_buffers = true;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	q->streamoff_state = 0;
+#endif
 
 	return vb2_core_queue_init(q);
 }

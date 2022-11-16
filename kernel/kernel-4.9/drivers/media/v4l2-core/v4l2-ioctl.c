@@ -1256,6 +1256,31 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
 	case V4L2_PIX_FMT_TM6000:	descr = "A/V + VBI Mux Packet"; break;
 	case V4L2_PIX_FMT_CIT_YYVYUY:	descr = "GSPCA CIT YYVYUY"; break;
 	case V4L2_PIX_FMT_KONICA420:	descr = "GSPCA KONICA420"; break;
+
+#if defined(CONFIG_VIDEO_AVT_CSI2)
+	case V4L2_PIX_FMT_CUSTOM:	descr = "0x31 MIPI DATATYPE"; break;
+	case V4L2_PIX_FMT_TX2_Y10:	descr = "10-bit/16-bit Greyscale"; break;
+	case V4L2_PIX_FMT_TX2_Y12:	descr = "12-bit/16-bit Greyscale"; break;
+	case V4L2_PIX_FMT_TX2_SBGGR10:	descr = "10-bit/16-bit Bayer BGBG/GRGR"; break;
+	case V4L2_PIX_FMT_TX2_SGBRG10:	descr = "10-bit/16-bit Bayer GBGB/RGRG"; break;
+	case V4L2_PIX_FMT_TX2_SGRBG10:	descr = "10-bit/16-bit Bayer GRGR/BGBG"; break;
+	case V4L2_PIX_FMT_TX2_SRGGB10:	descr = "10-bit/16-bit Bayer RGRG/GBGB"; break;
+	case V4L2_PIX_FMT_TX2_SBGGR12:	descr = "12-bit/16-bit Bayer BGBG/GRGR"; break;
+	case V4L2_PIX_FMT_TX2_SGBRG12:	descr = "12-bit/16-bit Bayer GBGB/RGRG"; break;
+	case V4L2_PIX_FMT_TX2_SGRBG12:	descr = "12-bit/16-bit Bayer GRGR/BGBG"; break;
+	case V4L2_PIX_FMT_TX2_SRGGB12:	descr = "12-bit/16-bit Bayer RGRG/GBGB"; break;
+	case V4L2_PIX_FMT_XAVIER_Y10:	descr = "10-bit/16-bit Greyscale"; break;
+	case V4L2_PIX_FMT_XAVIER_Y12:	descr = "12-bit/16-bit Greyscale"; break;
+	case V4L2_PIX_FMT_XAVIER_SBGGR10:	descr = "10-bit/16-bit Bayer BGBG/GRGR"; break;
+	case V4L2_PIX_FMT_XAVIER_SGBRG10:	descr = "10-bit/16-bit Bayer GBGB/RGRG"; break;
+	case V4L2_PIX_FMT_XAVIER_SGRBG10:	descr = "10-bit/16-bit Bayer GRGR/BGBG"; break;
+	case V4L2_PIX_FMT_XAVIER_SRGGB10:	descr = "10-bit/16-bit Bayer RGRG/GBGB"; break;
+	case V4L2_PIX_FMT_XAVIER_SBGGR12:	descr = "12-bit/16-bit Bayer BGBG/GRGR"; break;
+	case V4L2_PIX_FMT_XAVIER_SGBRG12:	descr = "12-bit/16-bit Bayer GBGB/RGRG"; break;
+	case V4L2_PIX_FMT_XAVIER_SGRBG12:	descr = "12-bit/16-bit Bayer GRGR/BGBG"; break;
+	case V4L2_PIX_FMT_XAVIER_SRGGB12:	descr = "12-bit/16-bit Bayer RGRG/GBGB"; break;
+#endif
+
 	case V4L2_SDR_FMT_CU8:		descr = "Complex U8"; break;
 	case V4L2_SDR_FMT_CU16LE:	descr = "Complex U16LE"; break;
 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
