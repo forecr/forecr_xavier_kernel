@@ -22,10 +22,13 @@
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 	model = "Jetson AGX Xavier for MILBOARD-XV";
-	
+
 	i2c@c240000 {
 		ucsi_ccg@8 {
 			status = "disabled";
+			connector@0 {
+				/delete-node/ port;
+			};
 		};
 	};
 
@@ -88,6 +91,8 @@
 				status = "okay";
 				vbus-supply = <&battery_reg>;
 				mode = "host";
+				/delete-property/ usb-role-switch;
+				/delete-node/ port;
 			};
 			usb2-3 {
 				status = "okay";
@@ -98,6 +103,7 @@
 	};
 
 	xudc@3550000 {
+		phy-names = "usb2", "usb3";
 		/delete-property/  extcon-cables;
 		/delete-property/  extcon-cable-names;
 		/delete-property/  #extcon-cells;
@@ -133,6 +139,7 @@
 	};
 
 	pcie@141a0000 {
+		status = "disabled";
 		nvidia,max-speed = <2>;
 	};
 
