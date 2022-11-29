@@ -139,7 +139,6 @@
 	};
 
 	pcie@141a0000 {
-		status = "disabled";
 		nvidia,max-speed = <2>;
 	};
 
