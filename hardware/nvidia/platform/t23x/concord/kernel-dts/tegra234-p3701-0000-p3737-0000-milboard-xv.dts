@@ -1,7 +1,7 @@
 /*
- * Top level DTS file for CVM:P3701-0004 and CVB:P3737-0000.
+ * Top level DTS file for CVM:P3701-0000 and CVB:P3737-0000.
  *
- * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 #include "tegra234-power-tree-p3701-0000-p3737-0000.dtsi"
 #include "tegra234-dcb-p3701-0000-a02-p3737-0000-a01_hdmi.dtsi"
 #include <tegra234-soc/mods-simple-bus.dtsi>
-//#include "cvb/tegra234-p3737-camera-modules.dtsi"
-#include "cvb/tegra234-p3737-0000-camera-imx185-a00.dtsi"
 
 #include <t234-common-cvm/tegra234-cpuidle.dtsi>
 #include <t234-common-cvm/tegra234-thermal.dtsi>
@@ -33,10 +31,9 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
-	model = "Jetson AGX Orin for DSBOARD-AGX";
+	model = "Jetson AGX Orin for MILBOARD-XV";
 
-	compatible = "nvidia,p3737-0000+p3701-0004", "nvidia,tegra234", "nvidia,tegra23x";
-
+	compatible = "nvidia,p3737-0000+p3701-0000", "nvidia,tegra234", "nvidia,tegra23x";
 
 	fixed-regulators {
 		p3737_vdd_3v3_pcie: regulator@105 {
@@ -46,14 +43,7 @@
 		};
 		p3737_vdd_12v_pcie: regulator@114 {
 			/delete-property/ regulator-boot-on;
-			/delete-property/ gpio;
-			/delete-property/ enable-active-low;
-			regulator-always-on;
 		};
-	};
-
-	serial@3140000 { //for RS232-422-485 communication
-		status = "okay";
 	};
 
 	i2c@c240000 {
@@ -67,23 +57,14 @@
 				/delete-node/ port;
 			};
 		};
-		pcf8574a: gpio@38 {
-			compatible = "nxp,pcf8574a";
-			reg = <0x38>;
-			gpio-controller;
-			#gpio-cells = <2>;
-			/*
-			pcf8574a_outlow {
-				gpio-hog;
-				gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
-				output-low;
-			};
-			*/
-		};
 	};
 
-	serial@3110000 {
-		status = "okay";
+	pcie@141a0000 {
+		nvidia,max-speed = <2>;
+	};
+
+	pcie_ep@141a0000 {
+		nvidia,max-speed = <2>;
 	};
 
 	/* PCIe x8 (C7) */
@@ -181,14 +162,6 @@
 	};
 
 	/delete-node/ tegra_usb_cd;
-
-	i2c@c250000 {
-		tmp102: tmp102@49 { // Temperature Sensor
-			compatible = "ti,tmp102";
-			reg = <0x49>;
-			#thermal-sensor-cells = <0>;
-		};
-	};
 
 	nvsciipc-kernel {
 		compatible = "nvidia,nvsciipc";
@@ -389,104 +362,5 @@
 
 	serial@31d0000 {
 		status = "okay";
-	};
-};
-/ {
-	funnel_top_ccplex@26020000 {
-		in-ports {
-			/delete-node/ port@2;
-		};
-	};
-
-	/delete-node/ funnel_ccplex2@26050000;
-	/delete-node/ cpu11_etm@27B40000;
-	/delete-node/ cpu10_etm@27A40000;
-	/delete-node/ cpu9_etm@27940000;
-	/delete-node/ cpu8_etm@27840000;
-	/delete-node/ dsu-pmu-2;
-
-	cpus {
-		cpu-map {
-			/delete-node/ cluster2;
-		};
-		/delete-node/ cpu@8;
-		/delete-node/ cpu@9;
-		/delete-node/ cpu@10;
-		/delete-node/ cpu@11;
-	};
-
-	thermal-zones {
-		CPU-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		GPU-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		CV0-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		CV1-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		CV2-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		SOC0-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		SOC1-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-		SOC2-therm {
-			cooling-maps {
-				map0 {
-					cooling-device = <&cl0_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&cl1_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&tegra_ga10b THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
 	};
 };
