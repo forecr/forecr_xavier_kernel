@@ -41,9 +41,42 @@
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				tca6424_22_a: tca6424@22 {
+			    		compatible = "ti,tca6424";
+			    		gpio-controller;
+			    		#gpio-cells = <2>;
+			    		reg = <0x22>;
+					vcc-supply = <&p2822_vdd_sys_en>;
+			    		status = "okay";
+			    		tca6424_22_outlow {
+			    		/*
+				 	* GPIO-0 : RST_CAM1
+				 	* GPIO-1 : RST_CAM2
+				 	* GPIO-2 : RST_CAM3
+				 	* .... more is there
+				 	*/
+				 	gpio-hog;
+				 	gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				 	output-low;
+				 	label = "tca6424_22_outlow_0",
+				         	"tca6424_22_outlow_1",
+				         	"tca6424_22_outlow_2",
+				         	"tca6424_22_outlow_3",
+				         	"tca6424_22_outlow_4",
+				         	"tca6424_22_outlow_5",
+				         	"tca6424_22_outlow_6",
+				         	"tca6424_22_outlow_7";
+			    		};
+			    		tca6424_22_outhigh {
+			            		status = "disabled";
+			    		};
+			    		tca6424_22_input {
+			            		status = "disabled";
+			    		};
+				};
 				ar0521_a@42 {
-					reset-gpios = <&tca6408_38 5 GPIO_ACTIVE_HIGH>;
-					pwdn-gpios  = <&tca6408_38 0 GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&tca6424_22_a 0 GPIO_ACTIVE_HIGH>;
+					pwdn-gpios  = <&tca6424_22_a 6 GPIO_ACTIVE_HIGH>;
 				};
 			};
 			i2c@1 {
@@ -52,9 +85,42 @@
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				tca6424_22_b: tca6424@22 {
+			    		compatible = "ti,tca6424";
+			    		gpio-controller;
+			    		#gpio-cells = <2>;
+			    		reg = <0x22>;
+					vcc-supply = <&p2822_vdd_sys_en>;
+			    		status = "okay";
+			    		tca6424_22_outlow {
+			    		/*
+				 	* GPIO-0 : RST_CAM1
+				 	* GPIO-1 : RST_CAM2
+				 	* GPIO-2 : RST_CAM3
+				 	* .... more is there
+				 	*/
+				 	gpio-hog;
+				 	gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				 	output-low;
+				 	label = "tca6424_22_outlow_0",
+				         	"tca6424_22_outlow_1",
+				         	"tca6424_22_outlow_2",
+				         	"tca6424_22_outlow_3",
+				         	"tca6424_22_outlow_4",
+				         	"tca6424_22_outlow_5",
+				         	"tca6424_22_outlow_6",
+				         	"tca6424_22_outlow_7";
+			    		};
+			    		tca6424_22_outhigh {
+			            		status = "disabled";
+			    		};
+			    		tca6424_22_input {
+			            		status = "disabled";
+			    		};
+				};
 				ar0521_b@42 {
-					reset-gpios = <&tca6408_38 1 GPIO_ACTIVE_HIGH>;
-					pwdn-gpios  = <&tca6408_38 1 GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&tca6424_22_b 0 GPIO_ACTIVE_HIGH>;
+					pwdn-gpios  = <&tca6424_22_b 6 GPIO_ACTIVE_HIGH>;
 				};
 			};
 			i2c@2 {
@@ -62,9 +128,42 @@
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				tca6424_22_c: tca6424@22 {
+			    		compatible = "ti,tca6424";
+			    		gpio-controller;
+			    		#gpio-cells = <2>;
+			    		reg = <0x22>;
+					vcc-supply = <&p2822_vdd_sys_en>;
+			    		status = "okay";
+			    		tca6424_22_outlow {
+			    			/*
+				 		* GPIO-0 : RST_CAM1
+				 		* GPIO-1 : RST_CAM2
+				 		* GPIO-2 : RST_CAM3
+				 		* .... more is there
+				 		*/
+				 		gpio-hog;
+				 		gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				 		output-low;
+				 		label = "tca6424_22_outlow_0",
+				         		"tca6424_22_outlow_1",
+				         		"tca6424_22_outlow_2",
+				         		"tca6424_22_outlow_3",
+				         		"tca6424_22_outlow_4",
+				         		"tca6424_22_outlow_5",
+				         		"tca6424_22_outlow_6",
+				         		"tca6424_22_outlow_7";
+			    		};
+			    		tca6424_22_outhigh {
+			            		status = "disabled";
+			    		};
+			    		tca6424_22_input {
+			            		status = "disabled";
+			    		};
+				};	
 				ar0521_c@42 {
-					reset-gpios = <&tca6408_38 6 GPIO_ACTIVE_HIGH>;
-					pwdn-gpios  = <&tca6408_38 2 GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&tca6424_22_c 0 GPIO_ACTIVE_HIGH>;
+					pwdn-gpios  = <&tca6424_22_c 6 GPIO_ACTIVE_HIGH>;
 				};
 			};
 			i2c@3 {
@@ -73,9 +172,42 @@
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				tca6424_22_d: tca6424@22 {
+			    		compatible = "ti,tca6424";
+			    		gpio-controller;
+			    		#gpio-cells = <2>;
+			    		reg = <0x22>;
+					vcc-supply = <&p2822_vdd_sys_en>;
+			    		status = "okay";
+			    		tca6424_22_outlow {
+			    			/*
+				 		* GPIO-0 : RST_CAM1
+				 		* GPIO-1 : RST_CAM2
+				 		* GPIO-2 : RST_CAM3
+				 		* .... more is there
+				 		*/
+				 		gpio-hog;
+				 		gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				 		output-low;
+				 		label = "tca6424_22_outlow_0",
+				         		"tca6424_22_outlow_1",
+				         		"tca6424_22_outlow_2",
+				         		"tca6424_22_outlow_3",
+				         		"tca6424_22_outlow_4",
+				         		"tca6424_22_outlow_5",
+				         		"tca6424_22_outlow_6",
+				         		"tca6424_22_outlow_7";
+			    		};
+			    		tca6424_22_outhigh {
+			            		status = "disabled";
+			    		};
+			    		tca6424_22_input {
+			            		status = "disabled";
+			    		};
+				};
 				ar0521_d@42 {
-					reset-gpios = <&tca6408_38 3 GPIO_ACTIVE_HIGH>;
-					pwdn-gpios  = <&tca6408_38 3 GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&tca6424_22_d 0 GPIO_ACTIVE_HIGH>;
+					pwdn-gpios  = <&tca6424_22_d 6 GPIO_ACTIVE_HIGH>;
 				};
 			};
 			i2c@4 {
@@ -83,9 +215,42 @@
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				tca6424_22_e: tca6424@22 {
+			    		compatible = "ti,tca6424";
+			    		gpio-controller;
+			    		#gpio-cells = <2>;
+			    		reg = <0x22>;
+					vcc-supply = <&p2822_vdd_sys_en>;
+			    		status = "okay";
+			    		tca6424_22_outlow {
+			    			/*
+				 		* GPIO-0 : RST_CAM1
+				 		* GPIO-1 : RST_CAM2
+				 		* GPIO-2 : RST_CAM3
+				 		* .... more is there
+				 		*/
+				 		gpio-hog;
+				 		gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				 		output-low;
+				 		label = "tca6424_22_outlow_0",
+				         		"tca6424_22_outlow_1",
+				         		"tca6424_22_outlow_2",
+				         		"tca6424_22_outlow_3",
+				         		"tca6424_22_outlow_4",
+				         		"tca6424_22_outlow_5",
+				         		"tca6424_22_outlow_6",
+				         		"tca6424_22_outlow_7";
+			    		};
+			    		tca6424_22_outhigh {
+			            		status = "disabled";
+			    		};
+			    		tca6424_22_input {
+			            		status = "disabled";
+			    		};
+				};
 				ar0521_e@42 {
-					reset-gpios = <&tca6408_38 7 GPIO_ACTIVE_HIGH>;
-					pwdn-gpios  = <&tca6408_38 4 GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&tca6424_22_e 0 GPIO_ACTIVE_HIGH>;
+					pwdn-gpios  = <&tca6424_22_e 6 GPIO_ACTIVE_HIGH>;
 				};
 			};
 			i2c@5 {
@@ -94,9 +259,42 @@
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				tca6424_22_f: tca6424@22 {
+			    		compatible = "ti,tca6424";
+			    		gpio-controller;
+			    		#gpio-cells = <2>;
+			    		reg = <0x22>;
+					vcc-supply = <&p2822_vdd_sys_en>;
+			    		status = "okay";
+			    		tca6424_22_outlow {
+			    			/*
+				 		* GPIO-0 : RST_CAM1
+				 		* GPIO-1 : RST_CAM2
+				 		* GPIO-2 : RST_CAM3
+				 		* .... more is there
+				 		*/
+				 		gpio-hog;
+				 		gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+				 		output-low;
+				 		label = "tca6424_22_outlow_0",
+				         		"tca6424_22_outlow_1",
+				         		"tca6424_22_outlow_2",
+				         		"tca6424_22_outlow_3",
+				         		"tca6424_22_outlow_4",
+				         		"tca6424_22_outlow_5",
+				         		"tca6424_22_outlow_6",
+				         		"tca6424_22_outlow_7";
+			    		};
+			    		tca6424_22_outhigh {
+			            		status = "disabled";
+			    		};
+			    		tca6424_22_input {
+			            		status = "disabled";
+			    		};
+				};
 				ar0521_f@42 {
-					reset-gpios = <&tca6408_38 5 GPIO_ACTIVE_HIGH>;
-					pwdn-gpios  = <&tca6408_38 5 GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&tca6424_22_f 0 GPIO_ACTIVE_HIGH>;
+					pwdn-gpios  = <&tca6424_22_f 6 GPIO_ACTIVE_HIGH>;
 				};
 			};
 
