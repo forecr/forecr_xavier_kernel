@@ -29,6 +29,8 @@
 	echo "Linux_for_Tegra/rootfs/usr/lib/modules/\$(uname -r)/kernel/drivers/gpu/nvgpu/nvgpu.ko" > $HOME/kernel_out_dsboard_nx2_xavier/mv_nvgpu_ko.txt
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-0001-p3509-0000.dtb
 
 
 # For DSBOARD_NX2 (rev-1.21; 1.1 & 1.0) with Xavier NX SoM, type these commands below:
@@ -37,6 +39,8 @@
 	echo "Linux_for_Tegra/rootfs/usr/lib/modules/\$(uname -r)/kernel/drivers/gpu/nvgpu/nvgpu.ko" > $HOME/kernel_out_dsboard_nx2_xavier/mv_nvgpu_ko.txt
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-0001-p3509-0000.dtb
 
 
 # For MILBOARD_XV with AGX Xavier SoM, type these commands below:
