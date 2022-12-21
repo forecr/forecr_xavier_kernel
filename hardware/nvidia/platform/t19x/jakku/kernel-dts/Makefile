@@ -18,7 +18,9 @@ dtbo-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-all-p3509-0000-camera-imx477
 dtbo-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-all-p3509-0000-camera-imx219-dual.dtbo
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000-basler.dtb
+dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000-imx477.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000-rev121.dtb
+dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p3668-dsboard-nx2-0000-mcp2515.dtb
 
 ifneq ($(dtb-y),)
