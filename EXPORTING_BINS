@@ -12,11 +12,15 @@ cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/tegra194-p2888-0008-dsboard-
 mkdir $HOME/kernel_out_dsboard_nx2_xavier
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-all-p3509-0000.dtb
+mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-all-p3509-0000.dtb
 
 # For DSBOARD_NX2 (rev-1.21; 1.1 & 1.0) with Xavier NX SoM, type these commands below:
 mkdir $HOME/kernel_out_dsboard_nx2_xavier
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000-rev121.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-all-p3509-0000.dtb
+mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-all-p3509-0000.dtb
 
 # For DSBOARD_NX2 (rev-1.22) with TX2 NX SoM, type these commands below:
 mkdir $HOME/kernel_out_dsboard_nx2_tx2
