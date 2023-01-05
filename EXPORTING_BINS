@@ -26,6 +26,8 @@ cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0
 mkdir $HOME/kernel_out_dsboard_nx2_tx2
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_tx2/Image
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_tx2/tegra186-p3636-0001-p3509-0000-a01.dtb 
+mkdir $HOME/kernel_out_dsboard_nx2_tx2/imx477
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2_imx477.dtb $HOME/kernel_out_dsboard_nx2_tx2/imx477/tegra186-p3636-0001-p3509-0000-a01.dtb 
 cd $HOME/kernel_out_dsboard_nx2_tx2/
 wget https://github.com/mistelektronik/forecr_blog_files/blob/master/tegra186-bpmp-p3636-0001-a00-00.zip?raw=true -O tegra186-bpmp-p3636-0001-a00-00.zip
 unzip tegra186-bpmp-p3636-0001-a00-00.zip
@@ -36,6 +38,8 @@ cd $OLDPWD
 mkdir $HOME/kernel_out_dsboard_nx2_tx2
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_tx2/Image
 cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2-rev121.dtb $HOME/kernel_out_dsboard_nx2_tx2/tegra186-p3636-0001-p3509-0000-a01.dtb 
+mkdir $HOME/kernel_out_dsboard_nx2_tx2/imx477
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_tx2/imx477/tegra186-p3636-0001-p3509-0000-a01.dtb 
 cd $HOME/kernel_out_dsboard_nx2_tx2/
 wget https://github.com/mistelektronik/forecr_blog_files/blob/master/tegra186-bpmp-p3636-0001-a00-00.zip?raw=true -O tegra186-bpmp-p3636-0001-a00-00.zip
 unzip tegra186-bpmp-p3636-0001-a00-00.zip

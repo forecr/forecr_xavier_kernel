@@ -17,6 +17,8 @@ dtbo-$(CONFIG_ARCH_TEGRA_18x_SOC) += tegra186-p3636-0001-p3509-0000-a01-respeake
 dtb-$(CONFIG_ARCH_TEGRA_18x_SOC) += tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2.dtb
 dtb-$(CONFIG_ARCH_TEGRA_18x_SOC) += tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2-rev121.dtb
 dtb-$(CONFIG_ARCH_TEGRA_18x_SOC) += tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2_imx477.dtb
+dtb-$(CONFIG_ARCH_TEGRA_18x_SOC) += tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2-rev121-imx477.dtb
+
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
 dts-include += $(makefile-path)
