@@ -19,6 +19,8 @@ apply_rt_patches()
 			$PWD/../arch/arm64/configs/.orig.defconfig
 
 		#make temporary copy of the Forecr's defconfig files
+		cp $PWD/../arch/arm64/configs/dsboard_agx_defconfig\
+			$PWD/../arch/arm64/configs/.orig.dsboard_agx_defconfig
 		cp $PWD/../arch/arm64/configs/dsboard_nx2_defconfig\
 			$PWD/../arch/arm64/configs/.orig.dsboard_nx2_defconfig
 		cp $PWD/../arch/arm64/configs/dsboard_xv2_defconfig\
@@ -54,6 +56,20 @@ apply_rt_patches()
 
 
 		#make temporary copy of the Forecr's defconfig files
+		cp $PWD/../arch/arm64/configs/dsboard_agx_defconfig\
+			$PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/dsboard_agx_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig"\
+				"$PWD/../arch/arm64/configs/dsboard_agx_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for DSBOARD-AGX!"
+
 		cp $PWD/../arch/arm64/configs/dsboard_nx2_defconfig\
 			$PWD/../arch/arm64/configs/.updated.dsboard_nx2_defconfig
 		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.dsboard_nx2_defconfig"\
@@ -118,6 +134,13 @@ revert_rt_patches()
 		rm -rf $PWD/../arch/arm64/configs/.updated.defconfig
 		echo "The PREEMPT RT patches have been successfully reverted!"
 
+
+		rm "$PWD/../arch/arm64/configs/dsboard_agx_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.dsboard_agx_defconfig\
+			$PWD/../arch/arm64/configs/dsboard_agx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.dsboard_agx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for DSBOARD-AGX!"
 
 		rm "$PWD/../arch/arm64/configs/dsboard_nx2_defconfig"
 		cp $PWD/../arch/arm64/configs/.orig.dsboard_nx2_defconfig\
