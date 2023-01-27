@@ -18,6 +18,18 @@ apply_rt_patches()
 		cp $PWD/../arch/arm64/configs/defconfig\
 			$PWD/../arch/arm64/configs/.orig.defconfig
 
+		#make temporary copy of the Forecr's defconfig files
+		cp $PWD/../arch/arm64/configs/dsboard_agx_defconfig\
+			$PWD/../arch/arm64/configs/.orig.dsboard_agx_defconfig
+		cp $PWD/../arch/arm64/configs/dsboard_nx2_defconfig\
+			$PWD/../arch/arm64/configs/.orig.dsboard_nx2_defconfig
+		cp $PWD/../arch/arm64/configs/dsboard_ornx_defconfig\
+			$PWD/../arch/arm64/configs/.orig.dsboard_ornx_defconfig
+		cp $PWD/../arch/arm64/configs/dsboard_xv2_defconfig\
+			$PWD/../arch/arm64/configs/.orig.dsboard_xv2_defconfig
+		cp $PWD/../arch/arm64/configs/milboard_xv_defconfig\
+			$PWD/../arch/arm64/configs/.orig.milboard_xv_defconfig
+
 		file_list=`find $PWD/../rt-patches -name \*.patch -type f | sort`
 		for p in $file_list; do
 			# set flag in case of failure and continue
@@ -43,6 +55,78 @@ apply_rt_patches()
 				"$PWD/../arch/arm64/configs/tegra_defconfig"
 
 		echo "The PREEMPT RT patches have been successfully applied!"
+
+
+		#make temporary copy of the Forecr's defconfig files
+		cp $PWD/../arch/arm64/configs/dsboard_agx_defconfig\
+			$PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/dsboard_agx_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig"\
+				"$PWD/../arch/arm64/configs/dsboard_agx_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for DSBOARD-AGX!"
+
+		cp $PWD/../arch/arm64/configs/dsboard_nx2_defconfig\
+			$PWD/../arch/arm64/configs/.updated.dsboard_nx2_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.dsboard_nx2_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/dsboard_nx2_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.dsboard_nx2_defconfig"\
+				"$PWD/../arch/arm64/configs/dsboard_nx2_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for DSBOARD-NX2!"
+
+		cp $PWD/../arch/arm64/configs/dsboard_ornx_defconfig\
+			$PWD/../arch/arm64/configs/.updated.dsboard_ornx_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.dsboard_ornx_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/dsboard_ornx_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.dsboard_ornx_defconfig"\
+				"$PWD/../arch/arm64/configs/dsboard_ornx_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for DSBOARD-ORNX!"
+
+		cp $PWD/../arch/arm64/configs/dsboard_xv2_defconfig\
+			$PWD/../arch/arm64/configs/.updated.dsboard_xv2_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.dsboard_xv2_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/dsboard_xv2_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.dsboard_xv2_defconfig"\
+				"$PWD/../arch/arm64/configs/dsboard_xv2_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for DSBOARD-XV2!"
+
+		cp $PWD/../arch/arm64/configs/milboard_xv_defconfig\
+			$PWD/../arch/arm64/configs/.updated.milboard_xv_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.milboard_xv_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/milboard_xv_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.milboard_xv_defconfig"\
+				"$PWD/../arch/arm64/configs/milboard_xv_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for MILBOARD-XV!"
 	fi
 }
 
@@ -65,6 +149,42 @@ revert_rt_patches()
 		rm -rf $PWD/../arch/arm64/configs/.orig.defconfig
 		rm -rf $PWD/../arch/arm64/configs/.updated.defconfig
 		echo "The PREEMPT RT patches have been successfully reverted!"
+
+
+		rm "$PWD/../arch/arm64/configs/dsboard_agx_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.dsboard_agx_defconfig\
+			$PWD/../arch/arm64/configs/dsboard_agx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.dsboard_agx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.dsboard_agx_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for DSBOARD-AGX!"
+
+		rm "$PWD/../arch/arm64/configs/dsboard_nx2_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.dsboard_nx2_defconfig\
+			$PWD/../arch/arm64/configs/dsboard_nx2_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.dsboard_nx2_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.dsboard_nx2_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for DSBOARD-NX2!"
+
+		rm "$PWD/../arch/arm64/configs/dsboard_ornx_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.dsboard_ornx_defconfig\
+			$PWD/../arch/arm64/configs/dsboard_ornx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.dsboard_ornx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.dsboard_ornx_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for DSBOARD-ORNX!"
+
+		rm "$PWD/../arch/arm64/configs/dsboard_xv2_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.dsboard_xv2_defconfig\
+			$PWD/../arch/arm64/configs/dsboard_xv2_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.dsboard_xv2_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.dsboard_xv2_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for DSBOARD-XV2!"
+
+		rm "$PWD/../arch/arm64/configs/milboard_xv_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.milboard_xv_defconfig\
+			$PWD/../arch/arm64/configs/milboard_xv_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.milboard_xv_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.milboard_xv_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for MILBOARD-XV!"
 	else
 		echo "The PREEMPT RT patches are not applied to the kernel!"
 	fi
