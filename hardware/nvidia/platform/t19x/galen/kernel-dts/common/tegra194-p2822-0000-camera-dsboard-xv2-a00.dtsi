@@ -77,12 +77,12 @@
 				};
 			};
 			i2c@5 {
-				status="disabled";
+				//status="disabled";
 				reg = <5>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
-				imx219_f@10 {
+				imx219_g@10 {
 					reset-gpios = <&tca6408_38 5 GPIO_ACTIVE_HIGH>;
 				};
 			};

@@ -5,7 +5,7 @@
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agx/Image 
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agx/tegra194-p2888-0001-p2822-0000.dtb
 	mkdir $HOME/kernel_out_dsboard_xv2_agx/imx477
-	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agx/tegra194-p2888-0001-p2822-0000.dtb
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agx/imx477/tegra194-p2888-0001-p2822-0000.dtb
 
 
 # For DSBOARD_XV2 with AGX Xavier Industrial SoM, type these commands below:
