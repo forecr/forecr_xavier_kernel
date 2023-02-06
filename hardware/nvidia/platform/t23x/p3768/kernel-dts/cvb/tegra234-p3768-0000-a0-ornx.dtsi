@@ -82,15 +82,15 @@
 				lanes {
 					usb3-0 {
 						nvidia,function = "xusb";
-						status = "okay";
+						status = "disabled";
 					};
 					usb3-1 {
 						nvidia,function = "xusb";
-						status = "okay";
+						status = "disabled";
 					};
 					usb3-2 {
 						nvidia,function = "xusb";
-						status = "okay";
+						status = "disabled";
 					};
 				};
 			};
@@ -98,7 +98,7 @@
 
 		ports {
 			usb2-0 {/* Goes to recovery port */
-				mode = "peripheral";
+				mode = "otg";
 				status = "okay";
 				usb-role-switch;
 				connector {
@@ -118,34 +118,36 @@
 			};
 			usb3-0 {/* Goes to hub */
 				nvidia,usb2-companion = <1>;
-				status = "okay";
+				status = "disabled";
 			};
 			usb3-1 {
 				nvidia,usb2-companion = <2>;
-				status = "okay";
+				status = "disabled";
 			};
 			usb3-2 {
 				nvidia,usb2-companion = <0>;
-				status = "okay";
+				status = "disabled";
 			};
 		};
 	};
 
 	tegra_xudc: xudc@3550000 {
 		status = "okay";
-		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>;
-		phy-names = "usb2-0";
+		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-2}>;
+		phy-names = "usb2-0", "usb3-2";
 		nvidia,xusb-padctl = <&xusb_padctl>;
 	};
 
 	tegra_xhci: xhci@3610000 {
 		status = "okay";
-		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-1}>,
+		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-1}>,
 			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-2}>,
 			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-0}>,
 			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-1}>,
 			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-2}>;
-		phy-names = "usb2-1", "usb2-2", "usb3-0", "usb3-1", "usb3-2";
+		phy-names = "usb2-0", "usb2-1", "usb2-2", "usb3-0", "usb3-1", "usb3-2";
 		nvidia,xusb-padctl = <&xusb_padctl>;
 	};
 
