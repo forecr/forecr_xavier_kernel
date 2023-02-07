@@ -30,6 +30,7 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nx/Image
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
 
+
 # For DSBOARD_NX2 (rev-1.22) with Xavier NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_xavier
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_xavier/

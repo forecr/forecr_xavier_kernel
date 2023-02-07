@@ -43,7 +43,7 @@
 		phy-names = "p2u-0";
 	};
 
-	pcie@140c0000 { /* C9x1 */
+	pcie@140c0000 { /* C9x1 - It will be fixed for the next release */
 		status = "okay";
 		num-lanes = <1>;
 		phys = <&p2u_gbe_1>;
