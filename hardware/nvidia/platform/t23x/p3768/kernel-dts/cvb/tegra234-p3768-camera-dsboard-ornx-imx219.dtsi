@@ -23,6 +23,12 @@
 #define CAM3_PWDN	TEGRA234_AON_GPIO(EE, 2) // GPIO10
 #define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
 
+// CAM0_MCLK - Pin_116 - GPIO(P, 0)
+// CAM1_MCLK - Pin_122 - GPIO(P, 1)
+// CAM2_MCLK - GPIO02 - GPIO(Q, 5)
+// CAM3_MCLK - GPIO11 - GPIO(Q, 6)
+
+
 / {
 	i2c@3180000 {
 		pca9544a_70: pca9544a@70 {
