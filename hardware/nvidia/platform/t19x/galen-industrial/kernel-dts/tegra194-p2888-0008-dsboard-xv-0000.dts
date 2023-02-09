@@ -27,4 +27,20 @@
 	psci {
 		nvidia,system-lp0-disable;
 	};
+
+	/*
+	bpmp {
+		i2c {
+			spmic@3c {
+				backup-battery {
+					status = "okay";
+					backup-battery-charging-current = <800>;
+					backup-battery-charging-voltage = <3000000>;
+					backup-battery-output-resister = <100>;
+				};
+			};
+		};
+	};
+	*/
+
 };
