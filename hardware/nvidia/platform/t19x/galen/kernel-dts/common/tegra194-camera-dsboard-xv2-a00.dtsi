@@ -72,10 +72,10 @@
 				};
 			};
 			port@5 {
-				status="disabled";
+				status="okay";
 				reg = <5>;
 				dsboard_xv2_vi_in5: endpoint {
-					status="disabled";
+					status="okay";
 					port-index = <5>;
 					bus-width = <2>;
 					remote-endpoint = <&dsboard_xv2_csi_out5>;
@@ -221,26 +221,26 @@
 				};
 			};
 			channel@5 { //in next board revision, the port-index should be updated to 6-G.
-				status="disabled";
+				status="okay";
 				reg = <5>;
 				ports {
 					#address-cells = <1>;
 					#size-cells = <0>;
 					port@0 {
-						status="disabled";
+						status="okay";
 						reg = <0>;
 						dsboard_xv2_csi_in5: endpoint@10 {
-							status="disabled";
-							port-index = <5>;
+							status="okay";
+							port-index = <6>;
 							bus-width = <2>;
 							remote-endpoint = <&dsboard_xv2_imx219_out5>;
 						};
 					};
 					port@1 {
-						status="disabled";
+						status="okay";
 						reg = <1>;
 						dsboard_xv2_csi_out5: endpoint@11 {
-							status="disabled";
+							status="okay";
 							remote-endpoint = <&dsboard_xv2_vi_in5>;
 						};
 					};
@@ -1840,8 +1840,8 @@
 			};
 
 			i2c@5 {
-				imx219_f@10 {
-					status="disabled";
+				imx219_g@10 {
+					//status="disabled";
 					compatible = "sony,imx219";
 					/* I2C device address */
 					reg = <0x10>;
@@ -1941,7 +1941,7 @@
 					mode0 { /* IMX219_MODE_3280x2464_21FPS */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "yes";
 						dpcm_enable = "false";
@@ -1981,7 +1981,7 @@
 					mode1 { /* IMX219_MODE_3280x1848_28FPS */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "yes";
 						dpcm_enable = "false";
@@ -2021,7 +2021,7 @@
 					mode2 { /* IMX219_MODE_1920x1080_30FPS */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "yes";
 						dpcm_enable = "false";
@@ -2062,7 +2062,7 @@
 					mode3 { /* IMX219_MODE_1640x1232_30FPS */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "yes";
 						dpcm_enable = "false";
@@ -2103,7 +2103,7 @@
 					mode4 { /* IMX219_MODE_1280x720_60FPS */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "yes";
 						dpcm_enable = "false";
@@ -2197,7 +2197,7 @@
 		* isp_bw_margin_pct = <>;
 		* Isp bandwidth margin in percentage
 		*/
-		num_csi_lanes = <10>;
+		num_csi_lanes = <12>;
 		max_lane_speed = <1500000>;
 		min_bits_per_pixel = <10>;
 		vi_peak_byte_per_pixel = <2>;
@@ -2301,18 +2301,18 @@
 				};
 			};
 			module5 {
-				status = "disabled";
+				status = "okay";
 				badge = "dsboard_xv2_topright_P5V27C";
 				position = "topright";
 				orientation = "1";
 				drivernode0 {
-					status = "disabled";
+					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx219 35-0010";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@5/imx219_f@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@5/imx219_g@10";
 				};
 				drivernode1 {
-					status = "disabled";
+					status = "okay";
 					pcl_id = "v4l2_lens";
 					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx219@P5V27C/";
 				};
