@@ -33,10 +33,10 @@
 					};
 				};
 				port@1 {
-					status = "disabled";
+					status = "okay";
 					reg = <1>;
 					dsboard_xv2_vi_in1: endpoint {
-						status = "disabled";
+						status = "okay";
 						port-index = <1>;
 						bus-width = <2>;
 						remote-endpoint = <&dsboard_xv2_csi_out1>;
@@ -53,10 +53,10 @@
 					};
 				};
 				port@3 {
-					status = "disabled";
+					status = "okay";
 					reg = <3>;
 					dsboard_xv2_vi_in3: endpoint {
-						status = "disabled";
+						status = "okay";
 						port-index = <3>;
 						bus-width = <2>;
 						remote-endpoint = <&dsboard_xv2_csi_out3>;
@@ -117,26 +117,26 @@
 				};
 			};
 			channel@1 {
-				status = "disabled";
+				status = "okay";
 				reg = <1>;
 				ports {
 					#address-cells = <1>;
 					#size-cells = <0>;
 					port@0 {
-						status = "disabled";
+						status = "okay";
 						reg = <0>;
 						dsboard_xv2_csi_in1: endpoint@2 {
-							status = "disabled";
+							status = "okay";
 							port-index = <1>;
 							bus-width = <2>;
 							remote-endpoint = <&dsboard_xv2_ar0521_out1>;
 						};
 					};
 					port@1 {
-						status = "disabled";
+						status = "okay";
 						reg = <1>;
 						dsboard_xv2_csi_out1: endpoint@3 {
-							status = "disabled";
+							status = "okay";
 							remote-endpoint = <&dsboard_xv2_vi_in1>;
 						};
 					};
@@ -169,26 +169,26 @@
 				};
 			};
 			channel@3 {
-				status = "disabled";
+				status = "okay";
 				reg = <3>;
 				ports {
 					#address-cells = <1>;
 					#size-cells = <0>;
 					port@0 {
-						status = "disabled";
+						status = "okay";
 						reg = <0>;
 						dsboard_xv2_csi_in3: endpoint@6 {
-							status = "disabled";
+							status = "okay";
 							port-index = <3>;
 							bus-width = <2>;
 							remote-endpoint = <&dsboard_xv2_ar0521_out3>;
 						};
 					};
 					port@1 {
-						status = "disabled";
+						status = "okay";
 						reg = <1>;
 						dsboard_xv2_csi_out3: endpoint@7 {
-							status = "disabled";
+							status = "okay";
 							remote-endpoint = <&dsboard_xv2_vi_in3>;
 						};
 					};
@@ -578,7 +578,7 @@
 
 					/* V4L2 device node location */
 					devnode = "video1";
-					status = "disabled";
+					status = "okay";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -1206,7 +1206,7 @@
 
 					/* V4L2 device node location */
 					devnode = "video3";
-					status = "disabled";
+					status = "okay";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -2203,12 +2203,12 @@
 				};
 			};
 			module1 {
-				status = "disabled";
+				status = "okay";
 				badge = "dsboard_xv2_centerleft_ar0521";
 				position = "centerleft";
 				orientation = "1";
 				drivernode0 {
-					status = "disabled";
+					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "ar0521 31-0042";
 					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@1/ar0521_b@42";
@@ -2227,12 +2227,12 @@
 				};
 			};
 			module3 {
-				status = "disabled";
+				status = "okay";
 				badge = "dsboard_xv2_topleft_ar0521";
 				position = "topleft";
 				orientation = "1";
 				drivernode0 {
-					status = "disabled";
+					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "ar0521 33-0042";
 					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@3/ar0521_d@42";

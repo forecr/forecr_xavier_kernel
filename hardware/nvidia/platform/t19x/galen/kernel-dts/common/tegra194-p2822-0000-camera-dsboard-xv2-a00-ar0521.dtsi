@@ -37,6 +37,7 @@
 			skip_mux_detect;
 			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
 			i2c@0 {
+				status="okay";
 				reg = <0>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
@@ -80,7 +81,7 @@
 				};
 			};
 			i2c@1 {
-				status="disabled";
+				status="okay";
 				reg = <1>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
@@ -124,6 +125,7 @@
 				};
 			};
 			i2c@2 {
+				status="okay";
 				reg = <2>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
@@ -167,7 +169,7 @@
 				};
 			};
 			i2c@3 {
-				status="disabled";
+				status="okay";
 				reg = <3>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
@@ -211,6 +213,7 @@
 				};
 			};
 			i2c@4 {
+				status="okay";
 				reg = <4>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
@@ -265,7 +268,7 @@
 			    		#gpio-cells = <2>;
 			    		reg = <0x22>;
 					vcc-supply = <&p2822_vdd_sys_en>;
-			    		status = "okay";
+			    		status = "disabled";
 			    		tca6424_22_outlow {
 			    			/*
 				 		* GPIO-0 : RST_CAM1
