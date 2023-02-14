@@ -40,6 +40,7 @@
 					reset-gpios = <&tca6408_38 0 GPIO_ACTIVE_HIGH>;
 				};
 			};
+
 			i2c@1 {
 				reg = <1>;
 				i2c-mux,deselect-on-exit;
@@ -49,6 +50,7 @@
 					reset-gpios = <&tca6408_38 1 GPIO_ACTIVE_HIGH>;
 				};
 			};
+
 			i2c@2 {
 				reg = <2>;
 				i2c-mux,deselect-on-exit;
@@ -58,6 +60,7 @@
 					reset-gpios = <&tca6408_38 2 GPIO_ACTIVE_HIGH>;
 				};
 			};
+
 			i2c@3 {
 				reg = <3>;
 				i2c-mux,deselect-on-exit;
@@ -77,15 +80,15 @@
 				};
 			};
 			i2c@5 {
-				status="disabled";
 				reg = <5>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
-				imx477_f@1a {
+				imx477_g@1a {
 					reset-gpios = <&tca6408_38 5 GPIO_ACTIVE_HIGH>;
 				};
 			};
+
 
 			i2c@6 {
 				reg = <6>;

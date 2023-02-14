@@ -72,10 +72,10 @@
 				};
 			};
 			port@5 {
-				status="disabled";
+				status="okay";
 				reg = <5>;
 				dsboard_xv2_vi_in5: endpoint {
-					status="disabled";
+					status="okay";
 					port-index = <5>;
 					bus-width = <2>;
 					remote-endpoint = <&dsboard_xv2_csi_out5>;
@@ -221,26 +221,26 @@
 				};
 			};
 			channel@5 { //in next board revision, the port-index should be updated to 6-G.
-				status="disabled";
+				status="okay";
 				reg = <5>;
 				ports {
 					#address-cells = <1>;
 					#size-cells = <0>;
 					port@0 {
-						status="disabled";
+						status="okay";
 						reg = <0>;
 						dsboard_xv2_csi_in5: endpoint@10 {
-							status="disabled";
-							port-index = <5>;
+							status="okay";
+							port-index = <6>;
 							bus-width = <2>;
 							remote-endpoint = <&dsboard_xv2_imx477_out5>;
 						};
 					};
 					port@1 {
-						status="disabled";
+						status="okay";
 						reg = <1>;
 						dsboard_xv2_csi_out5: endpoint@11 {
-							status="disabled";
+							status="okay";
 							remote-endpoint = <&dsboard_xv2_vi_in5>;
 						};
 					};
@@ -369,7 +369,7 @@
 						line_length = "11200";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -409,7 +409,7 @@
 						line_length = "7000";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -457,7 +457,7 @@
 					reg = <0x1a>;
 
 					/* V4L2 device node location */
-					devnode = "video0";
+					devnode = "video1";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -566,7 +566,7 @@
 						line_length = "11200";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -606,7 +606,7 @@
 						line_length = "7000";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -628,6 +628,7 @@
 
 						embedded_metadata_height = "2";
 					};
+
 
 					ports {
 						#address-cells = <1>;
@@ -652,7 +653,7 @@
 					reg = <0x1a>;
 
 					/* V4L2 device node location */
-					devnode = "video0";
+					devnode = "video2";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -761,7 +762,7 @@
 						line_length = "11200";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -801,7 +802,7 @@
 						line_length = "7000";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -847,7 +848,7 @@
 					reg = <0x1a>;
 
 					/* V4L2 device node location */
-					devnode = "video0";
+					devnode = "video3";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -956,7 +957,7 @@
 						line_length = "11200";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -996,7 +997,7 @@
 						line_length = "7000";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -1042,7 +1043,7 @@
 					reg = <0x1a>;
 
 					/* V4L2 device node location */
-					devnode = "video0";
+					devnode = "video4";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -1151,7 +1152,7 @@
 						line_length = "11200";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -1191,7 +1192,7 @@
 						line_length = "7000";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -1231,15 +1232,15 @@
 			};
 
 			i2c@5 {
-				imx477_f@1a {
-					status="disabled";
+				imx477_g@1a {
+					status="okay";
 
 					compatible = "ridgerun,imx477";
 					/* I2C device address */
 					reg = <0x1a>;
 
 					/* V4L2 device node location */
-					devnode = "video0";
+					devnode = "video5";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -1333,7 +1334,7 @@
 					mode0 { /* IMX477_MODE_3840x2160 */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "no";
 						dpcm_enable = "false";
@@ -1348,7 +1349,7 @@
 						line_length = "11200";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -1373,7 +1374,7 @@
 					mode1 { /* IMX477_MODE_1920X1080 */
 						mclk_khz = "24000";
 						num_lanes = "2";
-						tegra_sinterface = "serial_f";
+						tegra_sinterface = "serial_g";
 						phy_mode = "DPHY";
 						discontinuous_clk = "no";
 						dpcm_enable = "false";
@@ -1388,7 +1389,7 @@
 						line_length = "7000";
 						inherent_gain = "1";
 						mclk_multiplier = "80";
-						pix_clk_hz = "840000000";
+						pix_clk_hz = "300000000";
 
 						gain_factor = "16";
 						framerate_factor = "1000000";
@@ -1429,6 +1430,15 @@
 		};
 	};
 
+	dsboard_xv2_lens_imx477@P5V27C {
+		min_focus_distance = "0.0";
+		hyper_focal = "0.0";
+		focal_length = "3.04";
+		f_number = "2.0";
+		aperture = "0.0";
+	};
+
+
 	tegra-camera-platform {
 		compatible = "nvidia, tegra-camera-platform";
 		/**
@@ -1459,7 +1469,7 @@
 		* isp_bw_margin_pct = <>;
 		* Isp bandwidth margin in percentage
 		*/
-		num_csi_lanes = <10>;
+		num_csi_lanes = <12>;
 		max_lane_speed = <1500000>;
 		min_bits_per_pixel = <10>;
 		vi_peak_byte_per_pixel = <2>;
@@ -1486,7 +1496,12 @@
 					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx477 30-001a";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@0/imx477_a@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@0/imx477_a@1a";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx477@P5V27C/";
 				};
 			};
 			module1 {
@@ -1498,7 +1513,12 @@
 					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx477 31-001a";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@1/imx477_b@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@1/imx477_b@1a";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx477@P5V27C/";
 				};
 			};
 			module2 {
@@ -1510,7 +1530,12 @@
 					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx477 32-001a";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@2/imx477_c@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@2/imx477_c@1a";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx477@P5V27C/";
 				};
 			};
 			module3 {
@@ -1522,7 +1547,12 @@
 					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx477 33-001a";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@3/imx477_d@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@3/imx477_d@1a";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx477@P5V27C/";
 				};
 			};
 			module4 {
@@ -1534,19 +1564,29 @@
 					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx477 34-001a";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@4/imx477_e@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@4/imx477_e@1a";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx477@P5V27C/";
 				};
 			};
 			module5 {
-				status = "disabled";
+				status = "okay";
 				badge = "dsboard_xv2_topright_P5V27C";
 				position = "topright";
 				orientation = "1";
 				drivernode0 {
-					status = "disabled";
+					status = "okay";
 					pcl_id = "v4l2_sensor";
 					devname = "imx477 35-001a";
-					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@5/imx477_f@10";
+					proc-device-tree = "/proc/device-tree/i2c@3180000/tca9548@70/i2c@5/imx477_g@1a";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_xv2_lens_imx477@P5V27C/";
 				};
 			};
 		};
