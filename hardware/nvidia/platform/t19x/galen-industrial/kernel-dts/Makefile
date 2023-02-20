@@ -21,6 +21,7 @@ dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0008-p2822-0000-safety.dtb
 dtbo-$(BUILD_19x_ENABLE) += tegra194-p2888-0008-p2822-0000-overlay.dtbo
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0008-dsboard-xv-0000.dtb
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0008-dsboard-xv2-0000.dtb
+dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0008-dsboard-xv2-0000-imx477.dtb
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0008-milboard-xv-0000.dtb
 
 ifneq ($(dtb-y),)
