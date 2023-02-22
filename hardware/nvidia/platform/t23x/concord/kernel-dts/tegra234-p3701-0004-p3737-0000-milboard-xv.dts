@@ -58,6 +58,12 @@
 		};
 	};
 
+	pcie@14180000 { /* PCIe x1 (C0) */
+		status = "okay";
+		phys = <&p2u_hsio_0>;
+		phy-names = "p2u-0";
+	};
+
 	pcie@141a0000 {
 		nvidia,max-speed = <2>;
 	};
