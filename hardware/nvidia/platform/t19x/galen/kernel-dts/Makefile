@@ -41,6 +41,7 @@ dtbo-$(BUILD_19x_ENABLE) += tegra194-p2822-camera-e2832-overlay.dtbo
 dtbo-$(BUILD_19x_ENABLE) += tegra194-p2822-camera-eCAM130A_CUXVR-overlay.dtbo
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0001-dsboard-xv-0000.dtb
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0001-dsboard-xv2-0000.dtb
+dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0001-dsboard-xv2-0000-expansion.dtb
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0001-dsboard-xv2-0000-imx477.dtb
 dtb-$(BUILD_19x_ENABLE) += tegra194-p2888-0001-milboard-xv-0000.dtb
 
