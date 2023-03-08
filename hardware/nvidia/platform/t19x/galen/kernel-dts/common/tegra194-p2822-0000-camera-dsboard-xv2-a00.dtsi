@@ -77,12 +77,11 @@
 				};
 			};
 			i2c@5 {
-				status="disabled";
 				reg = <5>;
 				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
-				imx219_f@10 {
+				imx219_g@10 {
 					reset-gpios = <&tca6408_38 5 GPIO_ACTIVE_HIGH>;
 				};
 			};
@@ -93,34 +92,34 @@
 				#address-cells = <1>;
 				#size-cells = <0>;
 				tca6408_38: tca6408@38 {
-								compatible = "nxp,pcf8574a";
-								reg = <0x38>;
-								gpio-controller;
-								#gpio-cells = <2>;
-								tca6408_38_outlow {
-									/*
-									 * GPIO-0 : PWDN_CAM0
-									 * GPIO-1 : PWDN_CAM1
-									 * GPIO-2 : PWDN_CAM2
-									 * GPIO-3 : PWDN_CAM3
-									 * GPIO-4 : PWDN_CAM4
-									 * GPIO-5 : PWDN_CAM5
-									 * GPIO-6 : 
-									 * GPIO-7 : 
-									 */
-									gpio-hog;
-									gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
-									output-low;
-									label = "tca6408_38_outlow_0",
-										"tca6408_38_outlow_1",
-										"tca6408_38_outlow_2",
-										"tca6408_38_outlow_3",
-										"tca6408_38_outlow_4",
-										"tca6408_38_outlow_5",
-										"tca6408_38_outlow_6",
-										"tca6408_38_outlow_7";
-								};
-						};
+					compatible = "nxp,pcf8574a";
+					reg = <0x38>;
+					gpio-controller;
+					#gpio-cells = <2>;
+					tca6408_38_outlow {
+						/*
+						 * GPIO-0 : PWDN_CAM0
+						 * GPIO-1 : PWDN_CAM1
+						 * GPIO-2 : PWDN_CAM2
+						 * GPIO-3 : PWDN_CAM3
+						 * GPIO-4 : PWDN_CAM4
+						 * GPIO-5 : PWDN_CAM5
+						 * GPIO-6 : 
+						 * GPIO-7 : 
+						 */
+						gpio-hog;
+						gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+						output-low;
+						label = "tca6408_38_outlow_0",
+							"tca6408_38_outlow_1",
+							"tca6408_38_outlow_2",
+							"tca6408_38_outlow_3",
+							"tca6408_38_outlow_4",
+							"tca6408_38_outlow_5",
+							"tca6408_38_outlow_6",
+							"tca6408_38_outlow_7";
+					};
+				};
 			};
 		};
 	};
