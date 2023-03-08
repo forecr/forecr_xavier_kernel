@@ -6,6 +6,8 @@
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agx/tegra194-p2888-0001-p2822-0000.dtb
 	mkdir $HOME/kernel_out_dsboard_xv2_agx/imx477
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agx/imx477/tegra194-p2888-0001-p2822-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_xv2_agx/xv2-expansionboard
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-expansion.dtb $HOME/kernel_out_dsboard_xv2_agx/xv2-expansionboard/tegra194-p2888-0001-p2822-0000.dtb
 
 
 # For DSBOARD_XV2 with AGX Xavier Industrial SoM, type these commands below:
@@ -16,6 +18,8 @@
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agxi/tegra194-p2888-0008-p2822-0000.dtb
 	mkdir $HOME/kernel_out_dsboard_xv2_agxi/imx477
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agxi/imx477/tegra194-p2888-0008-p2822-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_xv2_agxi/xv2-expansionboard
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000-expansion.dtb $HOME/kernel_out_dsboard_xv2_agxi/xv2-expansionboard/tegra194-p2888-0008-p2822-0000.dtb
 
 
 # For DSBOARD_AGX with AGX Orin SoM, type these commands below:
