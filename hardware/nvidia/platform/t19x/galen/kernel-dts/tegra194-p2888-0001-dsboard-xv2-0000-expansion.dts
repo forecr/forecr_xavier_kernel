@@ -1,0 +1,172 @@
+/*
+ * Top level DTS file for CVM:P2888-0001 and CVB:DSBOARD-XV2.
+ *
+ * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+#include "common/tegra194-p2888-0001-p2822-0000-common.dtsi"
+#include "common/tegra194-p2822-0000-camera-dsboard-xv2-a00.dtsi"
+
+/*
+ * t194 galen mfg uses 3 display heads out of the 4 available on t194:
+ *	fb0: Head0->SOR2->DPIM->HDMI
+ *	fb1: Head1->SOR0->DPIM->DP0
+ *	fb2: Head2->SOR1->DPIM->DP1
+ * Each display head is assigned two windows each.
+ */
+
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "AGX Xavier for DSBOARD-XV2 + xv2-expansionboard";
+
+	i2c@c240000 {
+		ucsi_ccg@8 {
+			status = "disabled";
+		};
+		pcf8574a: gpio@38 {
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
+	};
+
+	i2c@c250000 {
+		rt5659.7-001a@1a {
+			status = "disabled";
+		};
+	};
+
+	pcie@141a0000 { // C5 - PCIE0 (NVHS0)
+		status = "okay";
+	};
+	pcie_ep@141a0000 {
+		status = "disabled";
+	};
+
+	sound {
+		status = "disabled";
+	};
+
+	host1x {
+
+		nvdisplay@15200000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+
+			status="okay";
+		};
+
+		nvdisplay@15210000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+
+			status="okay";
+
+			/delete-property/  vdd-edp-sec-mode-supply;
+			/delete-property/  vdd-dp-pad-supply;
+		};
+
+		nvdisplay@15220000 {
+			/delete-property/  extcon-cables;
+			/delete-property/  extcon-cable-names;
+			/delete-property/  #extcon-cells;
+
+			status="disabled";
+		};
+
+		sor {
+			/delete-property/  nvidia,typec-port;
+
+			status = "okay";
+			nvidia,active-panel = <&sor0_hdmi_display>;
+			nvidia,xbar-ctrl = <0x0 0x1 0x2 0x3 0x4>;
+
+			hdmi-display {
+				status = "okay";
+
+				disp-default-out {
+					nvidia,out-flags = <TEGRA_DC_OUT_HOTPLUG_LOW>;
+				};
+			};
+
+			dp-display {
+				status = "disabled";
+			};
+		};
+
+		sor1 {
+			status = "disabled";
+			/delete-property/  nvidia,typec-port;
+
+			dp-display {
+				status = "disabled";
+			};
+		};
+
+	};
+
+	xusb_padctl@3520000 {
+
+		ports {
+			usb2-0 {
+				status = "okay";
+				vbus-supply = <&battery_reg>;
+				mode = "host";
+			};
+			usb2-3 {
+				status = "okay";
+				vbus-supply = <&battery_reg>;
+				mode = "host";
+			};
+		};
+	};
+
+	xudc@3550000 {
+		/delete-property/  extcon-cables;
+		/delete-property/  extcon-cable-names;
+		/delete-property/  #extcon-cells;
+	};
+
+	xhci@3610000 {
+		/delete-property/  extcon-cables;
+		/delete-property/  extcon-cable-names;
+		/delete-property/  #extcon-cells;
+	};
+
+	/delete-node/ usb_cd;
+	
+	fixed-regulators {
+		regulator@114 {
+			/delete-property/	gpio;
+			/delete-property/	enable-active-high;
+		};
+
+		regulator@0 {
+			/delete-property/	regulator-always-on;
+			gpio = <&tegra_main_gpio TEGRA194_MAIN_GPIO(Z, 1) 0x0>;
+			enable-active-high;
+		};
+	};
+
+	clocks-init {
+		disable {
+			/delete-property/ clocks;
+		};
+	};
+
+};	
+
+
