@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p2888-0008-p2822-0000-noecc.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p2888-0008-p2822-0000-safety.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p2888-0008-dsboard-xv-0000.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p2888-0008-dsboard-xv2-0000.dtb
+dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p2888-0008-dsboard-xv2-0000-expansion.dtb
 dtb-$(CONFIG_ARCH_TEGRA_19x_SOC) += tegra194-p2888-0008-milboard-xv-0000.dtb
 
 ifneq ($(dtb-y),)
