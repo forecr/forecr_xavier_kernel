@@ -28,9 +28,15 @@
 #include <media/camera_common.h>
 #include "camera/camera_gpio.h"
 
+/* For Thread */
+#include <linux/delay.h>
+#include <linux/kthread.h>
+#include <linux/sched.h>
+
 #include "ar0521.h"
 
 #include "cam_firmware.h"
+#include "stream_mon_thrd.h"
 
 #define DEBUG_PRINTK
 #ifndef DEBUG_PRINTK
@@ -39,10 +45,100 @@
 #define debug_printk printk
 #endif
 
+#define MAX_NUM_CAM 6
+
+static uint8_t num_cam = 0;
+int init_err_hand_q=0;
+
+/*For Thread*/
+static struct task_struct *strm_mon_thrd;
+static uint8_t is_stream_monitor_thrd = 0, stop_thread=0;
+struct stream_monitor strm_mon[MAX_NUM_CAM];
+
+/*For Queue*/
+extern wait_queue_head_t econ_err_hand_q;
+extern int econ_frame_err_track;
+extern int econ_num_uncorr_err;
+extern char econ_dev_name[32];
+
 static const struct v4l2_ctrl_ops ar0521_ctrl_ops = {
 	.g_volatile_ctrl = ar0521_g_volatile_ctrl,
 	.s_ctrl = ar0521_s_ctrl,
 };
+
+int mcu_err_handle(struct i2c_client *err_client, struct ar0521 *err_priv)
+{
+	int err = 0;
+
+	err = ar0521_reset_cam(err_client);
+	if(err < 0) {
+		dev_err(&err_client->dev,"%s failed.\n", __func__);
+		return err;
+	}
+
+	return 0;
+}
+
+int find_err_cam(char *err_cam_name)
+{
+	int loop = 0;
+	int cam_name_len = 0;
+	cam_name_len = strlen(err_cam_name);
+	if(cam_name_len <= 0) {
+#if DEBUG
+		printk("\nInvalid name found");
+#endif
+		return -1;
+	}
+
+	for(loop =0; loop < MAX_NUM_CAM; loop++) {
+		if(!(strcmp(err_cam_name, strm_mon[loop].camera_name))){
+#if DEBUG
+			printk("Facing streaming issue in CAM %d\n",loop);
+#endif
+			goto cam_find_exit;
+		}
+	}
+cam_find_exit:
+
+	return loop;
+
+}
+
+/**
+ * Econ's Error Handling Thread function
+ */
+
+int stream_monitor_thread(void *strm_dev)
+{
+	int count = 0;
+	uint8_t err_cam = 0 ;
+	while(!kthread_should_stop())
+	{
+		printk("Inside stream monitor thread and waiting for the event %d\n",count++);
+		msleep(100);
+		wait_event_interruptible(econ_err_hand_q, econ_frame_err_track == 1);
+		if(econ_frame_err_track == 1 && stop_thread != 1 ) {
+			econ_num_uncorr_err = 0;
+			econ_frame_err_track = 0;
+			printk("Got the uncorr_err event for the camera, %s\n",econ_dev_name);
+			err_cam = find_err_cam(econ_dev_name);
+			if(err_cam >=0 && err_cam < MAX_NUM_CAM) {
+				mcu_err_handle(strm_mon[err_cam].strm_client_mon,strm_mon[err_cam].strm_priv_mon);
+			}
+		}
+		else{
+			msleep(100);
+#if DEBUG
+			printk("No Un_Corr ERROR\n");
+#endif
+		}
+	}
+#ifdef DEBUG
+	printk("Stream monitor thread is stopped\n");
+#endif
+	return 0;
+}
 
 static int ar0521_power_on(struct camera_common_data *s_data)
 {
@@ -90,6 +186,7 @@ skip_power_seqn:
 	return -ENODEV;
 }
 
+#if 0
 static int ar0521_power_put(struct ar0521 *priv)
 {
 	struct camera_common_power_rail *pw = &priv->power;
@@ -117,6 +214,7 @@ static int ar0521_power_put(struct ar0521 *priv)
 
 	return 0;
 }
+#endif
 
 static int ar0521_power_get(struct ar0521 *priv)
 {
@@ -289,6 +387,46 @@ static int ar0521_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *param)
 	return 0;
 }
 
+#if ISP_PWDN_WKUP
+static int ar0521_s_power(struct v4l2_subdev *sd, int on)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct camera_common_data *s_data = to_camera_common_data(&client->dev);
+	struct ar0521 *priv = (struct ar0521 *)s_data->priv;
+	int err;
+
+	if(on) {
+		if(priv->power_on == 0) {
+			/* Perform power wakeup sequence */
+			err = cam_isp_power_wakeup(client);
+			if(err < 0)
+			{
+				dev_err(&client->dev, "%s: Failed Power_wakeup\n", __func__);
+				return err;
+			}
+			mdelay(80);
+
+			pr_info("Sensor Hardware Power Up Sequence\n");
+		}
+		priv->power_on++;
+	}
+	else {
+		if(priv->power_on == 1) {
+			/* Perform power down Sequence */
+			err = cam_isp_power_down(client);
+			if (err < 0)
+			{
+				dev_err(&client->dev, "%s: Failed power_down\n", __func__);
+				return err;
+			}
+			pr_info("Sensor Hardware Power Down Sequence\n");
+		}
+		priv->power_on--;
+	}
+	return 0;
+}
+#endif
+
 static struct v4l2_subdev_video_ops ar0521_subdev_video_ops = {
 	.s_stream = ar0521_s_stream,
 	.g_mbus_config = camera_common_g_mbus_config,
@@ -298,7 +436,11 @@ static struct v4l2_subdev_video_ops ar0521_subdev_video_ops = {
 };
 
 static struct v4l2_subdev_core_ops ar0521_subdev_core_ops = {
+#if ISP_PWDN_WKUP
+	.s_power = ar0521_s_power,
+#else
 	.s_power = camera_common_s_power,
+#endif
 };
 
 static int ar0521_get_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_pad_config *cfg,
@@ -436,6 +578,38 @@ static int ar0521_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
 	return err;
 }
 
+static int ar0521_reset_cam(struct i2c_client *client)
+{
+	struct camera_common_data *s_data = to_camera_common_data(&client->dev);
+	struct ar0521 *priv = (struct ar0521 *)s_data->priv;
+	int err;
+
+	/* De-initialize the ISP*/
+	err = cam_isp_deinit(client);
+	if(err < 0) {
+		dev_err(&client->dev, "Unable to De-Init ISP \n");
+		return -EFAULT;
+	}
+
+	/* Initialize the ISP */
+	err = cam_isp_init(client);
+        if(err < 0) {
+		dev_err(&client->dev, "Unable to Init ISP \n");
+		return -EFAULT;
+	}
+
+	/* Configure the stream again */
+	priv->force_config = true;
+	err = cam_stream_config(client, priv->format_fourcc, priv->prev_index,
+						priv->prev_frateindex);
+	if (err < 0) {
+		dev_err(&client->dev, "%s: Failed stream_config \n", __func__);
+		return err;
+	}
+
+	return err;
+}
+
 static int ar0521_s_ctrl(struct v4l2_ctrl *ctrl)
 {
 	struct ar0521 *priv =
@@ -454,6 +628,14 @@ static int ar0521_s_ctrl(struct v4l2_ctrl *ctrl)
 
 	if (priv->power.state == SWITCH_OFF)
 		return 0;
+
+	if(ctrl->id == V4L2_CID_RESET_CAM) {
+		err = ar0521_reset_cam(client);
+		if(err < 0) {
+			dev_err(&client->dev," %s (%d ) Reset cam failed \n", __func__, __LINE__);
+		}
+		return err;
+	}
 
 	if ((err =
 	     cam_set_ctrl(client, ctrl->id, CTRL_STANDARD, ctrl->val)) < 0) {
@@ -830,7 +1012,7 @@ static int cam_stream_config(struct i2c_client *client, uint32_t format,
 		goto exit;
 	}
 
-	if(priv->prev_index == index) {
+	if(priv->prev_index == index && priv->force_config != true) {
 		debug_printk("Skipping Previous mode set ... \n");
 		ret = 0;
 		goto exit;
@@ -925,14 +1107,150 @@ issue_cmd:
 	ret = -ETIMEDOUT;
 
 exit:
-	if(!ret)
+	if(!ret) {
 		priv->prev_index = index;
+		priv->prev_frateindex = frate_index;
+	        priv->force_config = false;	
+	}
 
 	/* unlock semaphore */
 	mutex_unlock(&cam_i2c_mutex);
 
 	return ret;
 }
+
+#if ISP_PWDN_WKUP
+static int cam_isp_power_down(struct i2c_client *client)
+{
+	uint32_t payload_len = 0;
+
+	uint16_t cmd_status = 0;
+	uint8_t retcode = 0, cmd_id = 0;
+	int retry = 1000, err = 0;
+
+	/*lock semaphore */
+	mutex_lock(&cam_i2c_mutex);
+
+	/* First Txn Payload length = 0 */
+	payload_len = 0;
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_ISP_PDOWN;
+	mc_data[2] = payload_len >> 8;
+	mc_data[3] = payload_len & 0xFF;
+	mc_data[4] = errorcheck(&mc_data[2], 2);
+
+	ar0521_write(client, mc_data, TX_LEN_PKT);
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_ISP_PDOWN;
+	err = ar0521_write(client, mc_data, 2);
+	if (err != 0) {
+		dev_err(&client->dev, " %s(%d) Error - %d \n",
+			__func__, __LINE__, err);
+		goto exit;
+	}
+
+	while (--retry > 0) {
+		msleep(20);
+		cmd_id = CMD_ID_ISP_PDOWN;
+		if (cam_get_cmd_status(client, &cmd_id, &cmd_status, &retcode) <
+		    0) {
+			dev_err(&client->dev, " %s(%d) Get Status Error \n",
+				__func__, __LINE__);
+			err = -EINVAL;
+			goto exit;
+		}
+
+		if ((cmd_status == CAM_CMD_STATUS_ISP_PWDN) &&
+		    ((retcode == ERRCODE_SUCCESS) || retcode == ERRCODE_ALREADY)) {
+			err = 0;
+			goto exit;
+		}
+
+		if ((retcode != ERRCODE_BUSY) &&
+		    ((cmd_status != CAM_CMD_STATUS_PENDING))) {
+			dev_err(&client->dev,
+				"(%s) %d Error STATUS = 0x%04x RET = 0x%02x\n",
+				__func__, __LINE__, cmd_status,
+				retcode);
+			err = -EIO;
+			goto exit;
+		}
+
+	}
+	err = -ETIMEDOUT;
+ exit:
+	/* unlock semaphore */
+	mutex_unlock(&cam_i2c_mutex);
+	return err;
+}
+
+static int cam_isp_power_wakeup(struct i2c_client *client)
+{
+	uint32_t payload_len = 0;
+
+	uint16_t cmd_status = 0;
+	uint8_t retcode = 0, cmd_id = 0;
+	int retry = 1000, err = 0;
+
+	/*lock semaphore */
+	mutex_lock(&cam_i2c_mutex);
+	/* First Txn Payload length = 0 */
+	payload_len = 0;
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_ISP_PUP;
+	mc_data[2] = payload_len >> 8;
+	mc_data[3] = payload_len & 0xFF;
+	mc_data[4] = errorcheck(&mc_data[2], 2);
+
+	ar0521_write(client, mc_data, TX_LEN_PKT);
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_ISP_PUP;
+	err = ar0521_write(client, mc_data, 2);
+	if (err != 0) {
+		dev_err(&client->dev, " %s(%d) Error - %d \n",
+			__func__, __LINE__, err);
+		goto exit;
+	}
+
+	while (--retry > 0) {
+		msleep(20);
+		cmd_id = CMD_ID_ISP_PUP;
+		if (cam_get_cmd_status(client, &cmd_id, &cmd_status, &retcode) <
+		    0) {
+			dev_err(&client->dev, " %s(%d) Error \n",
+				__func__, __LINE__);
+			err = -EIO;
+			goto exit;
+		}
+
+		if ((cmd_status == CAM_CMD_STATUS_SUCCESS) &&
+		    ((retcode == ERRCODE_SUCCESS) || retcode == ERRCODE_ALREADY)) {
+			err = 0;
+			goto exit;
+		}
+
+		if ((retcode != ERRCODE_BUSY) &&
+		    ((cmd_status != CAM_CMD_STATUS_PENDING))) {
+			dev_err(&client->dev,
+				"(%s) %d Error STATUS = 0x%04x RET = 0x%02x\n",
+				__func__, __LINE__, cmd_status, retcode);
+			err = -EIO;
+			goto exit;
+		}
+
+	}
+
+	err = -ETIMEDOUT;
+ exit:
+	/* unlock semaphore */
+	mutex_unlock(&cam_i2c_mutex);
+	return err;
+}
+#endif
 
 static int cam_get_ctrl(struct i2c_client *client, uint32_t arg_ctrl_id,
 			uint8_t * ctrl_type, int32_t * curr_val)
@@ -2205,6 +2523,70 @@ exit:
 	return err;
 }
 
+static int cam_isp_deinit(struct i2c_client *client)
+{
+	uint32_t payload_len = 0;
+
+	uint16_t cmd_status = 0;
+	uint8_t retcode = 0, cmd_id = 0;
+	int retry = 1000, err = 0;
+
+	pr_info("cam_isp_de-init\n");
+
+	/* call ISP De-init command */
+
+	/* First Txn Payload length = 0 */
+	payload_len = 0;
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_DE_INIT_CAM;
+	mc_data[2] = payload_len >> 8;
+	mc_data[3] = payload_len & 0xFF;
+	mc_data[4] = errorcheck(&mc_data[2], 2);
+
+	ar0521_write(client, mc_data, TX_LEN_PKT);
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_DE_INIT_CAM;
+	err = ar0521_write(client, mc_data, 2);
+	if (err != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, err);
+		return -EIO;
+	}
+
+	while (--retry > 0) {
+		/* Some Sleep for init to process */
+		mdelay(500);
+
+		cmd_id = CMD_ID_DE_INIT_CAM;
+		if (cam_get_cmd_status
+		    (client, &cmd_id, &cmd_status, &retcode) < 0) {
+			dev_err(&client->dev," %s(%d) Error \n",
+			       __func__, __LINE__);
+			return -EIO;
+		}
+
+		if ((cmd_status == CAM_CMD_STATUS_ISP_UNINIT) &&
+		    ((retcode == ERRCODE_SUCCESS) || (retcode == ERRCODE_ALREADY))) {
+			dev_err(&client->dev,"ISP De-initialized !! \n");
+			//dev_err(" ISP Already Initialized !! \n");
+			return 0;
+		}
+
+		if ((retcode != ERRCODE_BUSY) &&
+		    ((cmd_status != CAM_CMD_STATUS_PENDING))) {
+			dev_err(&client->dev,
+			    "(%s) %d De-Init Error STATUS = 0x%04x RET = 0x%02x\n",
+			     __func__, __LINE__, cmd_status, retcode);
+			return -EIO;
+		}
+	}
+	dev_err(&client->dev,"ETIMEDOUT Error\n");
+	return -ETIMEDOUT;
+}
+
+
 static int cam_isp_init(struct i2c_client *client)
 {
 	uint32_t payload_len = 0;
@@ -2981,6 +3363,10 @@ static int ar0521_probe(struct i2c_client *client,
 	common_data->priv = (void *)priv;
 	priv->mipi_lane_config = mipi_lane;
 	priv->framesync_enabled = !framesync_disabled;
+	priv->force_config = false;
+#if ISP_PWDN_WKUP
+	priv->power_on = 0;
+#endif
 #ifdef FRAMESYNC_ENABLE
 	priv->last_sync_mode = 1;
 #endif
@@ -3208,7 +3594,61 @@ static int ar0521_probe(struct i2c_client *client,
 	err = v4l2_async_register_subdev(priv->subdev);
 	if (err)
 		return err;
-	
+
+	if(!init_err_hand_q) {
+		pr_info("Initializing err_hand_q\n");
+		/* Initialize the WAIT QUEUE head */
+		init_waitqueue_head(&econ_err_hand_q);
+		init_err_hand_q = 1;
+	}
+
+	/*Start Error Handling Thread*/
+	strm_mon[num_cam].strm_client_mon = client;
+	strm_mon[num_cam].strm_priv_mon = priv;
+	if (strcmp(client->dev.of_node->name, "ar0521_a") == 0) {
+		memset(strm_mon[num_cam].camera_name, 0, CAM_NAME_SIZE);
+		memcpy(strm_mon[num_cam].camera_name, &dev_name_compare[0], CAM_NAME_SIZE);
+	}
+	else if (strcmp(client->dev.of_node->name, "ar0521_b") == 0) {
+		memset(strm_mon[num_cam].camera_name, 0, CAM_NAME_SIZE);
+		memcpy(strm_mon[num_cam].camera_name, &dev_name_compare[1], CAM_NAME_SIZE);
+	}
+	else if(strcmp(client->dev.of_node->name, "ar0521_c") == 0) {
+		memset(strm_mon[num_cam].camera_name, 0, CAM_NAME_SIZE);
+		memcpy(strm_mon[num_cam].camera_name, &dev_name_compare[2], CAM_NAME_SIZE);
+	}
+	else if(strcmp(client->dev.of_node->name, "ar0521_d") == 0) {
+		memset(strm_mon[num_cam].camera_name, 0, CAM_NAME_SIZE);
+		memcpy(strm_mon[num_cam].camera_name, &dev_name_compare[3], CAM_NAME_SIZE);
+	}
+	else if (strcmp(client->dev.of_node->name, "ar0521_e") == 0)
+	{
+		memset(strm_mon[num_cam].camera_name, 0, CAM_NAME_SIZE);
+		memcpy(strm_mon[num_cam].camera_name, &dev_name_compare[4], CAM_NAME_SIZE);
+	}
+	else if (strcmp(client->dev.of_node->name, "ar0521_f") == 0)
+	{
+		memset(strm_mon[num_cam].camera_name, 0, CAM_NAME_SIZE);
+		memcpy(strm_mon[num_cam].camera_name, &dev_name_compare[5], CAM_NAME_SIZE);
+	}
+
+	if( is_stream_monitor_thrd == 0){
+		strm_mon_thrd = kthread_create(stream_monitor_thread, &strm_mon[num_cam], "strm_mon_thrd");
+		if(strm_mon_thrd != NULL)
+		{
+			wake_up_process(strm_mon_thrd);
+			printk("Stream Monitor Thread is created\n");
+		}
+		else
+		{
+			dev_err(&client->dev, "Could not create the stream monitor thread so stopping\n");
+			kthread_stop(strm_mon_thrd);
+		}
+		is_stream_monitor_thrd = 1;
+	}
+
+	num_cam++;
+
 	return 0;
 }
 
@@ -3249,8 +3689,18 @@ static int ar0521_remove(struct i2c_client *client)
 #endif
 
 	v4l2_ctrl_handler_free(&priv->ctrl_handler);
-	ar0521_power_put(priv);
+	//ar0521_power_put(priv);
 	camera_common_remove_debugfs(s_data);
+ 
+	if(is_stream_monitor_thrd == 1) {
+		/* For Err Handle Thread*/
+		stop_thread = 1;
+		econ_frame_err_track = 1;
+		wake_up_interruptible(&econ_err_hand_q);
+		printk("Stopping the Error Handling Thread\n");
+		kthread_stop(strm_mon_thrd);
+		is_stream_monitor_thrd = 0;
+	}
 
 	/* Free up memory */
 	for(loop = 0; loop < priv->cam_ctrl_info->ctrl_ui_data.ctrl_menu_info.num_menu_elem

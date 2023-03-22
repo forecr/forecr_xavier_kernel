@@ -46,6 +46,20 @@
 	| CAPTURE_STATUS_CHANSEL_NOMATCH \
 	| CAPTURE_STATUS_ABORTED)
 
+#define ERROR_TIME_TOLERANCE    3000000000
+#define MAX_ERROR_COUNT         5
+
+wait_queue_head_t econ_err_hand_q;
+EXPORT_SYMBOL(econ_err_hand_q);
+int econ_frame_err_track;
+EXPORT_SYMBOL(econ_frame_err_track);
+int econ_num_uncorr_err;
+EXPORT_SYMBOL(econ_num_uncorr_err);
+char econ_dev_name[32];
+EXPORT_SYMBOL(econ_dev_name);
+struct timespec64 uncorr_err_check_ts;
+u64 prev_time = 0, curr_time = 0;
+
 static const struct vi_capture_setup default_setup = {
 	.channel_flags = 0
 	| CAPTURE_CHANNEL_FLAG_VIDEO
@@ -504,6 +518,20 @@ uncorr_err:
 	spin_unlock_irqrestore(&chan->capture_state_lock, flags);
 
 	buf->vb2_state = VB2_BUF_STATE_ERROR;
+ 
+#ifdef CONFIG_VIDEO_ECAM
+	ktime_get_real_ts64(&uncorr_err_check_ts);
+	curr_time = (uncorr_err_check_ts.tv_sec * 1000000000LL) + uncorr_err_check_ts.tv_nsec;
+	if((curr_time - prev_time) < ERROR_TIME_TOLERANCE) {
+		/*Increment error count*/
+		econ_num_uncorr_err++;
+	}
+	else {
+		/*Uncorr error not coming continously. Reset the status variable*/
+		econ_num_uncorr_err = 0;
+	}
+	prev_time = curr_time;
+#endif
 
 rel_buf:
 	vi5_release_buffer(chan, buf);
@@ -625,6 +653,11 @@ static int tegra_channel_kthread_capture_dequeue(void *data)
 	struct tegra_channel *chan = data;
 	struct tegra_channel_buffer *buf;
 
+#ifdef CONFIG_VIDEO_ECAM
+	ktime_get_real_ts64(&uncorr_err_check_ts);
+	prev_time = (uncorr_err_check_ts.tv_sec * 1000000000LL) + uncorr_err_check_ts.tv_nsec;
+#endif
+
 	set_freezable();
 
 	while (1) {
@@ -655,6 +688,21 @@ static int tegra_channel_kthread_capture_dequeue(void *data)
 					"fatal: error recovery failed\n");
 				break;
 			}
+
+#ifdef CONFIG_VIDEO_ECAM
+			dev_err(chan->vi->dev,
+				"econ_err_handling %s:%d  no_of_corr_uncorr_err=%d\n", __func__,__LINE__, econ_num_uncorr_err);
+			if(econ_num_uncorr_err > MAX_ERROR_COUNT) {
+				econ_frame_err_track = 1;
+				memcpy(econ_dev_name, chan->video->name, sizeof(econ_dev_name));
+				dev_err(chan->vi->dev,
+					"Waking stream monitor thread error handling for camera sensor %s after %d uncorr_errors \n",
+					chan->video->name, econ_num_uncorr_err);
+				wake_up_interruptible(&econ_err_hand_q);
+				econ_num_uncorr_err = 0;
+			}
+#endif
+
 		} else
 			spin_unlock_irqrestore(&chan->capture_state_lock,
 				flags);

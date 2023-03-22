@@ -268,7 +268,7 @@
 			    		#gpio-cells = <2>;
 			    		reg = <0x22>;
 					vcc-supply = <&p2822_vdd_sys_en>;
-			    		status = "disabled";
+					status = "disabled";
 			    		tca6424_22_outlow {
 			    			/*
 				 		* GPIO-0 : RST_CAM1

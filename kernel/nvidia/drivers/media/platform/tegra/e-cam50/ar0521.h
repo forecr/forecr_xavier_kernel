@@ -61,6 +61,12 @@
 #define JETSON_TX2 	0x18
 #define JETSON_TX1 	0x21
 
+#define V4L2_CTRL_CLASS_USER		0x00980000
+#define V4L2_CID_BASE			(V4L2_CTRL_CLASS_USER | 0x900)
+#define V4L2_CID_RESET_CAM     		(V4L2_CID_BASE+22)
+#define ISP_PWDN_WKUP                   0
+#define DEBUG                           0
+
 typedef enum _errno {
 	ERRCODE_SUCCESS = 0x00,
 	ERRCODE_BUSY = 0x01,
@@ -235,8 +241,13 @@ struct ar0521 {
 	/* Array of Camera framesizes */
 	struct camera_common_frmfmt *cam_frmfmt;
 	uint16_t prev_index;
+	uint16_t prev_frateindex;
 	uint16_t mipi_lane_config;
+	bool force_config;
 	bool framesync_enabled;
+#if ISP_PWDN_WKUP
+	uint8_t power_on;
+#endif
 #ifdef FRAMESYNC_ENABLE
 	uint8_t last_sync_mode;
 #endif
@@ -285,7 +296,7 @@ static int ar0521_s_ctrl(struct v4l2_ctrl *ctrl);
 static int ar0521_read(struct i2c_client *client, u8 * val, u32 count);
 static int ar0521_write(struct i2c_client *client, u8 * val, u32 count);
 static int ar0521_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *param);
-int ar0521_s_power(struct v4l2_subdev *sd, int on);
+static int ar0521_reset_cam(struct i2c_client *client);
 static void toggle_gpio(unsigned int gpio, int value);
 
 static int cam_get_fw_version(struct i2c_client *client, unsigned char * fw_version, unsigned char *bin_fw_version);
@@ -298,6 +309,7 @@ static int cam_get_sensor_id(struct i2c_client *client, uint16_t * sensor_id);
 static int cam_get_cmd_status(struct i2c_client *client, uint8_t * cmd_id,
 			      uint16_t * cmd_status, uint8_t * ret_code);
 static int cam_isp_init(struct i2c_client *client);
+static int cam_isp_deinit(struct i2c_client *client);
 static int cam_stream_config(struct i2c_client *client, uint32_t format,
 			     int mode, int frate_index);
 static int cam_set_ctrl(struct i2c_client *client, uint32_t ctrl_id,
@@ -307,6 +319,11 @@ static int cam_get_ctrl(struct i2c_client *client, uint32_t ctrl_id,
 static int cam_get_ctrl_ui(struct i2c_client *client,
 			   ISP_CTRL_INFO * cam_ui_info, int index);
 static int cam_fw_update(struct i2c_client *client, unsigned char *bin_fw_version);
+#if ISP_PWDN_WKUP
+static int ar0521_s_power(struct v4l2_subdev *sd, int on);
+static int cam_isp_power_down(struct i2c_client *client);
+static int cam_isp_power_wakeup(struct i2c_client *client);
+#endif
 
 //static int cam_stream_on(struct i2c_client *client);
 static int cam_stream_off(struct i2c_client *client);
