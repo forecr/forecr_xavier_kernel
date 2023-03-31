@@ -1,0 +1,211 @@
+/*
+ * Top level DTS file for CVM:P3668-0001 and CVB:DSBOARD-NX2.
+ *
+ * Copyright (c) 2020-2021, Mist Elektronik Biyomedikal Ltd. Şti.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+
+/dts-v1/;
+#include "common/tegra194-p3668-common.dtsi"
+#include "common/tegra194-p3509-0000-a00.dtsi"
+
+#undef CAM_I2C_MUX
+#define CAM_I2C_MUX TEGRA194_MAIN_GPIO(Q, 6)
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "NVIDIA Jetson Xavier NX for DSBOARD-NX2 (rev-1.22)";
+
+	compatible = "nvidia,p3449-0000+p3668-0000", "nvidia,p3449-0000+p3668-0001", "nvidia,p3509-0000+p3668-0000", "nvidia,p3509-0000+p3668-0001", "nvidia,tegra194";
+
+	i2c@31e0000 {
+		pcf8574a: gpio@38 {
+			status = "okay";
+			compatible = "nxp,pcf8574a";
+			reg = <0x38>;
+			//interrupt-parent = <&irqpin2>;
+			//interrupts = <3 0>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			//interrupt-controller;
+			//#interrupt-cells = <2>;
+		};
+	};
+
+	pcie@141a0000{
+		nvidia,max-speed = <2>;
+	};
+
+	cam_i2cmux{
+		mux-gpios = <&tegra_main_gpio CAM_I2C_MUX GPIO_ACTIVE_HIGH>;
+	};
+
+	sdhci@3440000 {
+		status = "okay";
+		nvidia,vmmc-always-on;
+		disable-wp;
+	};
+
+	sdhci@3400000 {
+		status = "disabled";
+	};
+
+	clocks-init {
+		disable {
+			/delete-property/ clocks;
+		};
+	};
+
+#if TEGRA_PCIE_VERSION < DT_VERSION_2
+	gpio@c2f0000 {
+		w-disable1 {
+			gpio-hog;
+			output-high;
+			gpios = <TEGRA194_AON_GPIO(CC, 2) GPIO_ACTIVE_LOW>;
+			label = "w-disable1";
+			status = "disabled";
+		};
+	};
+#endif
+
+	spi@3210000{
+		status = "okay";
+		nvidia,clock-always-on;
+		spi@0 {
+			status = "okay";
+			compatible = "spidev";
+			reg = <0x0>;
+			spi-max-frequency = <20000000>;
+			nvidia,enable-hw-based-cs;
+			nvidia,enable-hw-based-cs;
+			nvidia,cs-setup-clk-count = <0x1e>;
+			nvidia,cs-hold-clk-count = <0x1e>;
+			nvidia,rx-clk-tap-delay = <0x1f>;
+			nvidia,tx-clk-tap-delay = <0x0>;
+		};
+	};
+
+	/* IMX477 dual sensor module begin */
+	cam_i2cmux {
+		i2c@0 {
+			rbpcv3_imx477_a@1a {
+				status = "okay";
+			};
+			rbpcv2_imx219_a@10 {
+                        	status = "disabled";
+			};
+		};
+		i2c@1 {
+			rbpcv3_imx477_c@1a {
+				status = "okay";
+			};
+			rbpcv2_imx219_c@10 {
+                        	status = "disabled";
+			};
+		};
+	};
+
+	tegra-camera-platform {
+		modules {
+			module0 {
+				status = "okay";
+				badge = "jakku_front_RBPCV3";
+				position = "front";
+				orientation = "1";
+
+				drivernode0 {
+					status = "okay";
+					pcl_id = "v4l2_sensor";
+					devname = "imx477 9-001a";
+					proc-device-tree = "/proc/device-tree/cam_i2cmux/i2c@0/rbpcv3_imx477_a@1a";
+				};
+			};
+			module1 {
+				status = "okay";
+				badge = "jakku_rear_RBPCV3";
+				position = "rear";
+				orientation = "1";
+
+				drivernode0 {
+					status = "okay";
+					pcl_id = "v4l2_sensor";
+					devname = "imx477 10-001a";
+					proc-device-tree = "/proc/device-tree/cam_i2cmux/i2c@1/rbpcv3_imx477_c@1a";
+				};
+			};
+		};
+	};
+
+	tegra-capture-vi {
+		ports {
+			port@0 {
+				endpoint {
+					status = "okay";
+					port-index = <0>;
+					bus-width = <2>;
+					remote-endpoint = <&rbpcv3_imx477_csi_out0>;
+				};
+			};
+			port@1 {
+				endpoint {
+					status = "okay";
+					port-index = <2>;
+					bus-width = <2>;
+					remote-endpoint = <&rbpcv3_imx477_csi_out1>;
+				};
+			};
+		};
+	};
+
+	host1x@13e00000 {
+		nvcsi@15a00000 {
+			channel@0 {
+				ports {
+					port@0 {
+						endpoint@0 {
+							status = "okay";
+							port-index = <0>;
+							bus-width = <2>;
+							remote-endpoint = <&rbpcv3_imx477_out0>;
+						};
+					};
+					port@1 {
+						endpoint@1 {
+							status = "okay";
+						};
+					};
+				};
+			};
+			channel@1 {
+				ports {
+					port@2 {
+						endpoint@2 {
+							status = "okay";
+							port-index = <2>;
+							bus-width = <2>;
+							remote-endpoint = <&rbpcv3_imx477_out1>;
+						};
+					};
+					port@3 {
+						endpoint@3 {
+							status = "okay";
+						};
+					};
+				};
+			};
+		};
+	};
+	/* IMX477 dual sensor module end */
+
+
+};
+
