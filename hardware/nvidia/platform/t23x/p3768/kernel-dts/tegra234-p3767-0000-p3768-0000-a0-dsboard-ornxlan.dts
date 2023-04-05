@@ -50,7 +50,7 @@
 		phy-names = "p2u-0";
 	};
 
-	i2c@c250000 {
+	i2c@3160000 {
 		tmp102: tmp102@49 { // Temperature Sensor
 			compatible = "ti,tmp102";
 			reg = <0x49>;
