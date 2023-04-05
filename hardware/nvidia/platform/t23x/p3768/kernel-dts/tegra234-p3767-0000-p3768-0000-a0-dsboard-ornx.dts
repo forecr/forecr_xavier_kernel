@@ -50,6 +50,14 @@
 		phy-names = "p2u-0";
 	};
 
+	i2c@3160000 {
+		tmp102: tmp102@49 { // Temperature Sensor
+			compatible = "ti,tmp102";
+			reg = <0x49>;
+			#thermal-sensor-cells = <0>;
+		};
+	};
+
 	spi@3210000{ // SPI0 with CS0 on expansion connector
 		status = "okay";
 		nvidia,clock-always-on;
