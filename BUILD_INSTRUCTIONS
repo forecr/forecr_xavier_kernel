@@ -21,6 +21,10 @@ make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
 make ARCH=arm64 O=$HOME/kernel_out_milboard_xv milboard_xv_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_milboard_xv -j$(($(nproc)-1))
 
+#MILBOARD_AGX for AGX Xavier
+make ARCH=arm64 O=$HOME/kernel_out_milboard_agx milboard_agx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_milboard_agx -j$(($(nproc)-1))
+
 #[OPTIONAL] Including RT-Patch
 #If RT-Patch has been applied to the kernel build, update the modules with new ones. 
 #For example:
