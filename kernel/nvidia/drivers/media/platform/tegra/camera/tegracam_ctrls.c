@@ -175,6 +175,29 @@ static struct v4l2_ctrl_config ctrl_cfg_list[] = {
 		.max = STEREO_EEPROM_SIZE,
 		.step = 2,
 	},
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+	{
+		.ops = &tegracam_ctrl_ops,
+		.id = TEGRA_CAMERA_CID_MASTER_SLAVE_SELECT,
+		.name = "Master-Slave Mode",
+		.type = V4L2_CTRL_TYPE_INTEGER_MENU,
+		.min = 0,
+		.max = ARRAY_SIZE(switch_ctrl_qmenu) - 1,
+		.menu_skip_mask = 0,
+		.def = 0,
+		.qmenu_int = switch_ctrl_qmenu,
+	},
+	{
+		.ops = &tegracam_ctrl_ops,
+		.id = TEGRA_CAMERA_CID_FRAME_SYNC,
+		.name = "Frame Sync Mode",
+		.type = V4L2_CTRL_TYPE_INTEGER64,
+		.flags = V4L2_CTRL_FLAG_SLIDER,
+		.min = 0,
+		.max = CTRL_U32_MAX,
+		.step = 1,
+	},
+#endif
 };
 
 static int tegracam_get_ctrl_index(u32 cid)
@@ -323,6 +346,17 @@ static int tegracam_set_ctrls(struct tegracam_ctrl_handler *handler,
 	case TEGRA_CAMERA_CID_GROUP_HOLD:
 		err = ops->set_group_hold(tc_dev, ctrl->val);
 		break;
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+	case TEGRA_CAMERA_CID_MASTER_SLAVE_SELECT:
+		if (switch_ctrl_qmenu[ctrl->val] == SWITCH_ON)
+			err = ops->set_master_mode(tc_dev, 1);
+		else
+			err = ops->set_master_mode(tc_dev, 0);
+		break;
+	case TEGRA_CAMERA_CID_FRAME_SYNC:
+		err = ops->set_frame_sync_mode(tc_dev, *ctrl->p_new.p_s64);
+		break;
+#endif
 	default:
 		pr_err("%s: unknown ctrl id.\n", __func__);
 		return -EINVAL;
@@ -395,6 +429,14 @@ static int tegracam_set_ctrls_ex(struct tegracam_ctrl_handler *handler,
 		break;
 	case TEGRA_CAMERA_CID_HDR_EN:
 		break;
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+	case TEGRA_CAMERA_CID_MASTER_SLAVE_SELECT:
+		err = ops->set_master_mode_ex(tc_dev, blob, *ctrl->p_new.p_s64);
+		break;
+	case TEGRA_CAMERA_CID_FRAME_SYNC:
+		err = ops->set_frame_sync_mode_ex(tc_dev, blob, *ctrl->p_new.p_s64);
+		break;
+#endif
 	default:
 		pr_err("%s: unknown ctrl id.\n", __func__);
 		return -EINVAL;
@@ -545,6 +587,15 @@ int tegracam_init_ctrl_ranges_by_mode(
 				ctrlprops->step_exp_time.val,
 				ctrlprops->default_exp_time.val);
 			break;
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+		case TEGRA_CAMERA_CID_FRAME_SYNC:
+			err = v4l2_ctrl_modify_range(ctrl,
+				ctrl->minimum,
+				ctrlprops->max_sync_modes,
+				ctrl->step,
+				ctrl->default_value);
+			break;
+#endif
 		case TEGRA_CAMERA_CID_EXPOSURE_SHORT:
 			/*
 			 * min_hdr_ratio should be equal to max_hdr_ratio.
@@ -723,6 +774,9 @@ static int tegracam_check_ctrl_ops(
 		/* The below controls are handled by framework */
 		case TEGRA_CAMERA_CID_SENSOR_MODE_ID:
 		case TEGRA_CAMERA_CID_HDR_EN:
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+		case TEGRA_CAMERA_CID_MASTER_SLAVE_SELECT:
+#endif
 			mode_ops++;
 			break;
 		default:

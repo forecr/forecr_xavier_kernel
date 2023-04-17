@@ -325,6 +325,12 @@ void destroy_buffer_table(
 	struct hlist_node *next;
 	struct capture_mapping *pin;
 
+
+#ifndef CONFIG_VIDEO_ECAM
+	if( tab == NULL )
+		goto skip;
+#endif
+
 	write_lock(&tab->hlock);
 
 	hash_for_each_safe(tab->hhead, bkt, next, pin, hnode) {
@@ -339,6 +345,10 @@ void destroy_buffer_table(
 	write_unlock(&tab->hlock);
 
 	kmem_cache_destroy(tab->cache);
+
+#ifndef CONFIG_VIDEO_ECAM
+skip:
+#endif
 	kfree(tab);
 }
 

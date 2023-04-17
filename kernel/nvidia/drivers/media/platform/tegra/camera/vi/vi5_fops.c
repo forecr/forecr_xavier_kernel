@@ -208,6 +208,13 @@ static int vi5_add_ctrls(struct tegra_channel *chan)
 
 	/* Add vi5 custom controls */
 	for (i = 0; i < ARRAY_SIZE(vi5_custom_ctrls); i++) {
+#ifdef CONFIG_VIDEO_ECAM
+		/* Skipped below 3 controls for econ YUV camera modules */
+		if (vi5_custom_ctrls[i].id == TEGRA_CAMERA_CID_SENSOR_CONFIG ||
+			vi5_custom_ctrls[i].id == TEGRA_CAMERA_CID_SENSOR_MODE_BLOB ||
+			vi5_custom_ctrls[i].id == TEGRA_CAMERA_CID_SENSOR_CONTROL_BLOB )
+                        continue;
+#endif
 		v4l2_ctrl_new_custom(&chan->ctrl_handler,
 			&vi5_custom_ctrls[i], NULL);
 		if (chan->ctrl_handler.error) {
@@ -920,13 +927,19 @@ static int vi5_channel_stop_streaming(struct vb2_queue *vq)
 	struct tegra_channel *chan = vb2_get_drv_priv(vq);
 	long err;
 	int vi_port = 0;
+#ifdef CONFIG_VIDEO_ECAM
+	if (!chan->bypass) {
+#else
 	if (!chan->bypass)
+#endif
 		vi5_channel_stop_kthreads(chan);
 
+#ifndef CONFIG_VIDEO_ECAM
 	/* csi stream/sensor(s) devices to be closed before vi channel */
 	tegra_channel_set_stream(chan, false);
 
 	if (!chan->bypass) {
+#endif
 		for (vi_port = 0; vi_port < chan->valid_ports; vi_port++) {
 			err = vi_capture_release(chan->tegra_vi_channel[vi_port],
 				CAPTURE_CHANNEL_RESET_FLAG_IMMEDIATE);
@@ -942,6 +955,11 @@ static int vi5_channel_stop_streaming(struct vb2_queue *vq)
 		/* release all remaining buffers to v4l2 */
 		tegra_channel_queued_buf_done(chan, VB2_BUF_STATE_ERROR, false);
 	}
+
+#ifdef CONFIG_VIDEO_ECAM
+	/* csi stream/sensor(s) devices to be closed before vi channel */
+	tegra_channel_set_stream(chan, false);
+#endif
 
 	return 0;
 }

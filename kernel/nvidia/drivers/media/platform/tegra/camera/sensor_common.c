@@ -571,6 +571,14 @@ static int sensor_common_parse_control_props(
 	else
 		control->interlace_type = value;
 
+#if defined(CONFIG_VIDEO_ECAM_ISP_MULTICAM)
+	err = read_property_u32(node, "max_sync_modes", &value);
+	if (err)
+		control->max_sync_modes = 0;
+	else
+		control->max_sync_modes = value;
+#endif
+
 	return 0;
 }
 

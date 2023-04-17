@@ -37,7 +37,11 @@ struct tegracam_device {
 	const struct v4l2_subdev_ops		*v4l2sd_ops;
 	const struct v4l2_subdev_internal_ops	*v4l2sd_internal_ops;
 	const struct media_entity_operations	*media_ops;
+#if defined(CONFIG_VIDEO_ECAM_ISP)
+	struct tegracam_ctrl_ops		*tcctrl_ops;
+#else
 	const struct tegracam_ctrl_ops		*tcctrl_ops;
+#endif
 	void	*priv;
 };
 

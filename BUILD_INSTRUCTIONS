@@ -20,6 +20,7 @@ make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx -j$(($(nproc)-1))
 #DSBOARD_NX2 for Xavier NX
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
+--- for E-CAM24 cameras, set CONFIG_VIDEO_ECAM and CONFIG_VIDEO_ECAM_AR0234=y in menuconfig
 
 #MILBOARD_XV for AGX Xavier
 make ARCH=arm64 O=$HOME/kernel_out_milboard_xv milboard_xv_defconfig

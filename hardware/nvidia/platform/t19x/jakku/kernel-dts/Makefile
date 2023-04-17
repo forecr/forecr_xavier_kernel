@@ -25,8 +25,10 @@ dtbo-$(BUILD_ENABLE) += tegra194-p3668-all-p3509-0000-camera-imx477-dual.dtbo
 dtbo-$(BUILD_ENABLE) += tegra194-p3668-all-p3509-0000-camera-imx219-dual.dtbo
 dtbo-$(BUILD_ENABLE) += tegra194-p3668-p3509-overlay.dtbo
 dtb-$(BUILD_ENABLE) += tegra194-p3668-dsboard-nx2-0000.dtb
+dtb-$(BUILD_ENABLE) += tegra194-p3668-dsboard-nx2-0000-ar0234.dtb
 dtb-$(BUILD_ENABLE) += tegra194-p3668-dsboard-nx2-0000-imx477.dtb
 dtb-$(BUILD_ENABLE) += tegra194-p3668-dsboard-nx2-0000-rev121.dtb
+dtb-$(BUILD_ENABLE) += tegra194-p3668-dsboard-nx2-0000-rev121-ar0234.dtb
 dtb-$(BUILD_ENABLE) += tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb
 
 

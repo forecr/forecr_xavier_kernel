@@ -37,7 +37,11 @@
 /* 256 byte alignment in accordance to NvRmSurface Pitch alignment.
  * It is the worst case scenario considering VIC engine requirements
  */
+#ifdef CONFIG_VIDEO_ECAM
+#define RM_SURFACE_ALIGNMENT 64
+#else
 #define RM_SURFACE_ALIGNMENT 256
+#endif
 
 static void tegra_channel_error_recovery(struct tegra_channel *chan);
 static void tegra_channel_stop_kthreads(struct tegra_channel *chan);
@@ -1106,7 +1110,12 @@ static int vi4_channel_start_streaming(struct vb2_queue *vq, u32 count)
 	}
 
 	chan->sequence = 0;
+#ifdef CONFIG_VIDEO_ECAM
+	/* econ camera module supported with upto 1 Second exposure time variation */
+	chan->timeout = msecs_to_jiffies(1000);
+#else
 	chan->timeout = msecs_to_jiffies(200);
+#endif
 	if (!chan->low_latency)
 		tegra_channel_init_ring_buffer(chan);
 

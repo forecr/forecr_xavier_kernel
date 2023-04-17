@@ -107,6 +107,43 @@ error:
 	return err;
 }
 
+#if defined(CONFIG_VIDEO_ECAM_ISP)
+static int tegracam_g_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *param)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct camera_common_data *s_data = to_camera_common_data(&client->dev);
+
+	param->parm.capture.capability |= V4L2_CAP_TIMEPERFRAME;
+	param->parm.capture.timeperframe.denominator =  s_data->frmfmt[s_data->mode].framerates[0];
+	param->parm.capture.timeperframe.numerator = 1;
+
+	return 0;
+}
+
+static int tegracam_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *param)
+{
+	struct i2c_client *client = v4l2_get_subdevdata(sd);
+	struct camera_common_data *s_data = to_camera_common_data(&client->dev);
+	int ret;
+
+	for (ret = 0; ret < s_data->frmfmt[s_data->mode].num_framerates; ret++) {
+		if ((s_data->frmfmt[s_data->mode].framerates[ret] == param->parm.capture.timeperframe.denominator)) {
+			param->parm.capture.capability |= V4L2_CAP_TIMEPERFRAME;
+			param->parm.capture.timeperframe.denominator =
+				s_data->frmfmt[s_data->mode].framerates[ret];
+			param->parm.capture.timeperframe.numerator = 1;
+			return 0;
+		}
+	}
+	param->parm.capture.capability |= V4L2_CAP_TIMEPERFRAME;
+	param->parm.capture.timeperframe.denominator =
+		s_data->frmfmt[s_data->mode].framerates[0];
+	param->parm.capture.timeperframe.numerator = 1;
+	return 0;
+}
+#endif
+
+
 static int v4l2sd_g_input_status(struct v4l2_subdev *sd, u32 *status)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
@@ -125,6 +162,10 @@ static struct v4l2_subdev_video_ops v4l2sd_video_ops = {
 	.s_stream	= v4l2sd_stream,
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	.g_mbus_config	= camera_common_g_mbus_config,
+#endif
+#if defined(CONFIG_VIDEO_ECAM_ISP)
+	.g_parm 	= tegracam_g_parm,
+	.s_parm		= tegracam_s_parm,
 #endif
 	.g_input_status = v4l2sd_g_input_status,
 };
