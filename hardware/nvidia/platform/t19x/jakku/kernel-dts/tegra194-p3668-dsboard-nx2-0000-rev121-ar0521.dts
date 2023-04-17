@@ -16,6 +16,7 @@
 /dts-v1/;
 #include "common/tegra194-p3668-common.dtsi"
 #include "common/tegra194-p3509-0000-a00.dtsi"
+#include "common/tegra194-camera-jakku-ar0521.dtsi"
 
 #undef CAM_I2C_MUX
 #define CAM_I2C_MUX 	TEGRA194_MAIN_GPIO(Q, 6)
@@ -46,6 +47,16 @@
 
 	cam_i2cmux{
 		mux-gpios = <&tegra_main_gpio CAM_I2C_MUX GPIO_ACTIVE_HIGH>;
+		i2c@0 {
+			rbpcv2_imx219_a@10 {
+				status = "disabled";
+			};
+		};
+		i2c@1 {
+			rbpcv2_imx219_c@10 {
+				status = "disabled";
+			};
+		};
 	};
 
 	sdhci@3440000 {

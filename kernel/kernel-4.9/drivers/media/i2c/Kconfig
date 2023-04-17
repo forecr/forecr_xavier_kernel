@@ -521,6 +521,20 @@ config VIDEO_ECAM
 	This is a flag to enable changes required to support the
 	Video4Linux2 sensor-level driver for the e-con Systems camera.
 
+config VIDEO_ECAM_AR0234
+	tristate "e-con AR0234 camera support"
+	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API && VIDEO_ECAM
+	---help---
+	This is a flag to enable changes required to support the
+	Video4Linux2 sensor-level driver for the e-con Systems AR0234 camera.
+
+config VIDEO_ECAM_AR0521
+	tristate "e-con AR0521 camera support"
+	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API && VIDEO_ECAM
+	---help---
+	This is a flag to enable changes required to support the
+	Video4Linux2 sensor-level driver for the e-con Systems AR0521 camera.
+
 config VIDEO_ECAM_ISP
        tristate "NVIDIA ISP based e-con camera support"
 	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API

@@ -10,4 +10,6 @@ obj-$(CONFIG_VIDEO_CAMERA)	+= regmap_util.o
 obj-$(CONFIG_VIDEO_TEGRA_VI_TPG) += tpg/
 obj-$(CONFIG_TEGRA_MIPI_CAL)	+= mipical/
 obj-$(CONFIG_VIDEO_ISC)		+= isc/
-obj-$(CONFIG_VIDEO_ECAM)        += e-cam50/
+obj-$(CONFIG_VIDEO_ECAM_AR0521) += e-cam50/
+obj-$(CONFIG_VIDEO_ECAM_AR0234) += e-cam24/
+
