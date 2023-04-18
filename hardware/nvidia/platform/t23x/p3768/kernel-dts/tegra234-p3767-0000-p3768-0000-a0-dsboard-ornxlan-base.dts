@@ -60,17 +60,13 @@
 
 	xusb_padctl: xusb_padctl@3520000 {
 		ports {
-			usb2-0 {/* Goes to recovery port */
-				mode = "host";
-				/delete-property/ usb-role-switch;
-				/delete-node/ connector;
-			};
 			usb3-0 {
 				nvidia,usb2-companion = <1>;
 				status = "okay";
 			};
 			usb3-1 {
-				nvidia,usb2-companion = <0>;
+				//nvidia,usb2-companion = <0>;
+				nvidia,usb2-companion = <2>;
 				status = "okay";
 			};
 			usb3-2 {
