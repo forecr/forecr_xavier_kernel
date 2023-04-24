@@ -89,6 +89,14 @@
 	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-milboard-agx-0000.dtb $HOME/kernel_out_milboard_agx_agxi/tegra194-p2888-0008-p2822-0000.dtb
 
 
+# For MILBOARD_AGX with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_agx_agx_orin
+	cp $HOME/kernel_out_milboard_agx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_agx_agx_orin/
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agx_orin/Image
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-milboard-agx.dtb $HOME/kernel_out_milboard_agx_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-milboard-agx.dtb $HOME/kernel_out_milboard_agx_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
+
+
 # For MILBOARD_XV with AGX Xavier SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_xv_agx
 	cp $HOME/kernel_out_milboard_xv/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_xv_agx/
