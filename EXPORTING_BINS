@@ -28,6 +28,26 @@
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
 
 
+# For RAIBOARD_ORNX with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_ornx_orin_nx
+	cp $HOME/kernel_out_raiboard_ornx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_ornx_orin_nx/
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nx/Image
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+
+
+# For RAIBOARD_ORNX with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_ornx_orin_nano
+	cp $HOME/kernel_out_raiboard_ornx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_ornx_orin_nano/
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nano/Image
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+
+
 # For DSBOARD_ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx
 	cp $HOME/kernel_out_dsboard_ornx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornx_orin_nx/
