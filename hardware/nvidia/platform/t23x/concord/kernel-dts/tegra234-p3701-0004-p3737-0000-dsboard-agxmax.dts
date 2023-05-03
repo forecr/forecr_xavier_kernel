@@ -1,5 +1,5 @@
 /*
- * Top level DTS file for CVM:P3701-0004 and CVB:P3737-0000.
+ * Top level DTS file for CVM:P3701-0004 and CVB:DSBOARD-AGXMAX.
  *
  * Copyright (c) 2022-2023, NVIDIA CORPORATION.  All rights reserved.
  *
@@ -66,18 +66,20 @@
 				/delete-node/ port;
 			};
 		};
+	};
+
+	i2c@3190000 {
 		pcf8574a: gpio@38 {
 			compatible = "nxp,pcf8574a";
 			reg = <0x38>;
 			gpio-controller;
 			#gpio-cells = <2>;
-			/*
+
 			pcf8574a_outlow {
 				gpio-hog;
 				gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
 				output-low;
 			};
-			*/
 		};
 	};
 
