@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms and conditions of the GNU General Public License,
+ * version 2, as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <dt-bindings/gpio/tegra234-gpio.h>
+
+/ {
+	chosen {
+		nvidia,ether-mac0 = "48:B0:2D:68:C9:1B";
+		nvidia,ether-mac1 = "48:B0:2D:68:C9:1C";
+	};
+
+	/* MGBE - A */
+	ethernet@6810000 {
+		status = "okay";
+		nvidia,mac-addr-idx = <1>;
+
+		/* 0=enable, 1=disable */
+		nvidia,pause_frames = <0>;
+		phy-mode = "10gbase-r";
+
+		local-mac-address = [1a 2b 3c 4d 5e 6e];
+		nvidia,phy-reset-gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(Y, 1) 0>;
+
+		/* 1:10G, 0:5G */
+		nvidia,uphy-gbe-mode = <1>;
+		/* 0:XFI 10G, 1:XFI 5G, 2:USXGMII 10G, 3:USXGMII 5G */
+		nvidia,phy-iface-mode = <0>;
+		nvidia,max-platform-mtu = <16383>;
+
+		fixed-link {
+			speed = <10000>;
+			full-duplex;
+		};
+	};
+};
