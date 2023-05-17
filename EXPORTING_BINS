@@ -62,6 +62,10 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nx/Image
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs/imx477/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs/imx477/tegra234-p3767-0001-p3768-0000-a0.dtb
 
 
 # For DSBOARD_ORNX with Orin Nano SoM, type these commands below:
@@ -70,6 +74,10 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nano/Image
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs/imx477/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
 
 
 # For DSBOARD_ORNXLAN with Orin NX SoM, type these commands below:
@@ -80,6 +88,12 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/tegra234-p3767-0001-p3768-0000-a0.dtb
 
 
 # For DSBOARD_ORNXLAN with Orin Nano SoM, type these commands below:
@@ -90,6 +104,12 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
 
 
 # For DSBOARD_NX2 (rev-1.22) with Orin NX SoM, type these commands below:
