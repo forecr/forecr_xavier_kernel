@@ -61,11 +61,10 @@
 
 	i2c@c250000 {
 		iam20680@68 {
-			compatible = "invensense,iam20680";
+			compatible = "invensense,iam20680ht";
 			reg = <0x68>;
 			interrupt-parent = <&tegra_main_gpio>;
 			interrupts = <TEGRA234_MAIN_GPIO(Y, 6) IRQ_TYPE_LEVEL_LOW>; //Unused pin
-			mount-matrix = "-0.984807753012208", "0", "-0.173648177666930", "0", "-1", "0", "-0.173648177666930", "0", "0.984807753012208"; // x0,y0,z0, x1,y1,z1, x2,y2,z2
 		};
 	};
 
@@ -106,12 +105,6 @@
 		status = "okay";
 		nvidia,clock-always-on;
 		spi@0 {
-			status = "disabled";
-		};
-		spi@1 {
-			status = "disabled";
-		};
-		can@1 {
 			status = "okay";
 			compatible = "microchip,mcp2515";
 			reg = <0x0>;
@@ -127,6 +120,9 @@
 				nvidia,rx-clk-tap-delay = <0x1f>;
 				nvidia,tx-clk-tap-delay = <0x0>;
 			};
+		};
+		spi@1 {
+			status = "disabled";
 		};
 	};
 	spi@3230000{
