@@ -22,7 +22,7 @@
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 
 	compatible = "nvidia,jetson-xavier-industrial", "nvidia,tegra194";
-	model = "Jetson AGX Xavier Industrial for MILBOARD-AGX";
+	model = "Jetson AGXi for MILBOARD-AGX";
 
 	psci {
 		nvidia,system-lp0-disable;
