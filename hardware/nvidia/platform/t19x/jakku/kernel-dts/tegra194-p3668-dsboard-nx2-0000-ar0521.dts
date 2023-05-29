@@ -24,7 +24,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
-	model = "Jetson Xavier NX for DSBOARD-NX2 (rev-1.22)";
+	model = "Jetson Xavier NX for DSBOARD-NX2";
 
 	compatible = "nvidia,p3449-0000+p3668-0000", "nvidia,p3449-0000+p3668-0001", "nvidia,p3509-0000+p3668-0000", "nvidia,p3509-0000+p3668-0001", "nvidia,tegra194";
 
