@@ -22,5 +22,5 @@
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 	compatible = "nvidia,p3509-0000+p3767-0004", "nvidia,p3767-0004", "nvidia,tegra234", "nvidia,tegra23x";
-	model = "Orin Nano 4GB for DSBOARD-NX2 (rev-1.22)";
+	model = "Orin Nano 4GB for DSBOARD-NX2";
 };

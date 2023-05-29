@@ -112,7 +112,7 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
 
 
-# For DSBOARD_NX2 (rev-1.22) with Orin NX SoM, type these commands below:
+# For DSBOARD_NX2 (rev-1.23 & 1.22) with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nx
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nx/
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nx/Image
@@ -120,7 +120,7 @@
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3767-0001-p3509-a02.dtb
 
 
-# For DSBOARD_NX2 (rev-1.22) with Orin Nano SoM, type these commands below:
+# For DSBOARD_NX2 (rev-1.23 & 1.22) with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nano
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nano/
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nano/Image
@@ -128,7 +128,7 @@
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3767-0004-p3509-a02.dtb
 
 
-# For DSBOARD_NX2 (rev-1.22) with Xavier NX SoM, type these commands below:
+# For DSBOARD_NX2 (rev-1.23 & 1.22) with Xavier NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_xavier
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_xavier/
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image

@@ -30,7 +30,7 @@
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
 	compatible = "nvidia,p3509-0000+p3767-0000", "nvidia,tegra234", "nvidia,tegra23x";
-	model = "Orin NX 16GB for DSBOARD-NX2 (rev-1.22)";
+	model = "Orin NX 16GB for DSBOARD-NX2";
 	//model = "Orin NX 16GB for DSBOARD-NX2 (rev-1.21; 1.1 & 1.0)";
 
 	i2c@c250000 {
