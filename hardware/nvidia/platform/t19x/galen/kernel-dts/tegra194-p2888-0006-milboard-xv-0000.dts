@@ -22,6 +22,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Xavier for MILBOARD-XV";
 
 	i2c@c240000 {
 		ucsi_ccg@8 {

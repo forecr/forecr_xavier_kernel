@@ -30,7 +30,7 @@
 	nvidia,proc-boardid = "3636:0001:A0";
 	nvidia,fastboot-usb-vid = <0x0955>;
 	nvidia,fastboot-usb-pid = <0xee16>;
-	model = "NVIDIA Jetson TX2 NX for DSBOARD-NX2";
+	model = "Jetson TX2 NX for DSBOARD-NX2";
 
 	chosen {
 		board-has-eeprom;

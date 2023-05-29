@@ -18,6 +18,7 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Xavier for DSBOARD-XV2";
 
 	i2c@c240000 {
 		ucsi_ccg@8 {

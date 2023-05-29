@@ -20,10 +20,9 @@
 / {
 	nvidia,dtsfilename = __FILE__;
 	nvidia,dtbbuildtime = __DATE__, __TIME__;
-	model = "AGXi for DSBOARD-XV2 + xv2-expansionboard";
 
 	compatible = "nvidia,jetson-xavier-industrial", "nvidia,tegra194";
-	model = "Jetson-AGXi";
+	model = "AGXi for DSBOARD-XV2 + xv2-expansionboard";
 
 	sce@b000000 {
 		status = "okay";
