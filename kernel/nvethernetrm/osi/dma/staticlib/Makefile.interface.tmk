@@ -20,21 +20,19 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 #
-# libnvethernetcl interface export
+# libnvethernetcl interface makefile fragment
 #
 ###############################################################################
-osi_get_refill_rx_desc_cnt
-osi_rx_dma_desc_init
-osi_set_rx_buf_len
-osi_hw_transmit
-osi_process_tx_completions
-osi_process_rx_completions
-osi_hw_dma_init
-osi_hw_dma_deinit
-osi_init_dma_ops
-osi_dma_get_systime_from_mac
-osi_is_mac_enabled
-osi_get_dma
-osi_handle_dma_intr
-osi_get_global_dma_status
-osi_dma_ioctl
+
+ifdef NV_INTERFACE_FLAG_STATIC_LIBRARY_SECTION
+NV_INTERFACE_NAME           := nvethernetcl
+NV_INTERFACE_COMPONENT_DIR := .
+NV_INTERFACE_PUBLIC_INCLUDES := \
+	./include
+endif
+
+# Local Variables:
+# indent-tabs-mode: t
+# tab-width: 8
+# End:
+# vi: set tabstop=8 noexpandtab:
