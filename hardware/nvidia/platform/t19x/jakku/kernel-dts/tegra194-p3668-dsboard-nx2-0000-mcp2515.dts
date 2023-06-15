@@ -68,46 +68,30 @@
 			status = "disabled";
 		};
 	};
+
 	clocks {
-	can_clock: can_clock {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <8000000>;
-		clock-accuracy = <100>;
-	};
-	};
-	/*
-	gpio@3110000 {
-		mcp2515_int {
-			gpio-hog;
-			input;
-			gpios = <TEGRA194_MAIN_GPIO(X, 6) 0>;
-			label = "mcp2515_int";
+		can_clock: can_clock {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <8000000>;
+			clock-accuracy = <100>;
 		};
 	};
-	*/
-	spi@3210000{
+	spi@3210000{ // SPI0 with CS0 for SPI2CAN
 		status = "okay";
 		nvidia,clock-always-on;
 		spi@0 {
-			status = "disabled";
-		};
-		can0: can@1 {
 			status = "okay";
-			compatible = "microchip,mcp2515"; 
+			compatible = "microchip,mcp2515";
 			reg = <0x0>;
-			spi-max-frequency = <10000000>; 
+			spi-max-frequency = <10000000>;
 			nvidia,enable-hw-based-cs;
-			clocks = <&can_clock>;	
+			clocks = <&can_clock>;
 			interrupt-parent = <&tegra_main_gpio>;
-			interrupts = <TEGRA194_MAIN_GPIO(X, 7) IRQ_TYPE_EDGE_FALLING>; //IRQ_TYPE_EDGE_BOTH
-			controller-data {
-				nvidia,enable-hw-based-cs;
-				nvidia,cs-setup-clk-count = <0x1e>;
-				nvidia,cs-hold-clk-count = <0x1e>;
-				nvidia,rx-clk-tap-delay = <0x1f>;
-				nvidia,tx-clk-tap-delay = <0x0>;
-			};	
+			interrupts = <TEGRA194_MAIN_GPIO(X, 7) IRQ_TYPE_EDGE_FALLING>;
+		};
+		spi@1 {
+			status = "disabled";
 		};
 	};
 
