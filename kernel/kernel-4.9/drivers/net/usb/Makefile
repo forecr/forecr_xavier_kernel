@@ -26,7 +26,13 @@ obj-$(CONFIG_USB_NET_RNDIS_HOST)	+= rndis_host.o
 obj-$(CONFIG_USB_NET_CDC_SUBSET_ENABLE)	+= cdc_subset.o
 obj-$(CONFIG_USB_NET_ZAURUS)	+= zaurus.o
 obj-$(CONFIG_USB_NET_MCS7830)	+= mcs7830.o
+
+ifneq (,$(filter $(CONFIG_USB_NET_QMI_WWAN),y m))
+obj-$(CONFIG_USB_USBNET)	+= usbnet.o qmi_wwan_simcom.o
+else
 obj-$(CONFIG_USB_USBNET)	+= usbnet.o
+endif
+
 obj-$(CONFIG_USB_NET_INT51X1)	+= int51x1.o
 obj-$(CONFIG_USB_CDC_PHONET)	+= cdc-phonet.o
 obj-$(CONFIG_USB_NET_KALMIA)	+= kalmia.o
@@ -36,6 +42,7 @@ obj-$(CONFIG_USB_NET_CX82310_ETH)	+= cx82310_eth.o
 obj-$(CONFIG_USB_NET_CDC_NCM)	+= cdc_ncm.o
 obj-$(CONFIG_USB_NET_HUAWEI_CDC_NCM)	+= huawei_cdc_ncm.o
 obj-$(CONFIG_USB_VL600)		+= lg-vl600.o
+obj-$(CONFIG_USB_NET_QMI_WWAN)  += qmi_wwan_q.o
 obj-$(CONFIG_USB_NET_QMI_WWAN)	+= qmi_wwan.o
 obj-$(CONFIG_USB_NET_CDC_MBIM)	+= cdc_mbim.o
 obj-$(CONFIG_USB_NET_CH9200)	+= ch9200.o
