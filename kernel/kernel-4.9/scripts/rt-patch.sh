@@ -78,6 +78,17 @@ apply_rt_patches()
 			--disable CPU_FREQ_GOV_SCHEDUTIL \
 			--disable CPU_FREQ_GOV_INTERACTIVE || any_failure=1
 		echo "PREEMPT RT patches successfully applied for MILBOARD-XV!"
+
+		cp ../arch/arm64/configs/milboard_agx_defconfig\
+			../arch/arm64/configs/.tmp.milboard_agx_defconfig
+		 ./config --file ../arch/arm64/configs/milboard_agx_defconfig\
+			--enable PREEMPT_RT_FULL \
+			--disable DEBUG_PREEMPT \
+			--disable CPU_IDLE_TEGRA18X \
+			--disable CPU_FREQ_TIMES \
+			--disable CPU_FREQ_GOV_SCHEDUTIL \
+			--disable CPU_FREQ_GOV_INTERACTIVE || any_failure=1
+		echo "PREEMPT RT patches successfully applied for MILBOARD-AGX!"
 	fi
 }
 
@@ -109,6 +120,10 @@ revert_rt_patches()
 		cp ../arch/arm64/configs/.tmp.milboard_xv_defconfig\
 			../arch/arm64/configs/milboard_xv_defconfig
 		rm -rf ../arch/arm64/configs/.tmp.milboard_xv_defconfig
+
+		cp ../arch/arm64/configs/.tmp.milboard_agx_defconfig\
+			../arch/arm64/configs/milboard_agx_defconfig
+		rm -rf ../arch/arm64/configs/.tmp.milboard_agx_defconfig
 		echo "The PREEMPT RT patches have been successfully reverted!"
 	else
 		echo "The PREEMPT RT patches are not applied to the kernel!"
