@@ -1,0 +1,44 @@
+#Load Environment
+cd ./kernel/kernel-5.10/
+source ../../environment_nvidia
+
+#[OPTIONAL] Applying RT-Patch
+sudo ./scripts/rt-patch.sh apply-patches 
+
+#DSBOARD_XV for AGX Xavier
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv tegra_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv -j$(($(nproc)-1))
+
+#DSBOARD_XV2 for AGX Xavier
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 dsboard_xv2_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 -j$(($(nproc)-1))
+
+#DSBOARD_AGX & DSBOARD_AGXMAX for AGX Orin
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx dsboard_agx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx -j$(($(nproc)-1))
+
+#DSBOARD_ORNX & DSBOARD_ORNXLAN for Orin NX & Orin Nano
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx dsboard_ornx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx -j$(($(nproc)-1))
+
+#RAIBOARD_ORNX for Orin NX & Orin Nano
+make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx raiboard_ornx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx -j$(($(nproc)-1))
+
+#DSBOARD_NX2 for Xavier NX
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
+
+#MILBOARD_AGX for AGX Xavier & AGX Orin
+make ARCH=arm64 O=$HOME/kernel_out_milboard_agx milboard_agx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_milboard_agx -j$(($(nproc)-1))
+
+#MILBOARD_XV for AGX Xavier & AGX Orin
+make ARCH=arm64 O=$HOME/kernel_out_milboard_xv milboard_xv_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_milboard_xv -j$(($(nproc)-1))
+
+#[OPTIONAL] Including RT-Patch
+#If RT-Patch has been applied to the kernel build, update the modules with new ones. 
+#For example:
+sudo make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_5.1.1_Linux_JETSON_XAVIER_NX_TARGETS/Linux_for_Tegra/rootfs/
+
