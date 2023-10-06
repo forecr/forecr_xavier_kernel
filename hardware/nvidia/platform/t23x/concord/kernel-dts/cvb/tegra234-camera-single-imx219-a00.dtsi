@@ -82,6 +82,10 @@
 	};
 
 	i2c@3180000 {
+		//clock-frequency = <0x61a80>; //400kHz
+		//clock-frequency = <0x186A0>; //100kHz
+		clock-frequency = <10000>; //10kHz
+
 		imx219_a@10 {
 			status = "okay";
 			compatible = "sony,imx219";
@@ -459,7 +463,7 @@
 				drivernode0 {
 					status = "okay";
 					pcl_id = "v4l2_sensor";
-					devname = "imx219 30-0010";
+					devname = "imx219 2-0010";
 					proc-device-tree = "/proc/device-tree/i2c@3180000/imx219_a@10";
 				};
 			};
