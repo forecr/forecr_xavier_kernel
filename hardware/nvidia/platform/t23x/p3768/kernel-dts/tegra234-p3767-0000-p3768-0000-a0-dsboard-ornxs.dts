@@ -33,8 +33,7 @@
 	};
 
 	xudc@3550000 {
-		status = "okay";
-		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>;
-		phy-names = "usb3-0";
+		status = "disabled";
 	};
+
 };
