@@ -87,14 +87,8 @@
 			nvidia,enable-hw-based-cs;
 			nvidia,rx-clk-tap-delay = <0x7>;
 			clocks = <&can_clock>;
-			interrupt-parent = <&tegra_main_gpio>;
-			interrupts = <TEGRA234_AON_GPIO(EE, 2) IRQ_TYPE_NONE>;
-			controller-data {
-				nvidia,cs-setup-clk-count = <0x1e>;
-				nvidia,cs-hold-clk-count = <0x1e>;
-				nvidia,rx-clk-tap-delay = <0x1f>;
-				nvidia,tx-clk-tap-delay = <0x0>;
-			};
+			interrupt-parent = <&tegra_aon_gpio>;
+			interrupts = <TEGRA234_AON_GPIO(EE, 2) IRQ_TYPE_EDGE_FALLING>;
 		};
 		spi@1 {
 			status = "disabled";
