@@ -30,19 +30,10 @@
 				/delete-property/ usb-role-switch;
 				/delete-node/ connector;
 			};
-			usb3-0 {
-				nvidia,usb2-companion = <1>;
-				status = "okay";
-			};
-			usb3-1 {
-				nvidia,usb2-companion = <0>;
-				status = "okay";
-			};
-			usb3-2 {
-				//nvidia,usb2-companion = <2>;
-				nvidia,usb2-companion = <1>;
-				status = "okay";
-			};
 		};
+	};
+
+	xudc@3550000 {
+		status = "disabled";
 	};
 };
