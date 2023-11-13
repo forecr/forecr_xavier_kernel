@@ -31,6 +31,20 @@
 
 
 / {
+	cam_i2cmux{
+		mux-gpios = <&tegra_main_gpio CAM_I2C_MUX GPIO_ACTIVE_HIGH>;
+		i2c@0 {
+			rbpcv2_imx219_a@10 {
+				reset-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
+			};
+		};
+		i2c@1 {
+			rbpcv2_imx219_c@10 {
+				reset-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
+			};
+		};
+	};
+
 	gpio-keys {
 		compatible = "gpio-keys";
 		gpio-keys,name = "gpio-keys";
