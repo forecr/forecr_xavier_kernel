@@ -28,5 +28,5 @@ make ARCH=arm64 O=$HOME/kernel_out_milboard_agx -j$(($(nproc)-1))
 #[OPTIONAL] Including RT-Patch
 #If RT-Patch has been applied to the kernel build, update the modules with new ones. 
 #For example:
-sudo make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_4.6.3_Linux_JETSON_XAVIER_NX_TARGETS/Linux_for_Tegra/rootfs/
+sudo make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_4.6.4_Linux_JETSON_XAVIER_NX_TARGETS/Linux_for_Tegra/rootfs/
 
