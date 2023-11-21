@@ -1,7 +1,7 @@
 # forecr_xavier_kernel
-Forecr Linux Kernel for Jetson Xavier, Xavier NX, Orin, Orin NX and Orin Nano based products
+Forecr Linux Kernel source files for Jetson Xavier, Xavier NX, Orin, Orin NX and Orin Nano based products
 
-## Avaiable JetPack Branches
+## Available JetPack Branches
 ### JetPack-5.x
 - [JetPack-5.1.2](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.2)
 - [JetPack-5.1.1](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.1)
@@ -15,3 +15,4 @@ Forecr Linux Kernel for Jetson Xavier, Xavier NX, Orin, Orin NX and Orin Nano ba
 - [JetPack-4.5.1](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-4.5.1)
 - [JetPack-4.5](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-4.5)
 - [JetPack-4.4.1](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-4.4.1)
+
