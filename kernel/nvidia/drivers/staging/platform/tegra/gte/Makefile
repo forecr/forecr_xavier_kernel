@@ -1,1 +1,0 @@
-obj-$(CONFIG_TEGRA_HTS_GTE)	+= tegra194_gte.o
