@@ -168,6 +168,34 @@
 
 	/delete-node/ tegra_usb_cd;
 
+	i2c@3180000 { // Goes to panelboard
+		status = "okay";
+	};
+
+	fixed-regulators {
+		regulator@116 {
+			//gpio = <&tegra_aon_gpio TEGRA234_AON_GPIO(CC, 2) 0>; //CAM_INT3, GPIO_ACTIVE_HIGH == 0
+			gpio = <&tegra_aon_gpio TEGRA234_AON_GPIO(AA, 5) 0>;
+		};
+	};
+
+	spi@c260000 { // Goes to panelboard
+		status = "okay";
+
+		spi@0 {
+			status = "okay";
+			compatible = "tegra-spidev";
+			reg = <0x0>;
+			spi-max-frequency = <20000000>;
+
+			controller-data {
+				nvidia,enable-hw-based-cs;
+				nvidia,rx-clk-tap-delay = <0x10>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+	};
+
 	nvsciipc-kernel {
 		compatible = "nvidia,nvsciipc";
 		status = "okay";

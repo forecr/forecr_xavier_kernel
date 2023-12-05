@@ -153,6 +153,27 @@
 		};
 	};
 
+	i2c@3180000 { // Goes to panelboard
+		status = "okay";
+	};
+
+	spi@c260000 { // Goes to panelboard
+		status = "okay";
+
+		spi@0 {
+			status = "okay";
+			compatible = "tegra-spidev";
+			reg = <0x0>;
+			spi-max-frequency = <20000000>;
+
+			controller-data {
+				nvidia,enable-hw-based-cs;
+				nvidia,rx-clk-tap-delay = <0x10>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+	};
+
 	/* FIXME: K5.4 overrides */
 	bpmp {
 		i2c {
