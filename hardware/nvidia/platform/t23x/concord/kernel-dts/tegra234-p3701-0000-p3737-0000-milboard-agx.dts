@@ -188,6 +188,10 @@
 
 	/delete-node/ tegra_usb_cd;
 
+	i2c@3180000 { // Goes to panelboard
+		status = "okay";
+	};
+
 	fixed-regulators {
 		regulator@116 {
 			//gpio = <&tegra_aon_gpio TEGRA234_AON_GPIO(CC, 2) 0>; //CAM_INT3, GPIO_ACTIVE_HIGH == 0
@@ -195,7 +199,7 @@
 		};
 	};
 
-	spi@c260000 {
+	spi@c260000 { // Goes to panelboard
 		status = "okay";
 
 		spi@0 {

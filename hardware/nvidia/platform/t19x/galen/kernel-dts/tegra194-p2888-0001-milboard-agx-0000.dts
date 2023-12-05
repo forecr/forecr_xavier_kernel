@@ -175,7 +175,11 @@
 		};
 	};
 
-	spi@c260000 {
+	i2c@3180000 { // Goes to panelboard
+		status = "okay";
+	};
+
+	spi@c260000 { // Goes to panelboard
 		status = "okay";
 
 		spi@0 {
