@@ -165,16 +165,7 @@
 	};
 
 	xudc@3550000 {
-		phy-names = "usb2", "usb3";
-		/delete-property/  extcon-cables;
-		/delete-property/  extcon-cable-names;
-		/delete-property/  #extcon-cells;
-	};
-
-	xhci@3610000 {
-		/delete-property/  extcon-cables;
-		/delete-property/  extcon-cable-names;
-		/delete-property/  #extcon-cells;
+		status = "disabled";
 	};
 
 	/delete-node/ tegra_usb_cd;
