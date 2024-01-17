@@ -147,14 +147,19 @@
 
 
 	xusb_padctl@3520000 {
-
 		ports {
 			usb2-0 {
 				status = "okay";
 				vbus-supply = <&battery_reg>;
-				mode = "host";
-				/delete-property/ usb-role-switch;
+				mode = "otg";
+				usb-role-switch;
 				/delete-node/ port;
+				connector {
+					compatible = "usb-b-connector", "gpio-usb-b-connector";
+					label = "micro-USB";
+					type = "micro";
+					vbus-gpios = <&tegra_main_gpio TEGRA234_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
+				};
 			};
 			usb2-3 {
 				status = "okay";
@@ -165,7 +170,7 @@
 	};
 
 	xudc@3550000 {
-		status = "disabled";
+		/delete-property/ charger-detector;
 	};
 
 	/delete-node/ tegra_usb_cd;
