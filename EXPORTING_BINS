@@ -40,16 +40,20 @@
 	mkdir $HOME/kernel_out_dsboard_agxmax_orin
 	cp $HOME/kernel_out_dsboard_agx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agxmax_orin/
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin/Image
-	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0000-p3737-0000.dtb
-	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0004-p3737-0000.dtb
-	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0005-p3737-0000.dtb
 
 
 # For DSBOARD_AGXMAX with AGX Orin Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agxmax_orin_ind
 	cp $HOME/kernel_out_dsboard_agx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agxmax_orin_ind/
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin_ind/Image
-	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin_ind/tegra234-p3701-0008-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin_ind/0_tegra234-p3701-0008-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin_ind/tegra234-p3701-0008-p3737-0000.dtb
 
 
 # For RAIBOARD_ORNX with Orin NX SoM, type these commands below:
