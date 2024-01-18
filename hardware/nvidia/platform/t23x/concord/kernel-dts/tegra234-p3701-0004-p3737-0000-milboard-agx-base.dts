@@ -15,7 +15,7 @@
 
 /dts-v1/;
 
-#include "tegra234-p3701-0000-p3737-0000-milboard-agx.dts"
+#include "tegra234-p3701-0000-p3737-0000-milboard-agx-base.dts"
 
 / {
 	nvidia,dtsfilename = __FILE__;
