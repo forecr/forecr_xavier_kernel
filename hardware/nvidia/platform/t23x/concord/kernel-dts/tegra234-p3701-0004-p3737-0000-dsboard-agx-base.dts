@@ -169,6 +169,18 @@
 				vbus-supply = <&battery_reg>;
 				mode = "host";
 			};
+			usb3-0 {
+				nvidia,usb2-companion = <1>;
+				status = "okay";
+			};
+			usb3-1 {
+				nvidia,usb2-companion = <2>;
+				status = "okay";
+			};
+			usb3-2 {
+				nvidia,usb2-companion = <3>;
+				status = "okay";
+			};
 		};
 	};
 
