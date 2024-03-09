@@ -181,7 +181,7 @@
 #define V4L2_CID_ADV_FAST_SWITCH	(V4L2_CID_USER_ADV7180_BASE + 0x00)
 
 /* Initial number of frames to skip to avoid possible garbage */
-#define ADV7180_NUM_OF_SKIP_FRAMES       2
+#define ADV7180_NUM_OF_SKIP_FRAMES       10
 
 struct adv7180_state;
 
@@ -327,7 +327,10 @@ static u32 adv7180_status_to_v4l2(u8 status1)
 static int __adv7180_status(struct adv7180_state *state, u32 *status,
 			    v4l2_std_id *std)
 {
-	int status1 = adv7180_read(state, ADV7180_REG_STATUS1);
+	int status1;
+
+	msleep(100);
+	status1 = adv7180_read(state, ADV7180_REG_STATUS1);
 
 	if (status1 < 0)
 		return status1;
@@ -652,6 +655,7 @@ static int adv7180_mbus_fmt(struct v4l2_subdev *sd,
 	fmt->code = MEDIA_BUS_FMT_UYVY8_2X8;
 	fmt->colorspace = V4L2_COLORSPACE_SMPTE170M;
 	fmt->width = 720;
+	fmt->field = state->field;
 	fmt->height = state->curr_norm & V4L2_STD_525_60 ? 480 : 576;
 
 	if (state->field == V4L2_FIELD_ALTERNATE)
@@ -829,6 +833,7 @@ static int adv7180_s_stream(struct v4l2_subdev *sd, int enable)
 		return ret;
 	state->streaming = enable;
 	mutex_unlock(&state->mutex);
+	msleep(300);
 	return 0;
 }
 
@@ -976,6 +981,11 @@ static int adv7182_init(struct adv7180_state *state)
 	}
 
 	adv7180_write(state, 0x0013, 0x00);
+	
+	// color bars
+	adv7180_write(state, 0x0014, 0x11);
+	// luma ramp
+	//adv7180_write(state, 0x0014, 0x12);
 
 	return 0;
 }
@@ -1264,6 +1274,7 @@ static int init_device(struct adv7180_state *state)
 
 	adv7180_set_power_pin(state, true);
 
+	usleep_range(5000, 10000);
 	adv7180_write(state, ADV7180_REG_PWR_MAN, ADV7180_PWR_MAN_RES);
 	usleep_range(5000, 10000);
 
@@ -1327,7 +1338,8 @@ static int adv7180_probe(struct i2c_client *client,
 		return -ENOMEM;
 
 	state->client = client;
-	state->field = V4L2_FIELD_ALTERNATE;
+	state->field = V4L2_FIELD_NONE;
+	//state->field = V4L2_FIELD_ALTERNATE;
 	state->chip_info = (struct adv7180_chip_info *)id->driver_data;
 
 	state->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
@@ -1392,6 +1404,11 @@ static int adv7180_probe(struct i2c_client *client,
 	if (ret)
 		goto err_free_irq;
 
+	ret = adv7180_read(state, ADV7180_REG_IDENT);
+	if (0x42 != ret && 0x43 != ret) {
+		v4l_err(client, "invalid IDENTIFICATION: 0x%x != 0x42 or 0x43\n", ret);
+		goto err_free_irq;
+	}
 	v4l_info(client, "chip found @ 0x%02x (%s)\n",
 		 client->addr, client->adapter->name);
 
