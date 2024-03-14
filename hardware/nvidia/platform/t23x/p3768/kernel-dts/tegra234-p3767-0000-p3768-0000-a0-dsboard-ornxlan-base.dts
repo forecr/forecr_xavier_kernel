@@ -1,0 +1,110 @@
+/*
+ * Top level DTS file for CVM:P3767-0000 and CVB:DSBOARD-ORNXLAN.
+ *
+ * Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+
+/dts-v1/;
+#include "tegra234-dcb-p3767-0000-hdmi.dtsi"
+#include <tegra234-soc/mods-simple-bus.dtsi>
+#include <t234-common-cvm/tegra234-thermal.dtsi>
+#include <t234-common-cvm/tegra234-cpuidle.dtsi>
+#include <t234-common-cvm/tegra234-thermal-cooling.dtsi>
+#include <t234-common-cvm/tegra234-thermal-userspace-alert.dtsi>
+#include "cvm/tegra234-p3767-0000.dtsi"
+#include "cvb/tegra234-p3768-0000-a0-ornx.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	compatible = "nvidia,p3768-0000+p3767-0000", "nvidia,tegra234", "nvidia,tegra23x";
+	model = "Orin NX 16GB for DSBOARD-ORNXLAN";
+
+	fixed-regulators {
+		regulator@102 { //p3768_vdd_1v8
+			//vin-supply = <&p3768_vdd_3v3_sys>;
+			/delete-property/ vin-supply;
+		};
+	};
+
+	pcie@141e0000 { /* C7x1 node */
+		status = "okay";
+		num-lanes = <1>;
+		phys = <&p2u_gbe_0>;
+		phy-names = "p2u-0";
+	};
+
+	pcie@140c0000 { /* C9x1 node */
+		status = "okay";
+		num-lanes = <1>;
+		phys = <&p2u_gbe_1>;
+		phy-names = "p2u-0";
+	};
+
+	i2c@3160000 {
+		tmp102: tmp102@49 { // Temperature Sensor
+			compatible = "ti,tmp102";
+			reg = <0x49>;
+			#thermal-sensor-cells = <0>;
+		};
+	};
+
+	xusb_padctl: xusb_padctl@3520000 {
+		ports {
+			usb3-0 {
+				nvidia,usb2-companion = <1>;
+				status = "okay";
+			};
+			usb3-1 {
+				//nvidia,usb2-companion = <0>;
+				nvidia,usb2-companion = <2>;
+				status = "okay";
+			};
+			usb3-2 {
+				nvidia,usb2-companion = <2>; 
+				status = "okay";
+			};
+		};
+	};
+
+	xudc@3550000 {
+		/delete-property/ charger-detector;
+	};
+
+	/delete-node/ usb_cd;
+
+	spi@3210000{ // SPI0 with CS0 on expansion connector
+		status = "okay";
+		spi@0 {
+			status = "okay";
+			compatible = "tegra-spidev";
+			reg = <0x0>;
+			spi-max-frequency = <20000000>;
+
+			controller-data {
+				nvidia,enable-hw-based-cs;
+				nvidia,rx-clk-tap-delay = <0x10>;
+				nvidia,tx-clk-tap-delay = <0x0>;
+			};
+		};
+	};
+
+
+	serial@3100000 { // UART1 (uarta) RS422
+		status = "okay";
+	};
+
+	serial@3110000 { // UART0 (uartb) RS232
+		status = "okay";
+	};
+
+};
