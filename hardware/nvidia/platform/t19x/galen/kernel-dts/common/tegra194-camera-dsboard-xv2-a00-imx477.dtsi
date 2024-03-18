@@ -1489,7 +1489,7 @@
 		modules {
 			module0 {
 				status = "okay";
-				badge = "dsboard_xv2_bottomleft_P5V27C";
+				badge = "dsboard_xv2_bottomleft";
 				position = "bottomleft";
 				orientation = "1";
 				drivernode0 {
@@ -1506,7 +1506,7 @@
 			};
 			module1 {
 				status = "okay";
-				badge = "dsboard_xv2_centerleft_P5V27C";
+				badge = "dsboard_xv2_centerleft";
 				position = "centerleft";
 				orientation = "1";
 				drivernode0 {
@@ -1523,7 +1523,7 @@
 			};
 			module2 {
 				status = "okay";
-				badge = "dsboard_xv2_centerright_P5V27C";
+				badge = "dsboard_xv2_centerright";
 				position = "centerright";
 				orientation = "1";
 				drivernode0 {
@@ -1540,7 +1540,7 @@
 			};
 			module3 {
 				status = "okay";
-				badge = "dsboard_xv2_topleft_P5V27C";
+				badge = "dsboard_xv2_topleft";
 				position = "topleft";
 				orientation = "1";
 				drivernode0 {
@@ -1557,7 +1557,7 @@
 			};
 			module4 {
 				status = "okay";
-				badge = "dsboard_xv2_bottomright_P5V27C";
+				badge = "dsboard_xv2_bottomright";
 				position = "bottomright";
 				orientation = "1";
 				drivernode0 {
@@ -1574,7 +1574,7 @@
 			};
 			module5 {
 				status = "okay";
-				badge = "dsboard_xv2_topright_P5V27C";
+				badge = "dsboard_xv2_topright";
 				position = "topright";
 				orientation = "1";
 				drivernode0 {
