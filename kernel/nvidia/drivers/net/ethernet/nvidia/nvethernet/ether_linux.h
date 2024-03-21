@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2022, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (c) 2018-2023, NVIDIA CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -206,21 +206,9 @@
 #define ETHER_TX_MAX_FRAME_SIZE	GSO_MAX_SIZE
 
 /**
- * @brief IVC wait timeout.
+ * @brief IVC wait timeout cnt in micro seconds.
  */
-#define IVC_WAIT_TIMEOUT		(msecs_to_jiffies(100))
-
-/**
- * @brief IVC read timeout cnt.
- * used as 20*IVC_WAIT_TIMEOUT hence Max is 2 sec timeout.
- */
-#define IVC_READ_TIMEOUT_CNT		20
-
-/**
- * @brief IVC channel timeout.
- * Used with 1 millisec so max timeout is 50 ms.
- */
-#define IVC_CHANNEL_TIMEOUT_CNT		50
+#define IVC_WAIT_TIMEOUT_CNT		200000
 
 /**
  * @brief Broadcast and MAC address macros
@@ -276,7 +264,7 @@ static inline bool valid_tx_len(unsigned int length)
  */
 #define ETHER_TX_DESC_THRESHOLD	(MAX_SKB_FRAGS + ETHER_TX_MAX_SPLIT + 2)
 
-#define ETHER_TX_MAX_FRAME	(TX_DESC_CNT / ETHER_TX_DESC_THRESHOLD)
+#define ETHER_TX_MAX_FRAME(x)	((x) / ETHER_TX_DESC_THRESHOLD)
 /**
  *@brief Returns count of available transmit descriptors
  *
@@ -289,10 +277,11 @@ static inline bool valid_tx_len(unsigned int length)
  *
  * @returns Number of available descriptors in the given Tx ring.
  */
-static inline int ether_avail_txdesc_cnt(struct osi_tx_ring *tx_ring)
+static inline int ether_avail_txdesc_cnt(struct osi_dma_priv_data *osi_dma,
+					 struct osi_tx_ring *tx_ring)
 {
 	return ((tx_ring->clean_idx - tx_ring->cur_tx_idx - 1) &
-		(TX_DESC_CNT - 1));
+		(osi_dma->tx_ring_sz - 1));
 }
 
 /**
@@ -356,11 +345,7 @@ struct ether_ivc_ctxt {
 	/** ivc cookie */
 	struct tegra_hv_ivc_cookie *ivck;
 	/** ivc lock */
-	struct mutex ivck_lock;
-	/** ivc work */
-	struct work_struct ivc_work;
-	/** wait for event */
-	struct completion msg_complete;
+	raw_spinlock_t ivck_lock;
 	/** Flag to indicate ivc started or stopped */
 	unsigned int ivc_state;
 };
@@ -389,6 +374,24 @@ struct ether_tx_ts_skb_list {
 	unsigned int pktid;
 	/** SKB jiffies to find time */
 	unsigned long pkt_jiffies;
+};
+
+/**
+ * @brief ether_xtra_stat_counters - OSI core extra stat counters
+ */
+struct ether_xtra_stat_counters {
+	/** rx skb allocation failure count */
+	nveu64_t re_alloc_rxbuf_failed[OSI_MGBE_MAX_NUM_QUEUES];
+	/** TX per channel interrupt count */
+	nveu64_t tx_normal_irq_n[OSI_MGBE_MAX_NUM_QUEUES];
+	/** TX per channel SW timer callback count */
+	nveu64_t tx_usecs_swtimer_n[OSI_MGBE_MAX_NUM_QUEUES];
+	/** RX per channel interrupt count */
+	nveu64_t rx_normal_irq_n[OSI_MGBE_MAX_NUM_QUEUES];
+	/** link connect count */
+	nveu64_t link_connect_count;
+	/** link disconnect count */
+	nveu64_t link_disconnect_count;
 };
 
 /**
@@ -524,10 +527,6 @@ struct ether_priv_data {
 	unsigned int promisc_mode;
 	/** Delayed work queue to read RMON counters periodically */
 	struct delayed_work ether_stats_work;
-	/** process rx work */
-	struct work_struct set_rx_mode_work;
-	/** rx lock */
-	struct mutex rx_mode_lock;
 	/** set speed work */
 	struct delayed_work set_speed_work;
 	/** Flag to check if EEE LPI is enabled for the MAC */
@@ -622,6 +621,16 @@ struct ether_priv_data {
 	raw_spinlock_t txts_lock;
 	/** Ref count for ether_get_tx_ts_func */
 	atomic_t tx_ts_ref_cnt;
+	/** Ref count for set_speed_work_func */
+	atomic_t set_speed_ref_cnt;
+	/** flag to enable logs using ethtool */
+	u32 msg_enable;
+	/** flag to indicate to start/stop the Tx */
+	unsigned int tx_start_stop;
+	/** Tasklet for restarting UPHY lanes */
+	struct tasklet_struct lane_restart_task;
+	/** xtra sw error counters */
+	struct ether_xtra_stat_counters xstats;
 };
 
 /**
@@ -808,6 +817,7 @@ int ether_tc_setup_cbs(struct ether_priv_data *pdata,
  * @retval EAGAIN on Failure
  */
 int ether_get_tx_ts(struct ether_priv_data *pdata);
+void ether_restart_lane_bringup_task(struct tasklet_struct *t);
 #ifdef ETHER_NVGRO
 void ether_nvgro_purge_timer(struct timer_list *t);
 #endif /* ETHER_NVGRO */
