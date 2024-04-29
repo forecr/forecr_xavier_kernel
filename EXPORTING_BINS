@@ -1,7 +1,7 @@
 # For DSBOARD_XV2 with AGX Xavier SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_xv2_agx
 	cp $HOME/kernel_out_dsboard_xv2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_xv2_agx/
-	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agx/Image 
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agx/Image
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agx/tegra194-p2888-0001-p2822-0000.dtb
 	mkdir $HOME/kernel_out_dsboard_xv2_agx/imx477
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agx/imx477/tegra194-p2888-0001-p2822-0000.dtb
@@ -12,7 +12,7 @@
 # For DSBOARD_XV2 with AGX Xavier Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_xv2_agxi
 	cp $HOME/kernel_out_dsboard_xv2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_xv2_agxi/
-	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agxi/Image 
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agxi/Image
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agxi/tegra194-p2888-0008-p2822-0000.dtb
 	mkdir $HOME/kernel_out_dsboard_xv2_agxi/imx477
 	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agxi/imx477/tegra194-p2888-0008-p2822-0000.dtb
@@ -23,7 +23,7 @@
 # For DSBOARD_AGX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agx_orin
 	cp $HOME/kernel_out_dsboard_agx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agx_orin/
-	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agx_orin/Image 
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agx_orin/Image
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3701-0000-p3737-0000.dtb
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3701-0004-p3737-0000.dtb
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
@@ -142,7 +142,7 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
 
 
-# For DSBOARD_NX2 (rev-1.23 & 1.22) with Orin NX SoM, type these commands below:
+# For DSBOARD_NX2 (rev-1.22 or newer) with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nx
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nx/
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nx/Image
@@ -150,7 +150,7 @@
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3767-0001-p3509-a02.dtb
 
 
-# For DSBOARD_NX2 (rev-1.23 & 1.22) with Orin Nano SoM, type these commands below:
+# For DSBOARD_NX2 (rev-1.22 or newer) with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nano
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nano/
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nano/Image
@@ -158,22 +158,18 @@
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3767-0004-p3509-a02.dtb
 
 
-# For DSBOARD_NX2 (rev-1.23 & 1.22) with Xavier NX SoM, type these commands below:
+# For DSBOARD_NX2 with Xavier NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_xavier
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_xavier/
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
 	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-0001-p3509-0000.dtb
-	mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
-	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-0001-p3509-0000.dtb
-
-
-# For DSBOARD_NX2 (rev-1.21; 1.1 & 1.0) with Xavier NX SoM, type these commands below:
-	mkdir $HOME/kernel_out_dsboard_nx2_xavier
-	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_xavier/
-	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
-	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-0001-p3509-0000.dtb
-	mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
-	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/without_fan
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121.dtb $HOME/kernel_out_dsboard_nx2_xavier/without_fan/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477_without_fan
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477_without_fan/tegra194-p3668-0001-p3509-0000.dtb
 
 
 # For MILBOARD_AGX with AGX Xavier SoM, type these commands below:
