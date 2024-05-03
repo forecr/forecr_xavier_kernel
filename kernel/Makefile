@@ -15,7 +15,7 @@ else
 kernel_image := $(kernel_source_dir)/arch/arm64/boot/Image
 endif
 
-NPROC ?= $(shell nproc)
+NPROC ?= $(($(shell nproc)-1))
 
 # LOCALVERSION : -tegra or -rt-tegra
 version = $(shell grep -q "CONFIG_PREEMPT_RT=y" \
