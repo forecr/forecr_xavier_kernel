@@ -1,0 +1,3 @@
+# The following upstream releases have been ported:
+[upstream-realtime]
+	linux-5.15.y-rt = 5.15-rt73
