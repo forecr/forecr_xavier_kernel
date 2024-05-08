@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
+
+/ {
+	aliases {
+		serial3 = &uartb;
+	};
+
+	bus@0 {
+		serial@3100000 { // UART1 (uarta) RS422
+			status = "okay";
+		};
+
+		uartb: serial@3110000 { // UART0 (uartb) RS232
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+		};
+
+		i2c@3160000 {
+			tmp102: tmp102@49 { // Temperature Sensor
+				status = "okay";
+				compatible = "ti,tmp102";
+				reg = <0x49>;
+				#thermal-sensor-cells = <0>;
+			};
+		};
+
+		i2c@3180000 {
+			pca9544a_70: pca9544a@70 {
+				status = "okay";
+				compatible = "nxp,pca9544";
+				reg = <0x70>;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				skip_mux_detect;
+				force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
+			};
+		};
+
+		padctl@3520000 {
+			ports {
+				usb3-0 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+				usb3-1 {
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+				};
+				usb3-2 {
+					nvidia,usb2-companion = <2>; 
+					status = "okay";
+				};
+			};
+		};
+		usb@3550000 {
+			status = "okay";
+
+			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>;
+			phy-names = "usb2-0", "usb3-1";
+		};
+
+		spi@3210000{ // SPI0 with CS0 on expansion connector
+			status = "okay";
+			spi@0 {
+				compatible = "tegra-spidev";
+				reg = <0x0>;
+				spi-max-frequency = <50000000>;
+				controller-data {
+					nvidia,enable-hw-based-cs;
+					nvidia,rx-clk-tap-delay = <0x10>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+		};
+
+		pcie@141e0000 { /* C7x1 node */
+			status = "okay";
+			num-lanes = <1>;
+			phys = <&p2u_gbe_0>;
+			phy-names = "p2u-0";
+		};
+
+		pcie@140c0000 { /* C9x1 node */
+			status = "okay";
+			num-lanes = <1>;
+			phys = <&p2u_gbe_1>;
+			phy-names = "p2u-0";
+		};
+	};
+};

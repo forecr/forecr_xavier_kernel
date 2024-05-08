@@ -72,10 +72,6 @@
 							nvidia,function = "xusb";
 							status = "okay";
 						};
-						usb3-2 {
-							nvidia,function = "xusb";
-							status = "okay";
-						};
 					};
 				};
 			};
@@ -87,18 +83,12 @@
 					vbus-supply = <&vdd_5v0_sys>;
 					status = "okay";
 					usb-role-switch;
-					connector {
-						compatible = "usb-b-connector", "gpio-usb-b-connector";
-						label = "micro-USB";
-						data-role = "micro";
-						vbus-gpio = <&gpio TEGRA234_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
-					};
 				};
 
 				/* hub */
 				usb2-1 {
 					mode = "host";
-					vbus-supply = <&vdd_5v0_sys>;
+					vbus-supply = <&vdd_1v1_hub>;
 					status = "okay";
 				};
 
@@ -117,12 +107,7 @@
 
 				/* J5 */
 				usb3-1 {
-					nvidia,usb2-companion = <2>;
-					status = "okay";
-				};
-				usb3-2 {
-					//nvidia,usb2-companion = <0>;
-					nvidia,usb2-companion = <2>;
+					nvidia,usb2-companion = <0>;
 					status = "okay";
 				};
 			};
@@ -131,8 +116,9 @@
 		usb@3550000 {
 			status = "okay";
 
-			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>;
-			phy-names = "usb2-0";
+			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>;
+			phy-names = "usb2-0", "usb3-0";
 		};
 
 		usb@3610000 {
@@ -142,9 +128,9 @@
 			       <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-1}>,
 			       <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-2}>,
 			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-0}>,
-			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>,
-			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-2}>;
-			phy-names = "usb2-0", "usb2-1", "usb2-2", "usb3-0", "usb3-1", "usb3-2";
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>;
+			phy-names = "usb2-0", "usb2-1", "usb2-2", "usb3-0",
+				    "usb3-1";
 		};
 
 		/* C8 - Ethernet */
