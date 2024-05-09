@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/tegra234-p3767-0000-common.h>
+#include "tegra234-camera-dsboard-ornxs-imx477.dtsi"
+
+/ {
+	overlay-name = "DSBOARD-ORNXS IMX477 2*2-lane";
+	jetson-header-name = "Jetson 24pin CSI Connector";
+	compatible = JETSON_COMPATIBLE_P3768;
+
+};
