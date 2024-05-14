@@ -9,11 +9,11 @@
 	};
 
 	bus@0 {
-		serial@3100000 { // UART1 (uarta) RS422
+		serial@3100000 { // UART1 (uarta) (RS422 for rev-1.0; RS232/422/485 for >rev-1.1)
 			status = "okay";
 		};
 
-		uartb: serial@3110000 { // UART0 (uartb) RS232
+		uartb: serial@3110000 { // UART0 (uartb) (RS232 for rev-1.0)
 			status = "okay";
 			compatible = "nvidia,tegra194-hsuart";
 			reset-names = "serial";
