@@ -1,4 +1,4 @@
-# For DSBOARD_ORNX with Orin NX SoM, type these commands below:
+# For DSBOARD-ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nx/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv.dtb
@@ -19,7 +19,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_ornx_orin_nx/
 
 
-# For DSBOARD_ORNX with Orin Nano SoM, type these commands below:
+# For DSBOARD-ORNX with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nano/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
@@ -40,7 +40,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_ornx_orin_nano/
 
 
-# For DSBOARD_ORNX_LAN with Orin NX SoM, type these commands below:
+# For DSBOARD-ORNX-LAN with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_lan_orin_nx
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_lan_orin_nx/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-dsboard-ornx-lan-base.dtb $HOME/kernel_out_dsboard_ornx_lan_orin_nx/tegra234-p3768-0000+p3767-0000-nv.dtb
@@ -63,7 +63,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_ornx_lan_orin_nx/
 
 
-# For DSBOARD_ORNX_LAN with Orin Nano SoM, type these commands below:
+# For DSBOARD-ORNX-LAN with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_lan_orin_nano
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_lan_orin_nano/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-dsboard-ornx-lan-base.dtb $HOME/kernel_out_dsboard_ornx_lan_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
@@ -86,7 +86,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_ornx_lan_orin_nano/
 
 
-# For DSBOARD_ORNXS with Orin NX SoM, type these commands below:
+# For DSBOARD-ORNXS with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nx/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3768-0000+p3767-0000-nv.dtb
@@ -109,7 +109,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_ornxs_orin_nx/
 
 
-# For DSBOARD_ORNXS with Orin Nano SoM, type these commands below:
+# For DSBOARD-ORNXS with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nano/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
@@ -132,7 +132,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_ornxs_orin_nano/
 
 
-# For DSBOARD_NX2 (rev-1.22 or newer) with Orin NX SoM, type these commands below:
+# For DSBOARD-NX2 (rev-1.22 or newer) with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nx
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nx/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3768-0000+p3767-0000-nv.dtb
@@ -153,7 +153,7 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_nx2_orin_nx/
 
 
-# For DSBOARD_NX2 (rev-1.22 or newer) with Orin NX/Nano SoM, type these commands below:
+# For DSBOARD-NX2 (rev-1.22 or newer) with Orin NX/Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nano
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nano/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
