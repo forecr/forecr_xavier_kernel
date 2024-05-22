@@ -23,6 +23,15 @@ dtb-n += tegra234-p3768-0000+p3767-0003-nv.dtb
 dtb-n += tegra234-p3768-0000+p3767-0004-nv.dtb
 dtb-n += tegra234-p3768-0000+p3767-0005-nv.dtb
 
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agx.dtb
+dtb-n += tegra234-p3737-0000+p3701-0008-nv-dsboard-agx-base.dtb
+dtb-n += tegra234-p3737-0000+p3701-0008-nv-dsboard-agx.dtb
+
 dtb-y += tegra234-p3768-0000+p3767-0000-nv-dsboard-nx2.dtb
 dtb-y += tegra234-p3768-0000+p3767-0001-nv-dsboard-nx2.dtb
 dtb-y += tegra234-p3768-0000+p3767-0003-nv-dsboard-nx2.dtb
