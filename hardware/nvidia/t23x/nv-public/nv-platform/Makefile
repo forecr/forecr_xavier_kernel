@@ -37,6 +37,15 @@ dtb-y += tegra234-p3768-0000+p3767-0001-nv-dsboard-ornx-lan.dtb
 dtb-y += tegra234-p3768-0000+p3767-0003-nv-dsboard-ornx-lan.dtb
 dtb-y += tegra234-p3768-0000+p3767-0004-nv-dsboard-ornx-lan.dtb
 
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-dsboard-ornxs-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-dsboard-ornxs-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-dsboard-ornxs-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-dsboard-ornxs-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-dsboard-ornxs.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-dsboard-ornxs.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-dsboard-ornxs.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-dsboard-ornxs.dtb
+
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
 endif
