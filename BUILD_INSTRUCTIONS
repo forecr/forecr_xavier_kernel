@@ -20,6 +20,10 @@
 #RAIBOARD-ORNX for Orin NX & Orin Nano
 
 #MILBOARD-AGX for AGX Orin
+	export KERNEL_DEF_CONFIG=milboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_agx
+	make -C kernel
+	make dtbs
 
 #DSBOARD-NX2 for Orin NX & Orin Nano
 	export KERNEL_DEF_CONFIG=dsboard_nx2_defconfig
