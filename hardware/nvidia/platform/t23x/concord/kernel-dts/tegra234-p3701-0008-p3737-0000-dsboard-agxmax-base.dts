@@ -27,6 +27,21 @@
 	compatible = "nvidia,p3737-0000+p3701-0008", "nvidia,p3701-0008", "nvidia,tegra234", "nvidia,tegra23x";
 	model = "AGX Orin Industrial for DSBOARD-AGXMAX";
 
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		linux,cma { /* Needed for nvgpu comptags */
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0x0 0x20000000>; /* 512MB */
+			alignment = <0x0 0x10000>;
+			linux,cma-default;
+			status = "okay";
+		};
+	};
+
 	bpmp {
 		i2c {
 			temp-sensor@4c {
