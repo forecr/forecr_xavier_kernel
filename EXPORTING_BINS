@@ -54,6 +54,14 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
 
 
+# For DSBOARD_ORNXS with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx
+	cp $HOME/kernel_out_dsboard_ornx/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxs_orin_nx/
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nx/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+
+
 # For DSBOARD_NX2 (rev-1.22 or newer) with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nx
 	cp $HOME/kernel_out_dsboard_nx2/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nx/
