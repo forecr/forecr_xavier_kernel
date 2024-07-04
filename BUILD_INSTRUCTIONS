@@ -21,6 +21,10 @@ make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx -j$(($(nproc)-1))
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx dsboard_ornx_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx -j$(($(nproc)-1))
 
+#RAIBOARD_AGX for AGX Orin
+make ARCH=arm64 O=$HOME/kernel_out_raiboard_agx raiboard_agx_defconfig
+make ARCH=arm64 O=$HOME/kernel_out_raiboard_agx -j$(($(nproc)-1))
+
 #RAIBOARD_ORNX for Orin NX & Orin Nano
 make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx raiboard_ornx_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx -j$(($(nproc)-1))
