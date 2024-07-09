@@ -51,6 +51,7 @@ dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-imx477.
 dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base-basler.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-raiboard-ornx.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3767-0000-p3768-0000-a0-raiboard-ornx-base.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3767-0001-p3509-a02-dsboard-nx2.dtb
