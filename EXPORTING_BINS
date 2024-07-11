@@ -181,6 +181,12 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/tegra234-p3767-0001-p3768-0000-a0.dtb
 	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
 	cp $INSTALL_MOD_PATH/lib/modules/5.10.192-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxs_orin_nx/
 	rm -rf $INSTALL_MOD_PATH
@@ -193,6 +199,12 @@
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
 	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
 	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
 	cp $INSTALL_MOD_PATH/lib/modules/5.10.192-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxs_orin_nano/
 	rm -rf $INSTALL_MOD_PATH
