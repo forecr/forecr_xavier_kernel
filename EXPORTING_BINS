@@ -63,6 +63,48 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_agxmax_orin_ind/
 
 
+# For RAIBOARD-ORNX with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_ornx_orin_nx
+	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nx/Image
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0001-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0000-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0001-nv.dtb
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
+	cd $INSTALL_MOD_PATH/..
+	sudo ./apply_binaries.sh
+	cd $OLDPWD
+	sudo -E make install -C kernel
+	cd $INSTALL_MOD_PATH
+	sudo rm -rf ./lib/modules/5.15.136-tegra/build
+	sudo rm -rf ./lib/modules/5.15.136-tegra/source
+	sudo tar --owner root --group root -cjf kernel_supplements.tbz2 lib/modules
+	sync
+	cd $OLDPWD
+	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_raiboard_ornx_orin_nx/
+
+
+# For RAIBOARD-ORNX with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_ornx_orin_nano
+	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nano/Image
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0004-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0003-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0004-nv.dtb
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
+	cd $INSTALL_MOD_PATH/..
+	sudo ./apply_binaries.sh
+	cd $OLDPWD
+	sudo -E make install -C kernel
+	cd $INSTALL_MOD_PATH
+	sudo rm -rf ./lib/modules/5.15.136-tegra/build
+	sudo rm -rf ./lib/modules/5.15.136-tegra/source
+	sudo tar --owner root --group root -cjf kernel_supplements.tbz2 lib/modules
+	sync
+	cd $OLDPWD
+	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_raiboard_ornx_orin_nano/
+
+
 # For DSBOARD-ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nx/Image
