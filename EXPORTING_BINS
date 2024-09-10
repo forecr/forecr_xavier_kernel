@@ -1,0 +1,320 @@
+# For DSBOARD_XV2 with AGX Xavier SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_xv2_agx
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agx/Image
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agx/tegra194-p2888-0001-p2822-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_xv2_agx/imx477
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agx/imx477/tegra194-p2888-0001-p2822-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_xv2_agx/xv2-expansionboard
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-dsboard-xv2-0000-expansion.dtb $HOME/kernel_out_dsboard_xv2_agx/xv2-expansionboard/tegra194-p2888-0001-p2822-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_xv2_agx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_XV2 with AGX Xavier Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_xv2_agxi
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agxi/Image
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agxi/tegra194-p2888-0008-p2822-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_xv2_agxi/imx477
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000-imx477.dtb $HOME/kernel_out_dsboard_xv2_agxi/imx477/tegra194-p2888-0008-p2822-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_xv2_agxi/xv2-expansionboard
+	cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-dsboard-xv2-0000-expansion.dtb $HOME/kernel_out_dsboard_xv2_agxi/xv2-expansionboard/tegra194-p2888-0008-p2822-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_xv2 modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_xv2_agxi/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_AGX with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_agx_orin
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agx_orin/Image
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3701-0005-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agx_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_AGXMAX with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_agxmax_orin
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin/Image
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3701-0005-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agxmax_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_AGXMAX with AGX Orin Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_agxmax_orin_ind
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin_ind/Image
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin_ind/0_tegra234-p3701-0008-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin_ind/tegra234-p3701-0008-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agxmax_orin_ind/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For RAIBOARD_AGX with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_agx_orin
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_agx_orin/Image
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3701-0005-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_raiboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_agx_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For RAIBOARD_AGX with AGX Orin Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_agx_orin_ind
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_agx_orin_ind/Image
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin_ind/0_tegra234-p3701-0008-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin_ind/tegra234-p3701-0008-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_raiboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_agx_orin_ind/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For RAIBOARD_ORNX with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_ornx_orin_nx
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nx/Image
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_ornx_orin_nx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For RAIBOARD_ORNX with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_ornx_orin_nano
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nano/Image
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_ornx_orin_nano/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_ORNX with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nx/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs/imx477/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/extra_dtbs/imx477/tegra234-p3767-0001-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornx_orin_nx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_ORNX with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nano/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs/imx477/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornx-imx477.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornx_orin_nano/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_ORNXLAN with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nx
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxlan_orin_nx/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nx/extra_dtbs/imx477/tegra234-p3767-0001-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxlan_orin_nx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_ORNXLAN with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nano
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxlan_orin_nano/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-base.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxlan-base-imx477.dtb $HOME/kernel_out_dsboard_ornxlan_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxlan_orin_nano/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_ORNXS with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nx/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/extra_dtbs/imx477/tegra234-p3767-0001-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxs_orin_nx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_ORNXS with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nano/Image
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_dsboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-dsboard-ornxs-base-imx477.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/extra_dtbs/imx477/tegra234-p3767-0004-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_ornxs_orin_nano/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_NX2 (rev-1.22 or newer) with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_nx2_orin_nx
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nx/Image
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3767-0000-p3509-a02.dtb
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3767-0001-p3509-a02.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_NX2 (rev-1.22 or newer) with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_nx2_orin_nano
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nano/Image
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3767-0003-p3509-a02.dtb
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3509-a02-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3767-0004-p3509-a02.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_orin_nano/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_NX2 with Xavier NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/without_fan
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121.dtb $HOME/kernel_out_dsboard_nx2_xavier/without_fan/tegra194-p3668-0001-p3509-0000.dtb
+	mkdir $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477_without_fan
+	cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/nvidia/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/extra_dtbs/imx477_without_fan/tegra194-p3668-0001-p3509-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_nx2_xavier/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_AGX with AGX Xavier SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_agx_agx
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agx/Image
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-milboard-agx-0000.dtb $HOME/kernel_out_milboard_agx_agx/tegra194-p2888-0001-p2822-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_agx_agx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_AGX with AGX Xavier Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_agx_agxi
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agxi/Image
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-milboard-agx-0000.dtb $HOME/kernel_out_milboard_agx_agxi/tegra194-p2888-0008-p2822-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_agx_agxi/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_AGX with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_agx_agx_orin
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agx_orin/Image
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-milboard-agx.dtb $HOME/kernel_out_milboard_agx_agx_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-milboard-agx.dtb $HOME/kernel_out_milboard_agx_agx_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-milboard-agx.dtb $HOME/kernel_out_milboard_agx_agx_orin/0_tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_agx_orin/tegra234-p3701-0005-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_agx_agx_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_AGX with AGX Orin Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_agx_agx_orin_ind
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agx_orin_ind/Image
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-milboard-agx.dtb $HOME/kernel_out_milboard_agx_agx_orin_ind/0_tegra234-p3701-0008-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_agx_orin_ind/tegra234-p3701-0008-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_agx_agx_orin_ind/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_XV with AGX Xavier SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_xv_agx
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agx/Image
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra194-p2888-0001-milboard-xv-0000.dtb $HOME/kernel_out_milboard_xv_agx/tegra194-p2888-0001-p2822-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_xv modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_xv_agx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_XV with AGX Xavier Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_xv_agxi
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agxi/Image
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra194-p2888-0008-milboard-xv-0000.dtb $HOME/kernel_out_milboard_xv_agxi/tegra194-p2888-0008-p2822-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_xv modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_xv_agxi/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_XV with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_xv_agx_orin
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agx_orin/Image
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-milboard-xv.dtb $HOME/kernel_out_milboard_xv_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-milboard-xv.dtb $HOME/kernel_out_milboard_xv_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-milboard-xv.dtb $HOME/kernel_out_milboard_xv_agx_orin/tegra234-p3701-0005-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_xv modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.216-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_xv_agx_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
+
