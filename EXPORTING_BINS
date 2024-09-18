@@ -70,6 +70,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0001-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0000-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0001-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_raiboard_ornx_orin_nx/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -91,6 +92,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0004-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0003-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-raiboard-ornx.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0004-nv.dtb
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_raiboard_ornx_orin_nano/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -112,6 +114,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0001-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo $HOME/kernel_out_dsboard_ornx_orin_nx/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx477.dtbo $HOME/kernel_out_dsboard_ornx_orin_nx/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_ornx_orin_nx/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -133,6 +136,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0004-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo $HOME/kernel_out_dsboard_ornx_orin_nano/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx477.dtbo $HOME/kernel_out_dsboard_ornx_orin_nano/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_ornx_orin_nano/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -156,6 +160,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-dsboard-ornx-lan.dtb $HOME/kernel_out_dsboard_ornx_lan_orin_nx/0_tegra234-p3768-0000+p3767-0001-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo $HOME/kernel_out_dsboard_ornx_lan_orin_nx/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx477.dtbo $HOME/kernel_out_dsboard_ornx_lan_orin_nx/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_ornx_lan_orin_nx/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -179,6 +184,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-dsboard-ornx-lan.dtb $HOME/kernel_out_dsboard_ornx_lan_orin_nano/0_tegra234-p3768-0000+p3767-0004-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo $HOME/kernel_out_dsboard_ornx_lan_orin_nano/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornx-imx477.dtbo $HOME/kernel_out_dsboard_ornx_lan_orin_nano/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_ornx_lan_orin_nano/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -202,6 +208,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/0_tegra234-p3768-0000+p3767-0001-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornxs-imx219.dtbo $HOME/kernel_out_dsboard_ornxs_orin_nx/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornxs-imx477.dtbo $HOME/kernel_out_dsboard_ornxs_orin_nx/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_ornxs_orin_nx/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -225,6 +232,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-dsboard-ornxs.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/0_tegra234-p3768-0000+p3767-0004-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornxs-imx219.dtbo $HOME/kernel_out_dsboard_ornxs_orin_nano/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-ornxs-imx477.dtbo $HOME/kernel_out_dsboard_ornxs_orin_nano/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_ornxs_orin_nano/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -246,6 +254,7 @@
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3768-0000+p3767-0001-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-nx2-imx219-dual.dtbo $HOME/kernel_out_dsboard_nx2_orin_nx/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-nx2-imx477-dual.dtbo $HOME/kernel_out_dsboard_nx2_orin_nx/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_nx2_orin_nx/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
@@ -260,13 +269,14 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_nx2_orin_nx/
 
 
-# For DSBOARD-NX2 (rev-1.22 or newer) with Orin NX/Nano SoM, type these commands below:
+# For DSBOARD-NX2 (rev-1.22 or newer) with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nano
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nano/Image
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3768-0000+p3767-0004-nv.dtb
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-nx2-imx219-dual.dtbo $HOME/kernel_out_dsboard_nx2_orin_nano/
 	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3767-camera-dsboard-nx2-imx477-dual.dtbo $HOME/kernel_out_dsboard_nx2_orin_nano/
+	cp nvidia-oot/device-tree/platform/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-dynamic.dtbo $HOME/kernel_out_dsboard_nx2_orin_nano/
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.0_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
 	cd $INSTALL_MOD_PATH/..
 	sudo ./apply_binaries.sh
