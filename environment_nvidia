@@ -2,4 +2,4 @@ export CROSS_COMPILE=$HOME/l4t-gcc/aarch64--glibc--stable-final/bin/aarch64-buil
 export LOCALVERSION=-tegra
 export TEGRA_KERNEL_OUT=$HOME/kernel_images
 export ARCH=arm64 
-
+export INSTALL_MOD_PATH=/tmp/kernel_out_Jetson
