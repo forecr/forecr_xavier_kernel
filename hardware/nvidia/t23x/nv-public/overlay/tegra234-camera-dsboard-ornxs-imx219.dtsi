@@ -4,12 +4,10 @@
 #include <dt-bindings/clock/tegra234-clock.h>
 #include <dt-bindings/gpio/tegra234-gpio.h>
 
+#define CAM0_RST        TEGRA234_MAIN_GPIO(H, 3)
 #define CAM0_PWDN	TEGRA234_MAIN_GPIO(H, 6)
 #define CAM1_PWDN	TEGRA234_MAIN_GPIO(AC, 0)
 #define CAM_I2C_MUX 	TEGRA234_MAIN_GPIO(Q, 6)
-
-// CAM0_MCLK - Pin_116 - GPIO(P, 0)
-// CAM1_MCLK - Pin_122 - GPIO(P, 1)
 
 / {
 	fragment-camera@0 {
@@ -22,20 +20,16 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			port@0 {
-				status = "okay";
 				reg = <0>;
 				dsboard_ornxs_vi_in0: endpoint {
-					status = "okay";
 					port-index = <0>;
 					bus-width = <2>;
 					remote-endpoint = <&dsboard_ornxs_csi_out0>;
 				};
 			};
 			port@1 {
-				status = "okay";
 				reg = <1>;
 				dsboard_ornxs_vi_in1: endpoint {
-					status = "okay";
 					port-index = <2>;
 					bus-width = <2>;
 					remote-endpoint = <&dsboard_ornxs_csi_out1>;
@@ -50,54 +44,43 @@
 				num-channels = <2>;
 				#address-cells = <1>;
 				#size-cells = <0>;
-				status = "okay";
 				channel@0 {
-					status = "okay";
 					reg = <0>;
 					ports {
 						#address-cells = <1>;
 						#size-cells = <0>;
 						port@0 {
-							status = "okay";
 							reg = <0>;
 							dsboard_ornxs_csi_in0: endpoint@0 {
-								status = "okay";
 								port-index = <0>;
 								bus-width = <2>;
 								remote-endpoint = <&dsboard_ornxs_imx219_out0>;
 							};
 						};
 						port@1 {
-							status = "okay";
 							reg = <1>;
 							dsboard_ornxs_csi_out0: endpoint@1 {
-								status = "okay";
 								remote-endpoint = <&dsboard_ornxs_vi_in0>;
 							};
 						};
 					};
 				};
 				channel@1 {
-					status = "okay";
 					reg = <1>;
 					ports {
 						#address-cells = <1>;
 						#size-cells = <0>;
 						port@0 {
-							status = "okay";
 							reg = <0>;
 							dsboard_ornxs_csi_in1: endpoint@2 {
-								status = "okay";
 								port-index = <2>;
 								bus-width = <2>;
 								remote-endpoint = <&dsboard_ornxs_imx219_out1>;
 							};
 						};
 						port@1 {
-							status = "okay";
 							reg = <1>;
 							dsboard_ornxs_csi_out1: endpoint@3 {
-								status = "okay";
 								remote-endpoint = <&dsboard_ornxs_vi_in1>;
 							};
 						};
@@ -115,8 +98,8 @@
 			mux-gpios = <&gpio CAM_I2C_MUX GPIO_ACTIVE_HIGH>;
 
 			i2c@0 {
+				status = "okay";
 				reg = <0>;
-				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
 
@@ -433,10 +416,8 @@
 						#size-cells = <0>;
 
 						port@0 {
-							status = "okay";
 							reg = <0>;
 							dsboard_ornxs_imx219_out0: endpoint {
-								status = "okay";
 								port-index = <0>;
 								bus-width = <2>;
 								remote-endpoint = <&dsboard_ornxs_csi_in0>;
@@ -447,8 +428,8 @@
 			};
 
 			i2c@1 {
+				status = "okay";
 				reg = <1>;
-				i2c-mux,deselect-on-exit;
 				#address-cells = <1>;
 				#size-cells = <0>;
 
@@ -460,7 +441,7 @@
 					reg = <0x10>;
 
 					/* V4L2 device node location */
-					devnode = "video2";
+					devnode = "video1";
 
 					/* Physical dimensions of sensor */
 					physical_w = "3.680";
@@ -470,7 +451,7 @@
 
 					use_sensor_mode_id = "true";
 
-					reset-gpios = <&gpio_aon CAM1_PWDN GPIO_ACTIVE_HIGH>;
+					reset-gpios = <&gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
 
 					mode0 { /* IMX219_MODE_3280x2464_21FPS */
 						mclk_khz = "24000";
@@ -692,7 +673,16 @@
 			};
 		};
 
-		dsboard_ornxs_lens_imx219@P5V27C {
+		gpio@2200000 {
+			camera-control-output-low {
+				gpio-hog;
+				output-low;
+				gpios = <CAM0_RST 0>;
+				label = "cam0-rst";
+			};
+		};
+
+		dsboard_ornxs_lens_imx219@RBPCV2 {
 			min_focus_distance = "0.0";
 			hyper_focal = "0.0";
 			focal_length = "3.04";
@@ -749,35 +739,29 @@
 		 */
 		modules {
 			module0 {
-				status = "okay";
 				badge = "dsboard_ornxs_front";
 				position = "front";
 				orientation = "1";
 				drivernode0 {
-					status = "okay";
 					pcl_id = "v4l2_sensor";
 					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/cam_i2cmux/i2c@0/imx219_a@10";
 				};
 				drivernode1 {
-					status = "okay";
 					pcl_id = "v4l2_lens";
-					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/dsboard_ornxs_lens_imx219@P5V27C/";
+					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/dsboard_ornxs_lens_imx219@RBPCV2/";
 				};
 			};
 			module1 {
-				status = "okay";
 				badge = "dsboard_ornxs_rear";
 				position = "rear";
 				orientation = "1";
 				drivernode0 {
-					status = "okay";
 					pcl_id = "v4l2_sensor";
 					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/cam_i2cmux/i2c@1/imx219_c@10";
 				};
 				drivernode1 {
-					status = "okay";
 					pcl_id = "v4l2_lens";
-					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/dsboard_ornxs_lens_imx219@P5V27C/";
+					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/dsboard_ornxs_lens_imx219@RBPCV2/";
 				};
 			};
 		};
