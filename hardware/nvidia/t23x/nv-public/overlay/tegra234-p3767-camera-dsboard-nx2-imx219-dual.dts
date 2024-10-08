@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/tegra234-p3767-0000-common.h>
+#include "tegra234-camera-dsboard-nx2-imx219.dtsi"
+
+/ {
+	overlay-name = "DSBOARD-NX2 IMX219 Dual";
+	jetson-header-name = "Jetson 24pin CSI Connector";
+	compatible = JETSON_COMPATIBLE_P3768;
+
+};
