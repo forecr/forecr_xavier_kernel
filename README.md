@@ -3,6 +3,7 @@ Forecr Linux Kernel source files for Jetson Xavier, Xavier NX, Orin, Orin NX and
 
 ## Available JetPack Branches
 ### JetPack-6.x
+- [JetPack-6.1](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.1)
 - [JetPack-6.0](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.0)
 ### JetPack-5.x
 - [JetPack-5.1.4](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.4)
