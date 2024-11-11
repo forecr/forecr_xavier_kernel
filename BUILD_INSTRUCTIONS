@@ -42,6 +42,7 @@
 	mv defconfig $OLDPWD/kernel/kernel-jammy-src/arch/arm64/configs/new_defconfig
 	cd $OLDPWD
 	export KERNEL_DEF_CONFIG=new_defconfig
+	make -C kernel dtc #[optional] to be able to compile only DTBs
 	make -C kernel
 	make dtbs
 
