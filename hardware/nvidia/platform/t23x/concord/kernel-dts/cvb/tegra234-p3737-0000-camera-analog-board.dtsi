@@ -1,0 +1,175 @@
+/*
+ * Copyright (c) 2015-2019, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include <dt-bindings/media/camera.h>
+
+// Test commands:
+// 	$ v4l2-ctl --set-ctrl preferred_stride=1472
+// 	$ gst-launch-1.0 v4l2src device=/dev/video0 ! video/x-raw,format=UYVY,width=720,height=576,framerate=30/1 ! xvimagesink
+
+/ {
+	tegra-capture-vi {
+		status = "okay";
+		num-channels = <1>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			port@0 {
+				status = "okay";
+				reg = <0>;
+				vi_in0: endpoint {
+					status = "okay";
+					port-index = <0>;
+					bus-width = <1>;
+					remote-endpoint = <&csi_out0>;
+				};
+			};
+		};
+	};
+
+	host1x@13e00000 {
+		nvcsi@15a00000 {
+			num-channels = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+			channel@0 {
+				status = "okay";
+				reg = <0>;
+				discontinuous_clk = "no";
+
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						status = "okay";
+						reg = <0>;
+						csi_in0: endpoint@0 {
+							status = "okay";
+							port-index = <0>;
+							bus-width = <1>;
+							remote-endpoint = <&adv7280_out0>;
+						};
+					};
+					port@1 {
+						status = "okay";
+						reg = <1>;
+						csi_out0: endpoint@1 {
+							status = "okay";
+							remote-endpoint = <&vi_in0>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	i2c@c240000 { // I2C2
+		adv7280m_a: composite-in@21 {
+			status = "okay";
+			compatible = "adi,adv7280-m";
+			reg = <0x21>;
+			devnode = "video0";
+			physical_w = "4.713";
+			physical_h = "3.494";
+			sensor_model = "adv7280-m";
+			use_sensor_mode_id = "false";
+			mclk = "extperiph1";
+			refclk_hz = <28636363>;
+			active_w = "720";
+			active_h = "576";
+
+			embedded_metadata_height = "0";
+
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					adv7280_out0: endpoint {
+						status = "okay";
+						port-index = <0>;
+						bus-width = <1>;
+						remote-endpoint = <&csi_in0>;
+					};
+				};
+			};
+		};
+	};
+
+	tegra-camera-platform {
+		compatible = "nvidia, tegra-camera-platform";
+		/**
+		* Physical settings to calculate max ISO BW
+		*
+		* num_csi_lanes = <>;
+		* Total number of CSI lanes when all cameras are active
+		*
+		* max_lane_speed = <>;
+		* Max lane speed in Kbit/s
+		*
+		* min_bits_per_pixel = <>;
+		* Min bits per pixel
+		*
+		* vi_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the VI ISO case
+		*
+		* vi_bw_margin_pct = <>;
+		* Vi bandwidth margin in percentage
+		*
+		* max_pixel_rate = <>;
+		* Max pixel rate in Kpixel/s for the ISP ISO case
+		* Set this to the highest pix_clk_hz out of all available modes.
+		*
+		* isp_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the ISP ISO case
+		*
+		* isp_bw_margin_pct = <>;
+		* Isp bandwidth margin in percentage
+		*/
+		num_csi_lanes = <1>;
+		max_lane_speed = <4000000>;
+		min_bits_per_pixel = <10>;
+		vi_peak_byte_per_pixel = <2>;
+		vi_bw_margin_pct = <25>;
+		isp_peak_byte_per_pixel = <5>;
+		isp_bw_margin_pct = <25>;
+
+		/**
+		* The general guideline for naming badge_info contains 3 parts, and is as follows,
+		* The first part is the camera_board_id for the module; if the module is in a FFD
+		* platform, then use the platform name for this part.
+		* The second part contains the position of the module, ex. “rear” or “front”.
+		* The third part contains the last 6 characters of a part number which is found
+		* in the module's specsheet from the vender.
+		*/
+		modules {
+			module0 {
+				status = "okay";
+				badge = "analog_front";
+				position = "front";
+				orientation = "1";
+				drivernode0 {
+					status = "okay";
+					pcl_id = "v4l2_sensor";
+					devname = "adv7180 1-0021";
+					proc-device-tree = "/proc/device-tree/i2c@c240000/composite-in@21";
+				};
+			};
+		};
+	};
+};
