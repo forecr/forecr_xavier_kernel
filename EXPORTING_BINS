@@ -48,6 +48,18 @@
 	rm -rf $INSTALL_MOD_PATH
 
 
+# For RAIBOARD_AGX with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_raiboard_agx_orin
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_agx_orin/Image
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_raiboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3701-0004-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_raiboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.104-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_raiboard_agx_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
 # For RAIBOARD_ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_raiboard_ornx_orin_nx
 	cp $HOME/kernel_out_raiboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nx/Image
