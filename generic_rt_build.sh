@@ -46,6 +46,8 @@ enable_rt()
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.dsboard_ornx_defconfig
 		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.milboard_agx_defconfig
+		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig\
+			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.raiboard_agx_defconfig
 		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.raiboard_ornx_defconfig
 
@@ -79,6 +81,8 @@ enable_rt()
 			""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.dsboard_ornx_defconfig"
 		cp -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig"\
 			""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.milboard_agx_defconfig"
+		cp -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig"\
+			""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_agx_defconfig"
 		cp -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig"\
 			""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_ornx_defconfig"
 
@@ -142,6 +146,16 @@ enable_rt()
 			--disable CPU_FREQ_TIMES \
 			--disable FAIR_GROUP_SCHED || any_failure=1
 
+		"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/scripts/config --file ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_agx_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--enable EMBEDDED\
+			--enable NAMESPACES\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+
 		"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/scripts/config --file ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_ornx_defconfig"\
 			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
 			--disable KVM\
@@ -160,6 +174,7 @@ enable_rt()
 		[[ -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_nx2_defconfig" ]] && rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_nx2_defconfig"
 		[[ -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_ornx_defconfig" ]] && rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_ornx_defconfig"
 		[[ -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig" ]] && rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig"
+		[[ -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig" ]] && rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig"
 		[[ -f ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig" ]] && rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig"
 
 		cp -fnrs ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.defconfig"\
@@ -177,6 +192,8 @@ enable_rt()
 				""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_ornx_defconfig"
 		cp -fnrs ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.milboard_agx_defconfig"\
 				""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig"
+		cp -fnrs ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_agx_defconfig"\
+				""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig"
 		cp -fnrs ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_ornx_defconfig"\
 				""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig"
 
@@ -204,6 +221,7 @@ disable_rt()
 		rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_nx2_defconfig"
 		rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_ornx_defconfig"
 		rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig"
+		rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig"
 		rm ""${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig"
 
 		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.defconfig\
@@ -221,6 +239,8 @@ disable_rt()
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_ornx_defconfig
 		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.milboard_agx_defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_agx_defconfig
+		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.raiboard_agx_defconfig\
+			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_agx_defconfig
 		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.raiboard_ornx_defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/raiboard_ornx_defconfig
 
@@ -237,6 +257,8 @@ disable_rt()
 		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.dsboard_ornx_defconfig
 		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.milboard_agx_defconfig
 		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.milboard_agx_defconfig
+		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.raiboard_agx_defconfig
+		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_agx_defconfig
 		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.raiboard_ornx_defconfig
 		rm -rf "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.updated.raiboard_ornx_defconfig
 		echo "PREEMPT RT config is disabled successfully!"
