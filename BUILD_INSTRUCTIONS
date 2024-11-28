@@ -17,6 +17,12 @@
 	make -C kernel
 	make dtbs
 
+#RAIBOARD-AGX for AGX Orin
+	export KERNEL_DEF_CONFIG=raiboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_raiboard_agx
+	make -C kernel
+	make dtbs
+
 #RAIBOARD-ORNX for Orin NX & Orin Nano
 	export KERNEL_DEF_CONFIG=raiboard_ornx_defconfig
 	export KERNEL_OUTPUT=$HOME/kernel_out_raiboard_ornx
