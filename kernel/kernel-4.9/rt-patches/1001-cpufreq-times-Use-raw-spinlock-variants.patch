@@ -1,0 +1,46 @@
+From ffa95567a2677b20ea3e1facfca99b8219642510 Mon Sep 17 00:00:00 2001
+From: Sumit Gupta <sumitg@nvidia.com>
+Date: Tue, 7 May 2019 18:31:30 +0530
+Subject: [PATCH 358/364] cpufreq: times: Use raw spinlock variants
+
+Use raw spinlock variants for not-sleeping in RT kernels.
+This was reported and suggested in devtalk to fix lockup
+issue during boot.
+
+Bug 2540766
+
+Change-Id: I2b1ce57d54e528533d17dd7fe25490b2c6eee880
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+---
+ drivers/cpufreq/cpufreq_times.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cpufreq/cpufreq_times.c b/drivers/cpufreq/cpufreq_times.c
+index f4574e9..0776b5a2 100644
+--- a/drivers/cpufreq/cpufreq_times.c
++++ b/drivers/cpufreq/cpufreq_times.c
+@@ -413,17 +413,17 @@ void cpufreq_acct_update_power(struct task_struct *p, cputime_t cputime)
+ 
+ 	state = freqs->offset + READ_ONCE(freqs->last_index);
+ 
+-	spin_lock_irqsave(&task_time_in_state_lock, flags);
++	raw_spin_lock_irqsave(&task_time_in_state_lock, flags);
+ 	if ((state < p->max_state || !cpufreq_task_times_realloc_locked(p)) &&
+ 	    p->time_in_state)
+ 		p->time_in_state[state] += cputime;
+-	spin_unlock_irqrestore(&task_time_in_state_lock, flags);
++	raw_spin_unlock_irqrestore(&task_time_in_state_lock, flags);
+ 
+-	spin_lock_irqsave(&uid_lock, flags);
++	raw_spin_lock_irqsave(&uid_lock, flags);
+ 	uid_entry = find_or_register_uid_locked(uid);
+ 	if (uid_entry && state < uid_entry->max_state)
+ 		uid_entry->time_in_state[state] += cputime;
+-	spin_unlock_irqrestore(&uid_lock, flags);
++	raw_spin_unlock_irqrestore(&uid_lock, flags);
+ 
+ 	rcu_read_lock();
+ 	uid_entry = find_uid_entry_rcu(uid);
+-- 
+2.7.4
+
