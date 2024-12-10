@@ -1,0 +1,69 @@
+# For DSBOARD_XV2 with AGX Xavier SoM, type these commands below:
+mkdir $HOME/kernel_out_dsboard_xv2_agx
+cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agx/Image 
+cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/tegra194-p2888-0001-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agx/tegra194-p2888-0001-p2822-0000.dtb
+mkdir $HOME/kernel_out_dsboard_xv2_agx/xv2-expansionboard
+cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/tegra194-p2888-0001-dsboard-xv2-0000-expansion.dtb $HOME/kernel_out_dsboard_xv2_agx/xv2-expansionboard/tegra194-p2888-0001-p2822-0000.dtb
+
+# For DSBOARD_XV2 with AGX Xavier Industrial SoM, type these commands below:
+mkdir $HOME/kernel_out_dsboard_xv2_agxi
+cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_xv2_agxi/Image 
+cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/tegra194-p2888-0008-dsboard-xv2-0000.dtb $HOME/kernel_out_dsboard_xv2_agxi/tegra194-p2888-0008-p2822-0000.dtb
+mkdir $HOME/kernel_out_dsboard_xv2_agxi/xv2-expansionboard
+cp $HOME/kernel_out_dsboard_xv2/arch/arm64/boot/dts/tegra194-p2888-0008-dsboard-xv2-0000-expansion.dtb $HOME/kernel_out_dsboard_xv2_agxi/xv2-expansionboard/tegra194-p2888-0008-p2822-0000.dtb
+
+# For DSBOARD_NX2 (rev-1.23 & 1.22) with Xavier NX SoM, type these commands below:
+mkdir $HOME/kernel_out_dsboard_nx2_xavier
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-all-p3509-0000.dtb
+mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-all-p3509-0000.dtb
+
+# For DSBOARD_NX2 (rev-1.21; 1.1 & 1.0) with Xavier NX SoM, type these commands below:
+mkdir $HOME/kernel_out_dsboard_nx2_xavier
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_xavier/Image
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000-rev121.dtb $HOME/kernel_out_dsboard_nx2_xavier/tegra194-p3668-all-p3509-0000.dtb
+mkdir $HOME/kernel_out_dsboard_nx2_xavier/imx477
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb $HOME/kernel_out_dsboard_nx2_xavier/imx477/tegra194-p3668-all-p3509-0000.dtb
+
+# For DSBOARD_NX2 (rev-1.23 & 1.22) with TX2 NX SoM, type these commands below:
+mkdir $HOME/kernel_out_dsboard_nx2_tx2
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_tx2/Image
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_tx2/tegra186-p3636-0001-p3509-0000-a01.dtb 
+cd $HOME/kernel_out_dsboard_nx2_tx2/
+wget https://github.com/mistelektronik/forecr_blog_files/blob/master/tegra186-bpmp-p3636-0001-a00-00.zip?raw=true -O tegra186-bpmp-p3636-0001-a00-00.zip
+unzip tegra186-bpmp-p3636-0001-a00-00.zip
+rm tegra186-bpmp-p3636-0001-a00-00.zip 
+cd $OLDPWD
+
+# For DSBOARD_NX2 (rev-1.21; 1.1 & 1.0) with TX2 NX SoM, type these commands below:
+mkdir $HOME/kernel_out_dsboard_nx2_tx2
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_tx2/Image
+cp $HOME/kernel_out_dsboard_nx2/arch/arm64/boot/dts/tegra186-p3636-0001-p3509-0000-a01-dsboard-nx2-rev121.dtb $HOME/kernel_out_dsboard_nx2_tx2/tegra186-p3636-0001-p3509-0000-a01.dtb 
+cd $HOME/kernel_out_dsboard_nx2_tx2/
+wget https://github.com/mistelektronik/forecr_blog_files/blob/master/tegra186-bpmp-p3636-0001-a00-00.zip?raw=true -O tegra186-bpmp-p3636-0001-a00-00.zip
+unzip tegra186-bpmp-p3636-0001-a00-00.zip
+rm tegra186-bpmp-p3636-0001-a00-00.zip 
+cd $OLDPWD
+
+# For MILBOARD_AGX with AGX Xavier SoM, type these commands below:
+mkdir $HOME/kernel_out_milboard_agx_agx
+cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agx/Image
+cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/tegra194-p2888-0001-milboard-agx-0000.dtb $HOME/kernel_out_milboard_agx_agx/tegra194-p2888-0001-p2822-0000.dtb
+
+# For MILBOARD_AGX with AGX Xavier Industrial SoM, type these commands below:
+mkdir $HOME/kernel_out_milboard_agx_agxi
+cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_agxi/Image
+cp $HOME/kernel_out_milboard_agx/arch/arm64/boot/dts/tegra194-p2888-0008-milboard-agx-0000.dtb $HOME/kernel_out_milboard_agx_agxi/tegra194-p2888-0008-p2822-0000.dtb
+
+# For MILBOARD_XV with AGX Xavier SoM, type these commands below:
+mkdir $HOME/kernel_out_milboard_xv_agx
+cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agx/Image 
+cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/tegra194-p2888-0001-milboard-xv-0000.dtb $HOME/kernel_out_milboard_xv_agx/tegra194-p2888-0001-p2822-0000.dtb
+
+# For MILBOARD_XV with AGX Xavier Industrial SoM, type these commands below:
+mkdir $HOME/kernel_out_milboard_xv_agxi
+cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agxi/Image 
+cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/dts/tegra194-p2888-0008-milboard-xv-0000.dtb $HOME/kernel_out_milboard_xv_agxi/tegra194-p2888-0008-p2822-0000.dtb
+
+
