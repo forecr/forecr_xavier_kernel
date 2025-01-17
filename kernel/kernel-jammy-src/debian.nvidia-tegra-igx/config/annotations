@@ -1,0 +1,27 @@
+# Menu: HEADER
+# FORMAT: 4
+# ARCH: arm64
+# FLAVOUR: arm64-nvidia-tegra-igx arm64-nvidia-tegra-igx-rt
+# FLAVOUR_DEP: {'arm64-nvidia-tegra-igx': 'arm64-nvidia-tegra', 'arm64-nvidia-tegra-igx-rt': 'arm64-nvidia-tegra-rt'}
+
+include "../../debian.nvidia-tegra/config/annotations"
+
+
+# ---- Annotations without notes ----
+
+CONFIG_AQUANTIA_PHY                             policy<{'arm64': 'n'}>
+CONFIG_DRM_SIMPLEDRM                            policy<{'arm64': 'n'}>
+CONFIG_FB_SIMPLE                                policy<{'arm64': 'y'}>
+CONFIG_ISO9660_FS                               policy<{'arm64': 'y'}>
+CONFIG_OPTEE                                    policy<{'arm64': 'y'}>
+CONFIG_PPS_CLIENT_GPIO                          policy<{'arm64': 'y'}>
+CONFIG_PPS_CLIENT_KTIMER                        policy<{'arm64': 'y'}>
+CONFIG_PPS_CLIENT_LDISC                         policy<{'arm64': 'y'}>
+CONFIG_PSTORE_BLK_CONSOLE_SIZE                  policy<{'arm64': '64'}>
+CONFIG_PSTORE_CONSOLE                           policy<{'arm64': 'y'}>
+CONFIG_PSTORE_RAM                               policy<{'arm64': 'y'}>
+CONFIG_R8169                                    policy<{'arm64': 'n'}>
+CONFIG_REED_SOLOMON                             policy<{'arm64': 'y'}>
+CONFIG_RTW88_8822C                              policy<{'arm64': '-'}>
+CONFIG_RTW88_8822CE                             policy<{'arm64': 'n'}>
+CONFIG_TEE                                      policy<{'arm64': 'y'}>
