@@ -45,7 +45,7 @@ function check_env_common {
 
 
 # shellcheck disable=SC2034
-NPROC=$(nproc)
+NPROC=$(($(nproc)-1))
 MAKE_BIN="${MAKE_BIN:-make}"
 BUILD_DIR="${BUILD_DIR:-$(pwd)/build_nv_sources}"
 

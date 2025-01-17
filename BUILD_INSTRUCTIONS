@@ -1,0 +1,58 @@
+#Load Environment
+	source environment_nvidia
+
+#[OPTIONAL] Applying RT-Patch
+	./generic_rt_build.sh "enable"
+	export IGNORE_PREEMPT_RT_PRESENCE=1
+
+#DSBOARD-AGX & DSBOARD-AGXMAX for AGX Orin
+	export KERNEL_DEF_CONFIG=dsboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_agx
+	make -C kernel
+	make dtbs
+
+#RAIBOARD-AGX for AGX Orin
+	export KERNEL_DEF_CONFIG=raiboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_raiboard_agx
+	make -C kernel
+	make dtbs
+
+#MILBOARD-AGX for AGX Orin
+	export KERNEL_DEF_CONFIG=milboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_agx
+	make -C kernel
+	make dtbs
+
+#RAIBOARD-ORNX for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=raiboard_ornx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_raiboard_ornx
+	make -C kernel
+	make dtbs
+
+#DSBOARD-ORNX, DSBOARD-ORNX-LAN & DSBOARD-ORNXS for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=dsboard_ornx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_ornx
+	make -C kernel
+	make dtbs
+
+#DSBOARD-NX2 for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=dsboard_nx2_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_nx2
+	make -C kernel
+	make dtbs
+
+#[INFO] Using custom defconfig
+	cd $KERNEL_OUTPUT
+	make menuconfig
+	make savedefconfig
+	mv defconfig $OLDPWD/kernel/kernel-jammy-src/arch/arm64/configs/new_defconfig
+	cd $OLDPWD
+	export KERNEL_DEF_CONFIG=new_defconfig
+	make -C kernel dtc #[optional] to be able to compile only DTBs
+	make -C kernel
+	make dtbs
+
+#[INFO] Cleanup the source tree
+	make -C kernel clean
+	make clean
+

@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0+ */
 /* Copyright (C) 2018 Microchip Technology Inc. */
+/* Copyright (C) 2021 NVIDIA CORPORATION. All rights reserved.*/
 
 #include <linux/module.h>
 #include <linux/pci.h>
@@ -15,6 +16,7 @@
 #include <linux/rtnetlink.h>
 #include <linux/iopoll.h>
 #include <linux/crc16.h>
+#include <linux/version.h>
 #include "lan743x_main.h"
 #include "lan743x_ethtool.h"
 
@@ -152,8 +154,9 @@ clean_up:
 	return result;
 }
 
-static void lan743x_intr_software_isr(struct lan743x_adapter *adapter)
+static void lan743x_intr_software_isr(void *context)
 {
+	struct lan743x_adapter *adapter = context;
 	struct lan743x_intr *intr = &adapter->intr;
 
 	/* disable the interrupt to prevent repeated re-triggering */
@@ -561,11 +564,11 @@ static int lan743x_intr_open(struct lan743x_adapter *adapter)
 
 	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0)) {
 		lan743x_csr_write(adapter, INT_MOD_CFG0, LAN743X_INT_MOD);
-		lan743x_csr_write(adapter, INT_MOD_CFG1, LAN743X_INT_MOD);
-		lan743x_csr_write(adapter, INT_MOD_CFG2, LAN743X_INT_MOD);
-		lan743x_csr_write(adapter, INT_MOD_CFG3, LAN743X_INT_MOD);
-		lan743x_csr_write(adapter, INT_MOD_CFG4, LAN743X_INT_MOD);
-		lan743x_csr_write(adapter, INT_MOD_CFG5, LAN743X_INT_MOD);
+		lan743x_csr_write(adapter, INT_MOD_CFG1, LAN743X_INT_MOD-200);   // TX 0 interrupt mod
+		lan743x_csr_write(adapter, INT_MOD_CFG2, LAN743X_INT_MOD+400);   // RX 0 interrupt mod
+		lan743x_csr_write(adapter, INT_MOD_CFG3, LAN743X_INT_MOD+400);   // RX 1 interrupt mod
+		lan743x_csr_write(adapter, INT_MOD_CFG4, LAN743X_INT_MOD+400);   // RX 2 interrupt mod
+		lan743x_csr_write(adapter, INT_MOD_CFG5, LAN743X_INT_MOD+400);   // RX 3 interrupt mod
 		lan743x_csr_write(adapter, INT_MOD_CFG6, LAN743X_INT_MOD);
 		lan743x_csr_write(adapter, INT_MOD_CFG7, LAN743X_INT_MOD);
 		lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00005432);
@@ -829,7 +832,7 @@ static int lan743x_mac_init(struct lan743x_adapter *adapter)
 			eth_random_addr(adapter->mac_address);
 	}
 	lan743x_mac_set_address(adapter, adapter->mac_address);
-	eth_hw_addr_set(netdev, adapter->mac_address);
+	ether_addr_copy(netdev->dev_addr, adapter->mac_address);
 
 	return 0;
 }
@@ -961,7 +964,7 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
 		data = lan743x_csr_read(adapter, MAC_CR);
 
 		/* set interface mode */
-		if (phy_interface_is_rgmii(phydev))
+		if (phy_interface_mode_is_rgmii(adapter->phy_mode))
 			/* RGMII */
 			data &= ~MAC_CR_MII_EN_;
 		else
@@ -1013,14 +1016,36 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
 
 static int lan743x_phy_open(struct lan743x_adapter *adapter)
 {
-	struct net_device *netdev = adapter->netdev;
 	struct lan743x_phy *phy = &adapter->phy;
-	struct phy_device *phydev;
+	struct phy_device *phydev = NULL;
+	struct device_node *phynode;
+	struct net_device *netdev;
 	int ret = -EIO;
 
-	/* try devicetree phy, or fixed link */
-	phydev = of_phy_get_and_connect(netdev, adapter->pdev->dev.of_node,
-					lan743x_phy_link_status_change);
+	netdev = adapter->netdev;
+	phynode = of_node_get(adapter->pdev->dev.of_node);
+
+	if (phynode) {
+		/* try devicetree phy, or fixed link */
+		of_get_phy_mode(phynode, &adapter->phy_mode);
+
+		if (of_phy_is_fixed_link(phynode)) {
+			ret = of_phy_register_fixed_link(phynode);
+			phy->fixed = true;
+			if (ret) {
+				netdev_err(netdev,
+					   "cannot register fixed PHY\n");
+				of_node_put(phynode);
+				goto return_error;
+			}
+			ret = of_property_read_u32(phynode, "nvidia,mdio_addr",
+						   &phy->mdio_addr);
+		}
+		phydev = of_phy_connect(netdev, phynode,
+					lan743x_phy_link_status_change, 0,
+					adapter->phy_mode);
+		of_node_put(phynode);
+	}
 
 	if (!phydev) {
 		/* try internal phy */
@@ -1028,9 +1053,10 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
 		if (!phydev)
 			goto return_error;
 
+		adapter->phy_mode = PHY_INTERFACE_MODE_GMII;
 		ret = phy_connect_direct(netdev, phydev,
 					 lan743x_phy_link_status_change,
-					 PHY_INTERFACE_MODE_GMII);
+					 adapter->phy_mode);
 		if (ret)
 			goto return_error;
 	}
@@ -1172,7 +1198,7 @@ static int lan743x_dmac_init(struct lan743x_adapter *adapter)
 	}
 	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0))
 		data |= DMAC_CFG_COAL_EN_;
-	data |= DMAC_CFG_CH_ARB_SEL_RX_HIGH_;
+	data |= DMAC_CFG_CH_ARB_SEL_ROUND_ROBIN_;
 	data |= DMAC_CFG_MAX_READ_REQ_SET_(6);
 	lan743x_csr_write(adapter, DMAC_CFG, data);
 	data = DMAC_COAL_CFG_TIMER_LIMIT_SET_(1);
@@ -1363,6 +1389,63 @@ static int lan743x_tx_get_avail_desc(struct lan743x_tx *tx)
 		return tx->ring_size - last_tail + last_head - 1;
 	else
 		return last_head - last_tail - 1;
+}
+
+int lan743x_rx_set_tstamp_mode(struct lan743x_adapter *adapter,
+			       int rx_filter)
+{
+	int channel_number;
+	int index;
+	u32 data;
+
+	switch (rx_filter) {
+	case HWTSTAMP_FILTER_PTP_V2_SYNC:
+			data = lan743x_csr_read(adapter, PTP_RX_TS_CFG);
+			data &= ~PTP_RX_TS_CFG_EVENT_MSGS_;
+			data |= PTP_RX_TS_CFG_SYNC_MSG_;
+			lan743x_csr_write(adapter, PTP_RX_TS_CFG, data);
+			break;
+	case HWTSTAMP_FILTER_PTP_V2_DELAY_REQ:
+			data = lan743x_csr_read(adapter, PTP_RX_TS_CFG);
+			data &= ~PTP_RX_TS_CFG_EVENT_MSGS_;
+			data |= PTP_RX_TS_CFG_DELAY_REQ_MSG_;
+			lan743x_csr_write(adapter, PTP_RX_TS_CFG, data);
+			break;
+	case HWTSTAMP_FILTER_PTP_V2_EVENT:
+			data = lan743x_csr_read(adapter, PTP_RX_TS_CFG);
+			data |= PTP_RX_TS_CFG_EVENT_MSGS_;
+			lan743x_csr_write(adapter, PTP_RX_TS_CFG, data);
+			break;
+	case HWTSTAMP_FILTER_NONE:
+	case HWTSTAMP_FILTER_ALL:
+			break;
+	default:
+			netif_warn(adapter, drv, adapter->netdev,
+				   "rx timestamp = %d is not supported\n",
+				   rx_filter);
+			return -EINVAL;
+	}
+
+	for (index = 0; index < LAN743X_USED_RX_CHANNELS; index++) {
+		channel_number = adapter->rx[index].channel_number;
+		data = lan743x_csr_read(adapter, RX_CFG_B(channel_number));
+		if (rx_filter == HWTSTAMP_FILTER_NONE) {
+			data &= ~(RX_CFG_B_TS_ALL_RX_ |
+				  RX_CFG_B_TS_DESCR_EN_);
+		} else if (rx_filter == HWTSTAMP_FILTER_ALL) {
+			data |= RX_CFG_B_TS_ALL_RX_;
+		} else {
+			/* enable storing timestamping in extension descriptor
+			 * instead of timestamping all the packets
+			 */
+			data &= ~RX_CFG_B_TS_ALL_RX_;
+			data |= RX_CFG_B_TS_DESCR_EN_;
+		}
+		lan743x_csr_write(adapter, RX_CFG_B(channel_number),
+				  data);
+	}
+
+	return 0;
 }
 
 void lan743x_tx_set_timestamping_mode(struct lan743x_tx *tx,
@@ -1589,11 +1672,13 @@ static netdev_tx_t lan743x_tx_xmit_frame(struct lan743x_tx *tx,
 {
 	int required_number_of_descriptors = 0;
 	unsigned int start_frame_length = 0;
+	netdev_tx_t retval = NETDEV_TX_OK;
 	unsigned int frame_length = 0;
 	unsigned int head_length = 0;
 	unsigned long irq_flags = 0;
 	bool do_timestamp = false;
 	bool ignore_sync = false;
+	struct netdev_queue *txq;
 	int nr_frags = 0;
 	bool gso = false;
 	int j;
@@ -1606,9 +1691,11 @@ static netdev_tx_t lan743x_tx_xmit_frame(struct lan743x_tx *tx,
 		if (required_number_of_descriptors > (tx->ring_size - 1)) {
 			dev_kfree_skb_irq(skb);
 		} else {
-			/* save to overflow buffer */
-			tx->overflow_skb = skb;
-			netif_stop_queue(tx->adapter->netdev);
+			/* save how many descriptors we needed to restart the queue */
+			tx->rqd_descriptors = required_number_of_descriptors;
+			retval = NETDEV_TX_BUSY;
+			txq = netdev_get_tx_queue(tx->adapter->netdev, tx->channel_number);
+			netif_tx_stop_queue(txq);
 		}
 		goto unlock;
 	}
@@ -1666,15 +1753,15 @@ finish:
 
 unlock:
 	spin_unlock_irqrestore(&tx->ring_lock, irq_flags);
-	return NETDEV_TX_OK;
+	return retval;
 }
 
 static int lan743x_tx_napi_poll(struct napi_struct *napi, int weight)
 {
 	struct lan743x_tx *tx = container_of(napi, struct lan743x_tx, napi);
 	struct lan743x_adapter *adapter = tx->adapter;
-	bool start_transmitter = false;
 	unsigned long irq_flags = 0;
+	struct netdev_queue *txq;
 	u32 ioc_bit = 0;
 
 	ioc_bit = DMAC_INT_BIT_TX_IOC_(tx->channel_number);
@@ -1685,23 +1772,19 @@ static int lan743x_tx_napi_poll(struct napi_struct *napi, int weight)
 
 	/* clean up tx ring */
 	lan743x_tx_release_completed_descriptors(tx);
-	if (netif_queue_stopped(adapter->netdev)) {
-		if (tx->overflow_skb) {
-			if (lan743x_tx_get_desc_cnt(tx, tx->overflow_skb) <=
-				lan743x_tx_get_avail_desc(tx))
-				start_transmitter = true;
+	txq = netdev_get_tx_queue(adapter->netdev, tx->channel_number);
+	if (netif_tx_queue_stopped(txq)) {
+		if (tx->rqd_descriptors) {
+			if (tx->rqd_descriptors <=
+			    lan743x_tx_get_avail_desc(tx)) {
+				tx->rqd_descriptors = 0;
+				netif_tx_wake_queue(txq);
+			}
 		} else {
-			netif_wake_queue(adapter->netdev);
+			netif_tx_wake_queue(txq);
 		}
 	}
 	spin_unlock_irqrestore(&tx->ring_lock, irq_flags);
-
-	if (start_transmitter) {
-		/* space is now available, transmit overflow skb */
-		lan743x_tx_xmit_frame(tx, tx->overflow_skb);
-		tx->overflow_skb = NULL;
-		netif_wake_queue(adapter->netdev);
-	}
 
 	if (!napi_complete(napi))
 		goto done;
@@ -1752,13 +1835,10 @@ static int lan743x_tx_ring_init(struct lan743x_tx *tx)
 	}
 	if (dma_set_mask_and_coherent(&tx->adapter->pdev->dev,
 				      DMA_BIT_MASK(64))) {
-		if (dma_set_mask_and_coherent(&tx->adapter->pdev->dev,
-					      DMA_BIT_MASK(32))) {
-			dev_warn(&tx->adapter->pdev->dev,
-				 "lan743x_: No suitable DMA available\n");
-			ret = -ENOMEM;
-			goto cleanup;
-		}
+		dev_warn(&tx->adapter->pdev->dev,
+			 "lan743x_: No suitable DMA available\n");
+		ret = -ENOMEM;
+		goto cleanup;
 	}
 	ring_allocation_size = ALIGN(tx->ring_size *
 				     sizeof(struct lan743x_tx_descriptor),
@@ -1829,10 +1909,7 @@ static void lan743x_tx_close(struct lan743x_tx *tx)
 
 	lan743x_tx_release_all_descriptors(tx);
 
-	if (tx->overflow_skb) {
-		dev_kfree_skb(tx->overflow_skb);
-		tx->overflow_skb = NULL;
-	}
+	tx->rqd_descriptors = 0;
 
 	lan743x_tx_ring_cleanup(tx);
 }
@@ -1912,7 +1989,7 @@ static int lan743x_tx_open(struct lan743x_tx *tx)
 							 (tx->channel_number));
 	netif_tx_napi_add(adapter->netdev,
 			  &tx->napi, lan743x_tx_napi_poll,
-			  tx->ring_size - 1);
+			  NAPI_POLL_WEIGHT);
 	napi_enable(&tx->napi);
 
 	data = 0;
@@ -2297,13 +2374,10 @@ static int lan743x_rx_ring_init(struct lan743x_rx *rx)
 	}
 	if (dma_set_mask_and_coherent(&rx->adapter->pdev->dev,
 				      DMA_BIT_MASK(64))) {
-		if (dma_set_mask_and_coherent(&rx->adapter->pdev->dev,
-					      DMA_BIT_MASK(32))) {
-			dev_warn(&rx->adapter->pdev->dev,
-				 "lan743x_: No suitable DMA available\n");
-			ret = -ENOMEM;
-			goto cleanup;
-		}
+		dev_warn(&rx->adapter->pdev->dev,
+			 "lan743x_: No suitable DMA available\n");
+		ret = -ENOMEM;
+		goto cleanup;
 	}
 	ring_allocation_size = ALIGN(rx->ring_size *
 				     sizeof(struct lan743x_rx_descriptor),
@@ -2440,7 +2514,7 @@ static int lan743x_rx_open(struct lan743x_rx *rx)
 		data |= RX_CFG_B_RX_PAD_2_;
 	data &= ~RX_CFG_B_RX_RING_LEN_MASK_;
 	data |= ((rx->ring_size) & RX_CFG_B_RX_RING_LEN_MASK_);
-	data |= RX_CFG_B_TS_ALL_RX_;
+	data |= RX_CFG_B_TS_DESCR_EN_;
 	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0))
 		data |= RX_CFG_B_RDMABL_512_;
 
@@ -2592,14 +2666,136 @@ static netdev_tx_t lan743x_netdev_xmit_frame(struct sk_buff *skb,
 	return lan743x_tx_xmit_frame(&adapter->tx[0], skb);
 }
 
+/**
+ * @brief Function to handle MDIO IOCTL in phyless move
+ *
+ * Algorithm: This function is used to write the data
+ * into the specified register.
+ *
+ * @param [in] pdata: Pointer to private data structure.
+ * @param [in] ifr: Interface request structure used for socket ioctl
+ *
+ * @retval 0 on success.
+ * @retval "negative value" on failure.
+ */
+
+static int lan7431_handle_priv_rmdio_ioctl(struct lan743x_adapter *adapter,
+					   struct ifreq *ifr)
+{
+	struct mii_ioctl_data *mii_data = if_mii(ifr);
+	unsigned int prtad, devad;
+	int ret = 0;
+
+	if (mdio_phy_id_is_c45(mii_data->phy_id)) {
+		prtad = mdio_phy_id_prtad(mii_data->phy_id);
+		devad = mdio_phy_id_devad(mii_data->phy_id);
+		devad = mdiobus_c45_addr(devad, mii_data->reg_num);
+	} else {
+		prtad = mii_data->phy_id;
+		devad = mii_data->reg_num;
+	}
+
+	netif_dbg(adapter, drv, adapter->netdev, "%s: phy_id:%d regadd: %d devaddr:%d\n",
+		  __func__, mii_data->phy_id, prtad, devad);
+	ret = lan743x_mdiobus_read(adapter->mdiobus, prtad, devad);
+	if (ret < 0) {
+		netif_err(adapter, drv, adapter->netdev, "%s: Data read failed\n", __func__);
+		return -EFAULT;
+	}
+
+	mii_data->val_out = ret;
+	return 0;
+}
+
+/**
+ * @brief Function to handle MDIO IOCTL in phyless move
+ *
+ * Algorithm: This function is used to write the data
+ * into the specified register.
+ *
+ * @param [in] pdata: Pointer to private data structure.
+ * @param [in] ifr: Interface request structure used for socket ioctl
+ *
+ * @retval 0 on success.
+ * @retval "negative value" on failure.
+ */
+static int lan7431_handle_priv_wmdio_ioctl(struct lan743x_adapter *adapter,
+					   struct ifreq *ifr)
+{
+	struct mii_ioctl_data *mii_data = if_mii(ifr);
+	unsigned int prtad, devad;
+
+	if (mdio_phy_id_is_c45(mii_data->phy_id)) {
+		prtad = mdio_phy_id_prtad(mii_data->phy_id);
+		devad = mdio_phy_id_devad(mii_data->phy_id);
+		devad = mdiobus_c45_addr(devad, mii_data->reg_num);
+	} else {
+		prtad = mii_data->phy_id;
+		devad = mii_data->reg_num;
+	}
+	netif_dbg(adapter, drv, adapter->netdev, "%s: phy_id:%d regadd: %d devaddr:%d val:%04x\n",
+		  __func__, mii_data->phy_id, prtad, devad, mii_data->val_in);
+	return lan743x_mdiobus_write(adapter->mdiobus, prtad, devad, mii_data->val_in);
+}
+
 static int lan743x_netdev_ioctl(struct net_device *netdev,
 				struct ifreq *ifr, int cmd)
 {
-	if (!netif_running(netdev))
+	int ret = -EINVAL;
+	struct lan743x_adapter *adapter = NULL;
+
+	if (!netdev || !ifr) {
+		netif_err(adapter, drv, adapter->netdev, "%s: Invalid arg\n", __func__);
 		return -EINVAL;
-	if (cmd == SIOCSHWTSTAMP)
-		return lan743x_ptp_ioctl(netdev, ifr, cmd);
-	return phy_mii_ioctl(netdev->phydev, ifr, cmd);
+	}
+	adapter = netdev_priv(netdev);
+	if (!adapter) {
+		netif_err(adapter, drv, adapter->netdev, "%s: bad priv\n", __func__);
+		return -EINVAL;
+	}
+
+	if (netif_running(netdev)) {
+		switch (cmd) {
+		case SIOCSHWTSTAMP:
+			ret = lan743x_ptp_ioctl(netdev, ifr, cmd);
+			break;
+		case SIOCGMIIPHY:
+		case SIOCGMIIREG:
+		case SIOCSMIIREG:
+			if (!netdev->phydev) {
+				ret = -EINVAL;
+				break;
+			}
+			if (adapter->phy.fixed) {
+				if (cmd == SIOCGMIIPHY) {
+					struct mii_ioctl_data *mii_data = if_mii(ifr);
+
+					mii_data->phy_id = adapter->phy.mdio_addr;
+					ret = 0;
+				} else if (cmd == SIOCGMIIREG) {
+					ret = lan7431_handle_priv_rmdio_ioctl(adapter, ifr);
+				} else if (cmd == SIOCSMIIREG) {
+					ret = lan7431_handle_priv_wmdio_ioctl(adapter, ifr);
+				} else {
+					netif_err(adapter, drv, adapter->netdev,
+						  "%s: impossible case\n", __func__);
+				}
+			} else {
+				if (!netdev->phydev)
+					ret = -EINVAL;
+				else
+					ret = phy_mii_ioctl(netdev->phydev, ifr, cmd);
+			}
+			break;
+		default:
+			ret = (!netdev->phydev) ? -EINVAL : phy_mii_ioctl(netdev->phydev, ifr, cmd);
+			break;
+		}
+	} else {
+		netif_err(adapter, drv, adapter->netdev, "%s: Interface not up\n", __func__);
+		ret = -EINVAL;
+	}
+	return ret;
 }
 
 static void lan743x_netdev_set_multicast(struct net_device *netdev)
@@ -2677,7 +2873,7 @@ static int lan743x_netdev_set_mac_address(struct net_device *netdev,
 	ret = eth_prepare_mac_addr_change(netdev, sock_addr);
 	if (ret)
 		return ret;
-	eth_hw_addr_set(netdev, sock_addr->sa_data);
+	ether_addr_copy(netdev->dev_addr, sock_addr->sa_data);
 	lan743x_mac_set_address(adapter, sock_addr->sa_data);
 	lan743x_rfe_update_mac_address(adapter);
 	return 0;
@@ -2687,7 +2883,7 @@ static const struct net_device_ops lan743x_netdev_ops = {
 	.ndo_open		= lan743x_netdev_open,
 	.ndo_stop		= lan743x_netdev_close,
 	.ndo_start_xmit		= lan743x_netdev_xmit_frame,
-	.ndo_eth_ioctl		= lan743x_netdev_ioctl,
+	.ndo_do_ioctl		= lan743x_netdev_ioctl,
 	.ndo_set_rx_mode	= lan743x_netdev_set_multicast,
 	.ndo_change_mtu		= lan743x_netdev_change_mtu,
 	.ndo_get_stats64	= lan743x_netdev_get_stats64,
@@ -2805,8 +3001,10 @@ static int lan743x_pcidev_probe(struct pci_dev *pdev,
 	struct net_device *netdev = NULL;
 	int ret = -ENODEV;
 
-	netdev = devm_alloc_etherdev(&pdev->dev,
-				     sizeof(struct lan743x_adapter));
+	netdev = devm_alloc_etherdev_mqs(&pdev->dev,
+						 sizeof(struct lan743x_adapter),
+						 LAN743X_USED_TX_CHANNELS,
+						 LAN743X_USED_RX_CHANNELS);
 	if (!netdev)
 		goto return_error;
 
@@ -2839,7 +3037,7 @@ static int lan743x_pcidev_probe(struct pci_dev *pdev,
 
 	adapter->netdev->netdev_ops = &lan743x_netdev_ops;
 	adapter->netdev->ethtool_ops = &lan743x_ethtool_ops;
-	adapter->netdev->features = NETIF_F_SG | NETIF_F_TSO | NETIF_F_HW_CSUM;
+	adapter->netdev->features = NETIF_F_SG | NETIF_F_TSO | NETIF_F_HW_CSUM | NETIF_F_RXCSUM;
 	adapter->netdev->hw_features = adapter->netdev->features;
 
 	/* carrier off reporting is important to ethtool even BEFORE open */

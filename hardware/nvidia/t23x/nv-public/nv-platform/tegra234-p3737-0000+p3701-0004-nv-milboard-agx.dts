@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/dts-v1/;
+
+#include "staging/tegra234-p3737-0000+p3701-0004.dts"
+#include "tegra234-p3737-0000+p3701-xxxx-nv-common-hdmi.dtsi"
+#include "tegra234-p3701-0000.dtsi"
+#include "tegra234-p3701-0000-milboard-agx.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "AGX Orin for MILBOARD-AGX";
+
+	bus@0 {
+		padctl@3520000 {
+			ports {
+				usb2-0 {
+					mode = "host";
+					/delete-property/ usb-role-switch;
+					/delete-node/ connector;
+				};
+			};
+		};
+
+		usb@3550000 {
+			status = "disabled";
+		};
+	};
+};
+

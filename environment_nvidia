@@ -1,0 +1,10 @@
+export LOCALVERSION=-tegra
+export ARCH=arm64 
+export KERNEL_HEADERS=$PWD/kernel/kernel-jammy-src
+export NPROC=$(($(nproc)-1))
+
+# You can prefer to change the following params
+export CROSS_COMPILE=$HOME/l4t-gcc/aarch64--glibc--stable-2022.08-1/bin/aarch64-buildroot-linux-gnu-
+export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.2_Linux_JETSON_TARGETS/Linux_for_Tegra/rootfs/
+export KERNEL_OUTPUT=$HOME/kernel_out_forecr
+
