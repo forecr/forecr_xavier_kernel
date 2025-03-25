@@ -33,6 +33,8 @@ apply_rt_patches()
 			$PWD/../arch/arm64/configs/.orig.dsboard_xv2_defconfig
 		cp $PWD/../arch/arm64/configs/milboard_agx_defconfig\
 			$PWD/../arch/arm64/configs/.orig.milboard_agx_defconfig
+		cp $PWD/../arch/arm64/configs/milboard_ornx_defconfig\
+			$PWD/../arch/arm64/configs/.orig.milboard_ornx_defconfig
 		cp $PWD/../arch/arm64/configs/milboard_xv_defconfig\
 			$PWD/../arch/arm64/configs/.orig.milboard_xv_defconfig
 
@@ -162,6 +164,20 @@ apply_rt_patches()
 				"$PWD/../arch/arm64/configs/milboard_agx_defconfig"
 		echo "PREEMPT RT patches have been successfully applied for MILBOARD-AGX!"
 
+		cp $PWD/../arch/arm64/configs/milboard_ornx_defconfig\
+			$PWD/../arch/arm64/configs/.updated.milboard_ornx_defconfig
+		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.milboard_ornx_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+		rm "$PWD/../arch/arm64/configs/milboard_ornx_defconfig"
+		cp -fnrs "$PWD/../arch/arm64/configs/.updated.milboard_ornx_defconfig"\
+				"$PWD/../arch/arm64/configs/milboard_ornx_defconfig"
+		echo "PREEMPT RT patches have been successfully applied for MILBOARD-ORNX!"
+
 		cp $PWD/../arch/arm64/configs/milboard_xv_defconfig\
 			$PWD/../arch/arm64/configs/.updated.milboard_xv_defconfig
 		$PWD/config --file "$PWD/../arch/arm64/configs/.updated.milboard_xv_defconfig"\
@@ -247,6 +263,13 @@ revert_rt_patches()
 		rm -rf $PWD/../arch/arm64/configs/.orig.milboard_agx_defconfig
 		rm -rf $PWD/../arch/arm64/configs/.updated.milboard_agx_defconfig
 		echo "The PREEMPT RT patches have been successfully reverted for MILBOARD-AGX!"
+
+		rm "$PWD/../arch/arm64/configs/milboard_ornx_defconfig"
+		cp $PWD/../arch/arm64/configs/.orig.milboard_ornx_defconfig\
+			$PWD/../arch/arm64/configs/milboard_ornx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.orig.milboard_ornx_defconfig
+		rm -rf $PWD/../arch/arm64/configs/.updated.milboard_ornx_defconfig
+		echo "The PREEMPT RT patches have been successfully reverted for MILBOARD-ORNX!"
 
 		rm "$PWD/../arch/arm64/configs/milboard_xv_defconfig"
 		cp $PWD/../arch/arm64/configs/.orig.milboard_xv_defconfig\
