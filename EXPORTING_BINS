@@ -288,6 +288,30 @@
 	rm -rf $INSTALL_MOD_PATH
 
 
+# For MILBOARD_ORNX with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_ornx_orin_nx
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_milboard_ornx_orin_nx/Image
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nx/0_tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nx/0_tegra234-p3767-0001-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0000-p3768-0000-a0-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3767-0000-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0001-p3768-0000-a0-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3767-0001-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.120-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_ornx_orin_nx/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For MILBOARD_ORNX with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_ornx_orin_nano
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/Image $HOME/kernel_out_milboard_ornx_orin_nano/Image
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nano/0_tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nano/0_tegra234-p3767-0004-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0003-p3768-0000-a0-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3767-0003-p3768-0000-a0.dtb
+	cp $HOME/kernel_out_milboard_ornx/arch/arm64/boot/dts/nvidia/tegra234-p3767-0004-p3768-0000-a0-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3767-0004-p3768-0000-a0.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_milboard_ornx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.120-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_milboard_ornx_orin_nano/
+	rm -rf $INSTALL_MOD_PATH
+
+
 # For MILBOARD_XV with AGX Xavier SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_xv_agx
 	cp $HOME/kernel_out_milboard_xv/arch/arm64/boot/Image $HOME/kernel_out_milboard_xv_agx/Image
