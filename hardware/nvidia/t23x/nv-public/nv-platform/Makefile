@@ -88,6 +88,15 @@ dtb-y += tegra234-p3768-0000+p3767-0001-nv-dsboard-ornxs.dtb
 dtb-y += tegra234-p3768-0000+p3767-0003-nv-dsboard-ornxs.dtb
 dtb-y += tegra234-p3768-0000+p3767-0004-nv-dsboard-ornxs.dtb
 
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-milboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-milboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-milboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-milboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-milboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-milboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-milboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-milboard-ornx.dtb
+
 dtb-y += tegra234-p3768-0000+p3767-0000-nv-raiboard-ornx-base.dtb
 dtb-y += tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx-base.dtb
 dtb-y += tegra234-p3768-0000+p3767-0003-nv-raiboard-ornx-base.dtb
