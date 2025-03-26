@@ -147,6 +147,55 @@
 	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_milboard_agx_orin_ind/
 
 
+# For MILBOARD-ORNX with Orin NX SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_ornx_orin_nx
+	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_ornx_orin_nx/Image
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-super-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-super-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0001-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0001-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-super-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0000-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0000-nv-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0000-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-super-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0001-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0001-nv-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nx/0_tegra234-p3768-0000+p3767-0001-nv.dtb
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs/
+	cd $INSTALL_MOD_PATH/..
+	sudo ./apply_binaries.sh
+	cd $OLDPWD
+	sudo -E make install -C kernel
+	cd $INSTALL_MOD_PATH
+	sudo rm -rf ./lib/modules/5.15.148-tegra/build
+	sudo rm -rf ./lib/modules/5.15.148-tegra/source
+	sudo tar --owner root --group root -cjf kernel_supplements.tbz2 lib/modules
+	sync
+	cd $OLDPWD
+	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_milboard_ornx_orin_nx/
+
+
+# For MILBOARD-ORNX with Orin Nano SoM, type these commands below:
+	mkdir $HOME/kernel_out_milboard_ornx_orin_nano
+	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_ornx_orin_nano/Image
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-super-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-super-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0004-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0004-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-super-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0003-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0003-nv-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0003-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-super-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0004-nv-super.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra234-p3768-0000+p3767-0004-nv-milboard-ornx.dtb $HOME/kernel_out_milboard_ornx_orin_nano/0_tegra234-p3768-0000+p3767-0004-nv.dtb
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_6.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs/
+	cd $INSTALL_MOD_PATH/..
+	sudo ./apply_binaries.sh
+	cd $OLDPWD
+	sudo -E make install -C kernel
+	cd $INSTALL_MOD_PATH
+	sudo rm -rf ./lib/modules/5.15.148-tegra/build
+	sudo rm -rf ./lib/modules/5.15.148-tegra/source
+	sudo tar --owner root --group root -cjf kernel_supplements.tbz2 lib/modules
+	sync
+	cd $OLDPWD
+	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_milboard_ornx_orin_nano/
+
 
 # For RAIBOARD-ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_raiboard_ornx_orin_nx

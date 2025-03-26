@@ -1,0 +1,247 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/ {
+	aliases {
+		serial3 = &uartb;
+	};
+
+	bus@0 {
+		serial@3100000 { // UART1 (uarta) RS232/422/485 Channel-1
+			status = "okay";
+		};
+
+		uartb: serial@3110000 { // UART0 (uartb) RS232/422/485 Channel-0
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+		};
+
+		i2c@3160000 {
+			// EEPROM CAT24C04WI-GT3 - 0x56
+
+			tmp102: tmp102@49 { // Temperature Sensor
+				status = "okay";
+				compatible = "ti,tmp102";
+				reg = <0x49>;
+				#thermal-sensor-cells = <0>;
+			};
+
+			tca9535_27: tca9535@27 {
+				compatible = "nxp,pca9535";
+				reg = <0x27>;
+				gpio-controller;
+				#gpio-cells = <2>;
+				gpio-line-names = 
+				    "SERIAL_CH0.DE",
+				    "SERIAL_CH0.SHDN#",
+				    "SERIAL_CH0.SLEW#",
+				    "SERIAL_CH0.TERM",
+				    "SERIAL_CH0.RS485/RS232#",
+				    "SERIAL_CH0.HALF/FULL#",
+				    "SERIAL_CH0.RE#",
+				    "CAN0_TERM_SEL_N",
+				    "SERIAL_CH1.DE",
+				    "SERIAL_CH1.SHDN#",
+				    "SERIAL_CH1.SLEW#",
+				    "SERIAL_CH1.TERM",
+				    "SERIAL_CH1.RS485/RS232#",
+				    "SERIAL_CH1.HALF/FULL#",
+				    "SERIAL_CH1.RE#",
+				    "CAN1_TERM_SEL_N";
+
+				ioexpander_outlow {
+					gpio-hog;
+					gpios = <3 0 4 0 5 0 6 0 7 0 11 0 12 0 13 0 14 0 15 0>;
+					output-low;
+				};
+
+				ioexpander_outhigh {
+					gpio-hog;
+					gpios = <0 0 1 0 2 0 8 0 9 0 10 0>;
+					output-high;
+				};
+			};
+		};
+
+		i2c@c250000 {
+			iam20680@68 {
+				compatible = "invensense,iam20680ht";
+				reg = <0x68>;
+				interrupt-parent = <&gpio>;
+				interrupts = <TEGRA234_MAIN_GPIO(Y, 6) IRQ_TYPE_LEVEL_LOW>; //Unused pin
+			};
+		};
+
+		i2c@3180000 {
+			tca9544a_70: tca9544a@70 {
+				status = "okay";
+				compatible = "nxp,pca9544";
+				reg = <0x70>;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				//i2c-mux-idle-disconnect;
+				//idle-state = <1>;
+				//skip_mux_detect = "yes";
+
+				i2c@0 {
+					status = "okay";
+					reg = <0>;
+					i2c-mux,deselect-on-exit;
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					pca6416_20: pca6416@20 {
+						compatible = "ti,pca6416";
+						reg = <0x20>;
+						gpio-controller;
+						#gpio-cells = <2>;
+						gpio-line-names = 
+						    "CAM_FRSYNC1",
+						    "CAM_FRSYNC2",
+						    "CAM_FRSYNC3",
+						    "CAM_FRSYNC4",
+						    "CAM_ERROR1",
+						    "CAM_ERROR2",
+						    "CAM_ERROR3",
+						    "CAM_ERROR4",
+						    "CAM_INT1",
+						    "CAM_INT2",
+						    "CAM_INT3",
+						    "CAM_INT4",
+						    "CAM0_RST",
+						    "CAM1_RST",
+						    "CAM_TE_RSV",
+						    "CAM_VDD_SYS_EN";
+
+						ioexpander_outlow {
+							gpio-hog;
+							gpios = <0 0 1 0 2 0 3 0 12 0 13 0 14 0>;
+							output-low;
+						};
+
+						ioexpander_outhigh {
+							gpio-hog;
+							gpios = <10 0 11 0 12 0 15 0>;
+							output-high;
+						};
+
+						ioexpander_input {
+							gpio-hog;
+							gpios = <4 0 5 0 6 0 7 0 8 0 9 0 10 0 11 0>;
+							input;
+						};
+					};
+				};
+				i2c@1 {
+					status = "okay";
+					reg = <1>;
+					i2c-mux,deselect-on-exit;
+					#address-cells = <1>;
+					#size-cells = <0>;
+				};
+				i2c@2 {
+					status = "okay";
+					reg = <2>;
+					i2c-mux,deselect-on-exit;
+					#address-cells = <1>;
+					#size-cells = <0>;
+				};
+				i2c@3 {
+					status = "okay";
+					reg = <3>;
+					i2c-mux,deselect-on-exit;
+					#address-cells = <1>;
+					#size-cells = <0>;
+				};
+			};
+		};
+
+		padctl@3520000 {
+			ports {
+				usb3-0 {
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+				};
+				usb3-1 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+				usb3-2 {
+					nvidia,usb2-companion = <2>;
+					status = "okay";
+				};
+			};
+		};
+		usb@3550000 {
+			status = "okay";
+			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-0}>;
+			phy-names = "usb2-0", "usb3-0";
+		};
+
+		clocks {
+			can_clock: can_clock {
+				compatible = "fixed-clock";
+				#clock-cells = <0>;
+				clock-frequency = <20000000>;
+				clock-accuracy = <100>;
+			};
+		};
+		spi@3210000{ // SPI0 with CS0 for SPI2CAN
+			status = "okay";
+			nvidia,clock-always-on;
+			spi@0 {
+				status = "okay";
+				compatible = "microchip,mcp2515";
+				reg = <0x0>;
+				spi-max-frequency = <10000000>;
+				interrupt-parent = <&gpio>;
+				interrupts = <TEGRA234_MAIN_GPIO(Z, 7) IRQ_TYPE_LEVEL_LOW>;
+				clocks = <&can_clock>;
+				nvidia,enable-hw-based-cs;
+			};
+			spi@1 {
+				status = "disabled";
+			};
+		};
+
+		spi@3230000{
+			status = "okay";
+			spi@0 {
+				compatible = "tegra-spidev";
+				reg = <0x0>;
+				spi-max-frequency = <50000000>;
+				controller-data {
+					nvidia,enable-hw-based-cs;
+					nvidia,rx-clk-tap-delay = <0x10>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+			spi@1 {
+				compatible = "tegra-spidev";
+				reg = <0x1>;
+				spi-max-frequency = <50000000>;
+				controller-data {
+					nvidia,enable-hw-based-cs;
+					nvidia,rx-clk-tap-delay = <0x10>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+		};
+
+		pcie@141e0000 { /* C7x1 node */
+			status = "okay";
+			num-lanes = <1>;
+			phys = <&p2u_gbe_0>;
+			phy-names = "p2u-0";
+		};
+
+		pcie@140c0000 { /* C9x1 node */
+			status = "okay";
+			num-lanes = <1>;
+			phys = <&p2u_gbe_1>;
+			phy-names = "p2u-0";
+		};
+	};
+};
