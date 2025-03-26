@@ -35,6 +35,12 @@
 	make -C kernel
 	make dtbs
 
+#MILBOARD-ORNX for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=milboard_ornx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_ornx
+	make -C kernel
+	make dtbs
+
 #DSBOARD-NX2 for Orin NX & Orin Nano
 	export KERNEL_DEF_CONFIG=dsboard_nx2_defconfig
 	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_nx2
