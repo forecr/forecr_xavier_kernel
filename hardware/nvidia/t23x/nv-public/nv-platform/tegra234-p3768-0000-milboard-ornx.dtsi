@@ -50,6 +50,7 @@
 				    "SERIAL_CH1.RE#",
 				    "CAN1_TERM_SEL_N";
 
+				/*
 				ioexpander_outlow {
 					gpio-hog;
 					gpios = <3 0 4 0 5 0 6 0 7 0 11 0 12 0 13 0 14 0 15 0>;
@@ -61,6 +62,7 @@
 					gpios = <0 0 1 0 2 0 8 0 9 0 10 0>;
 					output-high;
 				};
+				*/
 			};
 		};
 
@@ -114,6 +116,7 @@
 						    "CAM_TE_RSV",
 						    "CAM_VDD_SYS_EN";
 
+						/*
 						ioexpander_outlow {
 							gpio-hog;
 							gpios = <0 0 1 0 2 0 3 0 12 0 13 0 14 0>;
@@ -122,7 +125,7 @@
 
 						ioexpander_outhigh {
 							gpio-hog;
-							gpios = <10 0 11 0 12 0 15 0>;
+							gpios = <15 0>;
 							output-high;
 						};
 
@@ -131,6 +134,7 @@
 							gpios = <4 0 5 0 6 0 7 0 8 0 9 0 10 0 11 0>;
 							input;
 						};
+						*/
 					};
 				};
 				i2c@1 {
