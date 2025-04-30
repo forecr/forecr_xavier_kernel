@@ -55,6 +55,10 @@
 		status = "okay";
 	};
 
+	sdhci@3400000 {
+		/delete-property/ cd-gpios;
+	};
+
 	i2c@c240000 {
 		ucsi_ccg@8 {
 			status = "disabled";
