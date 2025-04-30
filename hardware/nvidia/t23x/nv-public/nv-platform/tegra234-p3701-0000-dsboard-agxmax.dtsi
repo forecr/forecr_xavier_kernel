@@ -22,6 +22,10 @@
 	};
 
 	bus@0 {
+		mmc@3400000 {
+			/delete-property/ cd-gpios;
+		};
+
 		serial@3140000 { //for RS232-422-485 communication
 			status = "okay";
 			compatible = "nvidia,tegra194-hsuart";
