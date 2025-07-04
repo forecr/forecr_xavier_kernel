@@ -29,6 +29,10 @@
 	compatible = "nvidia,p3768-0000+p3767-0000", "nvidia,tegra234", "nvidia,tegra23x";
 	model = "Orin NX for DSBOARD-ORNX";
 
+	aliases {
+		rtc2 = "/i2c@c250000/pcf8523@68";
+	};
+
 	fixed-regulators {
 		regulator@102 { //p3768_vdd_1v8
 			//vin-supply = <&p3768_vdd_3v3_sys>;
@@ -51,11 +55,24 @@
 	};
 
 	i2c@3160000 {
-		tmp102: tmp102@49 { // Temperature Sensor
+		tmp102: tmp102@49 { // Temperature Sensor - removed since rev-2.0
 			compatible = "ti,tmp102";
 			reg = <0x49>;
 			#thermal-sensor-cells = <0>;
 		};
+	};
+
+	i2c@c250000 { // using since rev-2.0
+		// 0x44 - INA700 Power Monitor
+
+		// 0x68 - PCF8523 RTC
+		pcf8523@68 {
+			status = "okay";
+			compatible = "nxp,pcf8523";
+			reg = <0x68>;
+		};
+
+		// 0x6B - 2536030320001 6-AXIS IMU & TEMP SENSOR
 	};
 
 	spi@3210000{ // SPI0 with CS0 on expansion connector
