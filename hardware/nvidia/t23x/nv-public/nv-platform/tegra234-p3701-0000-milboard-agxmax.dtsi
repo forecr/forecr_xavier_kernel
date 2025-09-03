@@ -1,0 +1,235 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/input/linux-event-codes.h>
+#include <dt-bindings/input/gpio-keys.h>
+
+/ {
+	aliases {
+		serial3 = &uarte; //serial@3140000
+		serial4 = &uartd; //serial@3130000
+		rtc2 = "/bus@0/i2c@3160000/pcf8523@68";
+	};
+
+	regulator-vdd-3v3-pcie {
+		/delete-property/ regulator-boot-on;
+		/delete-property/ gpio;
+		regulator-always-on;
+	};
+	regulator-vdd-12v-pcie {
+		/delete-property/ regulator-boot-on;
+		/delete-property/ gpio;
+		regulator-always-on;
+	};
+	regulator@3 {
+		regulator-boot-on;
+	};
+
+	bus@0 {
+		serial@3100000 { // UART1
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+			clock-names = "serial";
+		};
+
+		serial@3140000 { // UART2
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+			clock-names = "serial";
+		};
+
+		serial@3130000 { // UART4
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+			clock-names = "serial";
+		};
+
+		serial@3110000 { // UART5
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+			clock-names = "serial";
+		};
+
+		padctl@3520000 {
+			status = "okay";
+
+			ports {
+				usb2-0 {
+					status = "okay";
+					vbus-supply = <&vdd_5v0_sys>;
+					mode = "otg";
+					usb-role-switch;
+					/delete-node/ port;
+					connector {
+						compatible = "usb-b-connector", "gpio-usb-b-connector";
+						label = "micro-USB";
+						type = "micro";
+						vbus-gpios = <&gpio TEGRA234_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
+					};
+				};
+
+				usb2-1 {
+					/delete-node/ port;
+				};
+
+				usb3-0 { // unused
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+					/delete-node/ port;
+				};
+
+				usb3-1 {
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+					/delete-node/ port;
+				};
+
+				usb3-2 {
+					nvidia,usb2-companion = <2>;
+					status = "okay";
+				};
+			};
+		};
+
+		usb@3550000 {
+			status = "okay";
+			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>;
+			phy-names = "usb2-0", "usb3-1";
+		};
+
+		//ethernet@6900000 // already disabled
+		//ethernet@6a00000 // already disabled
+		//ethernet@6b00000 // already disabled
+
+		// 10G configured in tegra234-p3737-0000+p3701-0000.dts <- tegra234-p3737-0000.dtsi
+		ethernet@2310000 { //EQOS
+			status = "okay";
+
+			nvidia,mac-addr-idx = <0>;
+			nvidia,pause_frames = <1>;
+			local-mac-address = [1a 2b 3c 4d 5e 6f];
+			nvidia,phy-reset-gpio = <&gpio TEGRA234_MAIN_GPIO(G, 5) 0>;
+			phy-mode = "rgmii-id";
+			phy-handle = <&phy>;
+			nvidia,max-platform-mtu = <16383>; //8000
+
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				phy: phy@0 {
+					reg = <0>;
+					nvidia,phy-rst-pdelay-msec = <224>; /* msec */
+					nvidia,phy-rst-duration-usec = <10000>; /* usec */
+					interrupt-parent = <&gpio>;
+					interrupts = <TEGRA234_MAIN_GPIO(G, 4) IRQ_TYPE_LEVEL_LOW>;
+					marvell,copper-mode;
+					/* Setup LED[2] as interrupt pin (active low) */
+					marvell,reg-init = <0x03 0x12 0x7fff 0x880>;
+				};
+			};
+		};
+
+		i2c@c240000 {
+			status = "okay";
+			/delete-node/ typec@8;
+		};
+
+		i2c@3190000 {
+			tca9535_22: tca9535@22 {
+				compatible = "nxp,pca9535";
+				reg = <0x22>;
+				gpio-controller;
+				#gpio-cells = <2>;
+				gpio-line-names = 
+				    "SERIAL_CH0.RS485/RS232#",
+				    "SERIAL_CH0.TERM",
+				    "SERIAL_CH1.RS485/RS232#",
+				    "SERIAL_CH1.TERM",
+				    "SERIAL_CH2.RS485/RS232#",
+				    "SERIAL_CH2.TERM",
+				    "SERIAL_CH3.RS485/RS232#",
+				    "SERIAL_CH3.TERM",
+				    "DIGITAL_IO_CH0",
+				    "DIGITAL_IO_CH1",
+				    "DIGITAL_IO_CH2",
+				    "DIGITAL_IO_CH3",
+				    "DIGITAL_IO_CH4",
+				    "DIGITAL_IO_CH5",
+				    "DIGITAL_IO_CH6",
+				    "DIGITAL_IO_CH7";
+
+				/*
+				serial_default_config {
+					gpio-hog;
+					gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+					output-low; // for RS232
+					//output-high; // for RS422
+				};
+				*/
+			};
+		};
+
+		i2c@3160000 {
+			status = "okay";
+
+			// 0x68 - PCF8523 RTC
+			pcf8523@68 {
+				status = "okay";
+				compatible = "nxp,pcf8523";
+				reg = <0x68>;
+			};
+
+			// 0x56 - EEPROM CAT24C04WI-GT3
+			// 0x6B - 2536030320001 6-AXIS IMU & TEMP SENSOR
+		};
+
+		spi@3210000 {
+			status = "okay";
+
+			spi@0 {
+				status = "okay";
+				compatible = "tegra-spidev";
+				reg = <0x0>;
+				spi-max-frequency = <20000000>;
+
+				controller-data {
+					nvidia,enable-hw-based-cs;
+					nvidia,rx-clk-tap-delay = <0x10>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+		};
+
+		pcie@14180000 { // PCIe x1 (C0) - Ethernet
+			status = "okay";
+			phys = <&p2u_hsio_0>;
+			phy-names = "p2u-0";
+			nvidia,max-speed = <2>; // i210 is GEN2
+		};
+
+		pcie@14100000 { // PCIe x1 (C1) - Ethernet
+			status = "okay";
+			nvidia,max-speed = <2>; // i210 is GEN2
+		};
+
+		pcie@14160000 { //* PCIe x4 (C4) - M.2 Key-M
+			status = "okay";
+		};
+
+		pcie@141a0000 { // PCIe x8 (C5) - M.2 Key-M
+			status = "okay";
+			/delete-property/ vpcie3v3-supply;
+			/delete-property/ vpcie12v-supply;
+		};
+
+		pcie@141e0000 { // PCIe x8 (C7)
+			status = "disabled";
+		};
+	};
+};
