@@ -29,7 +29,7 @@
 	make -C kernel
 	make dtbs
 
-#MILBOARD-AGX for AGX Orin
+#MILBOARD-AGX & MILBOARD-AGXMAX for AGX Orin
 	export KERNEL_DEF_CONFIG=milboard_agx_defconfig
 	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_agx
 	make -C kernel
