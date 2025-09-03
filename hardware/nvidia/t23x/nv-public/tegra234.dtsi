@@ -2766,6 +2766,17 @@
 			status = "disabled";
 		};
 
+		uartd: serial@3130000 {
+			compatible = "nvidia,tegra234-uart", "nvidia,tegra20-uart";
+			reg = <0x0 0x03130000 0x0 0x10000>;
+			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&bpmp TEGRA234_CLK_UARTD>;
+			resets = <&bpmp TEGRA234_RESET_UARTD>;
+			dmas = <&gpcdma 19>, <&gpcdma 19>;
+			dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
 		uarte: serial@3140000 {
 			compatible = "nvidia,tegra234-uart", "nvidia,tegra20-uart";
 			reg = <0x0 0x03140000 0x0 0x10000>;
