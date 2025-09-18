@@ -33,7 +33,7 @@ make ARCH=arm64 O=$HOME/kernel_out_raiboard_ornx -j$(($(nproc)-1))
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 dsboard_nx2_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_dsboard_nx2 -j$(($(nproc)-1))
 
-#MILBOARD_AGX for AGX Xavier & AGX Orin
+#MILBOARD_AGX & MILBOARD-AGXMAX for AGX Xavier & AGX Orin
 make ARCH=arm64 O=$HOME/kernel_out_milboard_agx milboard_agx_defconfig
 make ARCH=arm64 O=$HOME/kernel_out_milboard_agx -j$(($(nproc)-1))
 
