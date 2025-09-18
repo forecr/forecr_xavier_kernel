@@ -84,6 +84,15 @@ dtb-$(BUILD_ENABLE) += tegra234-p3701-0008-p3737-0000-milboard-agx-base.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3701-0008-p3737-0000-raiboard-agx.dtb
 dtb-$(BUILD_ENABLE) += tegra234-p3701-0008-p3737-0000-raiboard-agx-base.dtb
 
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0000-p3737-0000-milboard-agxmax.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0000-p3737-0000-milboard-agxmax-base.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0004-p3737-0000-milboard-agxmax.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0004-p3737-0000-milboard-agxmax-base.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0005-p3737-0000-milboard-agxmax.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0005-p3737-0000-milboard-agxmax-base.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0008-p3737-0000-milboard-agxmax.dtb
+dtb-$(BUILD_ENABLE) += tegra234-p3701-0008-p3737-0000-milboard-agxmax-base.dtb
+
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
 endif
