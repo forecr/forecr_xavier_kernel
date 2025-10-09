@@ -100,6 +100,7 @@
 			usb2-0 {/* Goes to recovery port */
 				mode = "otg";
 				status = "okay";
+				vbus-supply = <&p3768_vdd_5v_sys>;
 				usb-role-switch;
 				connector {
 					compatible = "usb-b-connector", "gpio-usb-b-connector";
