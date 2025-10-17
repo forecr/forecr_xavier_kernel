@@ -1,0 +1,11 @@
+NVIDIA_VERSION = 580.00
+NVIDIA_NVID_VERSION = TempVersion
+NVIDIA_NVID_EXTRA = (bugfix_main)
+
+# This file.
+VERSION_MK_FILE := $(lastword $(MAKEFILE_LIST))
+$(OUTPUTDIR)/version.h: $(VERSION_MK_FILE)
+	@$(MKDIR) $(OUTPUTDIR)
+	@$(ECHO) '#define NVIDIA_VERSION "$(NVIDIA_VERSION)"' > $@
+
+NV_GENERATED_HEADERS += $(OUTPUTDIR)/version.h
