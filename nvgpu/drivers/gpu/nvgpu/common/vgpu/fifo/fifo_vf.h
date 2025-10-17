@@ -1,0 +1,16 @@
+/* SPDX-License-Identifier: GPL-2.0-only OR MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2024-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ */
+
+#ifndef NVGPU_FIFO_VF_H
+#define NVGPU_FIFO_VF_H
+
+struct gk20a;
+struct tegra_vgpu_runlist_disabled;
+
+void vf_fifo_handle_runlist_disabled_for_rc(struct gk20a *g,
+		struct tegra_vf_runlist_disabled *p);
+void vf_fifo_handle_runlist_disabled_for_cilp(struct gk20a *g,
+		struct tegra_vf_runlist_disabled *p);
+
+#endif

@@ -1,0 +1,14 @@
+/* SPDX-License-Identifier: GPL-2.0-only OR MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2024-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ */
+
+#ifndef NVGPU_NEXT_CLASS_GB20C_H
+#define NVGPU_NEXT_CLASS_GB20C_H
+
+#define NVD1B7_VIDEO_ENCODER		0xD1B7U
+#define NVD1FA_VIDEO_OFA 		0xD1FAU
+#define NVD1B0_VIDEO_DECODER		0xD1B0U
+
+#define BLACKWELL_DMA_COPY_B		0xCAB5U
+
+#endif /* NVGPU_NEXT_CLASS_GB20C_H */
