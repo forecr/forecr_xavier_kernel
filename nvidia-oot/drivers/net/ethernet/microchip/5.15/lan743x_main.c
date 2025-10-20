@@ -39,7 +39,7 @@ static int lan743x_pci_init(struct lan743x_adapter *adapter,
 	ret = pci_enable_device_mem(pdev);
 	if (ret)
 		goto return_error;
-
+	printk("lan743x_pci_init: FORECR OOT module\n");
 	netif_info(adapter, probe, adapter->netdev,
 		   "PCI: Vendor ID = 0x%04X, Device ID = 0x%04X\n",
 		   pdev->vendor, pdev->device);
@@ -1003,19 +1003,35 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
 
 static int lan743x_phy_open(struct lan743x_adapter *adapter)
 {
-	struct net_device *netdev = adapter->netdev;
 	struct lan743x_phy *phy = &adapter->phy;
-	struct phy_device *phydev;
+	struct phy_device *phydev = NULL;
 	struct device_node *phynode;
-
+	struct net_device *netdev;
 	int ret = -EIO;
 
+	netdev = adapter->netdev;
 	phynode = of_node_get(adapter->pdev->dev.of_node);
 
 	if (phynode) {
+		/* try devicetree phy, or fixed link */
+		of_get_phy_mode(phynode, &adapter->phy_mode);
+
+		if (of_phy_is_fixed_link(phynode)) {
+			ret = of_phy_register_fixed_link(phynode);
+			phy->fixed = true;
+			if (ret) {
+				netdev_err(netdev,
+					   "cannot register fixed PHY\n");
+				of_node_put(phynode);
+				goto return_error;
+			}
+			ret = of_property_read_u32(phynode, "nvidia,mdio_addr",
+						   &phy->mdio_addr);
+		}
 		phydev = of_phy_connect(netdev, phynode,
 					lan743x_phy_link_status_change, 0,
 					adapter->phy_mode);
+		of_node_put(phynode);
 	}
 
 	if (!phydev) {
@@ -1024,16 +1040,13 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
 		if (!phydev)
 			goto return_error;
 
+		adapter->phy_mode = PHY_INTERFACE_MODE_GMII;
 		ret = phy_connect_direct(netdev, phydev,
 					 lan743x_phy_link_status_change,
-					 PHY_INTERFACE_MODE_GMII);
+					 adapter->phy_mode);
 		if (ret)
 			goto return_error;
 	}
-
-	/*phydev is assigned by now*/
-	/*Skip the device resume via mdio bus */
-	phydev->mac_managed_pm = true;
 
 	/* MAC doesn't support 1000T Half */
 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
