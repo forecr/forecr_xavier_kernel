@@ -1,0 +1,9 @@
+export KERNEL_HEADERS=$PWD/kernel/kernel-noble
+export kernel_name=noble
+export NPROC=$(($(nproc)-1))
+
+# You can prefer to change the following params
+export CROSS_COMPILE=$HOME/l4t-gcc/x-tools/aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.0_Linux_JETSON_TARGETS/Linux_for_Tegra/rootfs/
+export KERNEL_OUTPUT=/tmp/kernel_out_forecr
+
