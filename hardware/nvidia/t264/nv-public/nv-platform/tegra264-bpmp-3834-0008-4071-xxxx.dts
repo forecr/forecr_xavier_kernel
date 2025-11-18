@@ -575,41 +575,41 @@
 
 	pcie {
 
-		pcie@0 {
+		pcie@0 { // PCIe C0 RP
 			status = "disabled";
 			pcie-id = <0x00>;
 			pcie-mode = <0x01>;
 		};
 
-		pcie@1 {
+		pcie@1 { // PCIe C1 RP
 			status = "okay";
 			pcie-id = <0x01>;
 			pcie-mode = <0x01>;
 			max-link-speed = <0x05>;
 		};
 
-		pcie@2 {
+		pcie@2 { // PCIe C2 RP - PCIe C2 EP
 			status = "okay";
 			pcie-id = <0x02>;
 			pcie-mode = <0x01>;
 			max-link-speed = <0x05>;
 		};
 
-		pcie@3 {
+		pcie@3 { // PCIe C3 RP
 			status = "disabled";
 			pcie-id = <0x03>;
 			pcie-mode = <0x01>;
 			max-link-speed = <0x05>;
 		};
 
-		pcie@4 {
+		pcie@4 { // PCIe C4 RP - PCIe C4 EP
 			status = "disabled";
 			pcie-id = <0x04>;
 			pcie-mode = <0x01>;
 			max-link-speed = <0x05>;
 		};
 
-		pcie@5 {
+		pcie@5 { // PCIe C5 RP - PCIe C5 EP
 			status = "okay";
 			pcie-id = <0x05>;
 			pcie-mode = <0x01>;
