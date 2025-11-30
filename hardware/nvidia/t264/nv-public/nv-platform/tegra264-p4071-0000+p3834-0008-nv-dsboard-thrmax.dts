@@ -1,0 +1,86 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2024-2025, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+/dts-v1/;
+
+#include "tegra264-p4071-0000+p3834-0008-nv.dts"
+#include "tegra264-p4071-0080-p3834-0008-25gbe.dtsi"
+//#include "tegra264-p4071-0080-p3834-0008-rec-usb-host.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Thor for DSBOARD-THRMAX";
+
+	bus@0 {
+		pcie@a808400000 { // PCIe C1 for M.2 Key-E
+			status = "okay";
+		};
+
+		pcie@a808420000 { // PCIe C2 for Intel Ethernet
+			status = "okay";
+		};
+
+		pcie@a808440000 { // PCIe C3 for M.2 Key-M
+			status = "okay";
+		};
+
+		pcie@a808460000 { // PCIe C4
+			status = "disabled";
+		};
+
+		pcie@a808480000 { // PCIe C5 for M.2 Key-M
+			status = "okay";
+		};
+
+		pcie_ep@a808420000 { // PCIe C2 EP
+			status = "disabled";
+		};
+
+		pcie_ep@a808460000 { // PCIe C4 EP
+			status = "disabled";
+		};
+
+		pcie_ep@a808480000 { // PCIe C5 EP
+			status = "disabled";
+		};
+
+		i2c@810c640000 {
+			status = "okay";
+			/* CVB EEPROM */
+			eeprom@56 {
+				compatible = "atmel,24c02";
+				reg = <0x56>;
+
+				label = "system";
+				vcc-supply = <&vdd_1v8_cvb>;
+				address-width = <8>;
+				pagesize = <8>;
+				size = <256>;
+				read-only;
+			};
+		};
+
+		padctl@a808680000 {
+			ports {
+				usb2-0 {
+					mode = "peripheral";
+                                        usb-role-switch;
+                                        role-switch-default-mode = "peripheral";
+                                        status = "okay";
+				};
+				usb3-0 { // M.2 Key-B
+					nvidia,usb2-companion = <3>;
+					status = "okay";
+				};
+				usb3-1 { // Recovery USB
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+				};
+				usb3-2 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+			};
+		};
+	};
+};
