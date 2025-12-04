@@ -44,20 +44,14 @@
 			status = "disabled";
 		};
 
-		i2c@810c640000 {
+		i2c@c610000 { // I2C4
 			status = "okay";
-			/* CVB EEPROM */
-			eeprom@56 {
-				compatible = "atmel,24c02";
-				reg = <0x56>;
+			// IMU & Temp Sensor 2536030320001 - 0x6b
+			// EEPROM CAT24C04WI-GT3 - 0x56
+		};
 
-				label = "system";
-				vcc-supply = <&vdd_1v8_cvb>;
-				address-width = <8>;
-				pagesize = <8>;
-				size = <256>;
-				read-only;
-			};
+		serial@810c540000 { // for RS232-422-485 communication
+			status = "okay";
 		};
 
 		padctl@a808680000 {
