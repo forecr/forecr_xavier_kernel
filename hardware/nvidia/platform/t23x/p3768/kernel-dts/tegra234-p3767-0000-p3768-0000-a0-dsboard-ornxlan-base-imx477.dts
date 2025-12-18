@@ -64,6 +64,11 @@
 
 	i2c@c250000 { // using since rev-2.0
 		// 0x44 - INA700 Power Monitor
+		ina700@44 {
+			status = "okay";
+			compatible = "ti,ina700";
+			reg = <0x44>;
+		};
 
 		// 0x68 - PCF8523 RTC
 		pcf8523@68 {
