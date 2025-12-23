@@ -8,7 +8,7 @@
 	sudo -E make modules_install
 	cd $INSTALL_MOD_PATH/..
 	sudo ./tools/l4t_update_initrd.sh
-	sudo rm rootfs/lib/modules/6.8.12-tegra/build
+	sudo rm rootfs/lib/modules/6.8.12*tegra/build
 	cd rootfs/
 	sudo tar --owner root --group root -cjf kernel_supplements.tbz2 lib/modules
 	sync
