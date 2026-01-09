@@ -90,6 +90,29 @@ clean:
 	@echo   "Kernel and in-tree modules installed successfully."
 	@echo   "================================================================================"
 
+
+menuconfig:
+	@echo   "================================================================================"
+	@echo   "Configuring $(KERNEL_SRC_DIR) sources"
+	@echo   "================================================================================"
+	$(MAKE) \
+		ARCH=arm64 \
+		-C $(kernel_source_dir) $(O_OPT) \
+		menuconfig
+	@echo   "================================================================================"
+
+
+update-defconfig:
+	@echo   "================================================================================"
+	@echo   "Updating latest $(KERNEL_SRC_DIR) configuration"
+	@echo   "================================================================================"
+	$(MAKE) \
+		ARCH=arm64 \
+		-C $(kernel_source_dir) $(O_OPT) \
+		savedefconfig
+	cp $(KERNEL_OUTPUT)/defconfig ${kernel_source_dir}/arch/arm64/configs/${KERNEL_DEF_CONFIG}
+	@echo   "================================================================================"
+
 # make help
 help:
 	@echo   "================================================================================"
@@ -97,4 +120,6 @@ help:
 	@echo   "   make or make kernel   # to build kernel"
 	@echo   "   make install          # to install kernel image and in-tree modules"
 	@echo   "   make clean            # to make clean kernel source"
+	@echo   "   make menuconfig       # to modify kernel config"
+	@echo   "   make update-defconfig # to save recent kernel config"
 	@echo   "================================================================================"
