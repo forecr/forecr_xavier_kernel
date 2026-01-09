@@ -30,11 +30,11 @@ enable_rt()
 		echo "PREEMPT RT config is already applied to the kernel!"
 	else
 		#make temporary copy of the defconfig file
-		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/defconfig\
+		cp -p "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.defconfig
 
 		#make temporary copy of the tegra_prod_defconfig file
-		cp "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/tegra_prod_defconfig\
+		cp -p "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/tegra_prod_defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.tegra_prod_defconfig
 
 		if [ -d "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/rt-patches ]; then
@@ -51,11 +51,11 @@ enable_rt()
 		fi
 
 		#make temporary copy of the defconfig file
-		cp -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"\
+		cp -pf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"
 
 		#make temporary copy of the tegra_prod_defconfig file
-		cp -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"\
+		cp -pf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.tegra_prod_defconfig"
 
 		"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/scripts/config" --file "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"\
@@ -82,11 +82,11 @@ enable_rt()
 		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig"
 		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"
 
-		cp -fnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"\
+		cp -pfnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"\
 				"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"
-		ln -s "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"\
+		ln -fs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"\
 				"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig"
-		cp -fnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.tegra_prod_defconfig"\
+		cp -pfnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.tegra_prod_defconfig"\
 				"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"
 
 		echo "PREEMPT RT config is set successfully!"
@@ -108,11 +108,11 @@ disable_rt()
 		rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"
 		rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig"
 		rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"
-		cp "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.defconfig"\
+		cp -p "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"
-		ln -s "defconfig"\
+		ln -fs "defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig"
-		cp "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.tegra_prod_defconfig"\
+		cp -p "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.tegra_prod_defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"
 
 		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.defconfig"
