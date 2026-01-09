@@ -62,6 +62,26 @@ kernel:
 	@echo   "================================================================================"
 
 
+dtc:
+	@echo   "================================================================================"
+	@echo   "Building $(KERNEL_SRC_DIR)/scripts/dtc"
+	@echo   "================================================================================"
+	$(MAKE) \
+		ARCH=arm64 \
+		-C $(kernel_source_dir) $(O_OPT) \
+		LOCALVERSION=$(LOCALVERSION) \
+		$(KERNEL_DEF_CONFIG)
+
+	$(MAKE) -j $(NPROC) \
+		ARCH=arm64 \
+		-C $(kernel_source_dir) $(O_OPT) \
+		LOCALVERSION=$(LOCALVERSION) \
+		--output-sync=target scripts_dtc
+	@echo   "================================================================================"
+	@echo   "dtc compiled successfully."
+	@echo   "================================================================================"
+
+
 install:
 	@echo   "================================================================================"
 	@echo   "Installing $(KERNEL_SRC_DIR) sources"
@@ -118,6 +138,7 @@ help:
 	@echo   "================================================================================"
 	@echo   "Usage:"
 	@echo   "   make or make kernel   # to build kernel"
+	@echo   "   make dtc              # to build dtc"
 	@echo   "   make install          # to install kernel image and in-tree modules"
 	@echo   "   make clean            # to make clean kernel source"
 	@echo   "   make menuconfig       # to modify kernel config"
