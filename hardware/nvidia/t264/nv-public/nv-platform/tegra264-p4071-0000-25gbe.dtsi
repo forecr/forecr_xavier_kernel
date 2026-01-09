@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2025, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/ {
+	bus@0 {
+		ethernet@a808a10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+	        ethernet@a808b10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+	        ethernet@a808d10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+	        ethernet@a808e10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+	};
+};

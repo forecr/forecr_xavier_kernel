@@ -26,7 +26,9 @@ dtbo-y += tegra264-android.dtbo
 dtbo-y += tegra264-ufs-provision.dtbo
 
 dtb-y += tegra264-bpmp-3834-0000-4071-xxxx.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-25gbe.dtb
 dtb-y += tegra264-bpmp-3834-0008-4071-xxxx.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-25gbe.dtb
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
