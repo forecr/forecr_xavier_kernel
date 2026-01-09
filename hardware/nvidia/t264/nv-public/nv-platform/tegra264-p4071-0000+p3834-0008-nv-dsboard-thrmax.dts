@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2024-2025, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+/dts-v1/;
+
+#include "tegra264-p4071-0000+p3834-0008-nv.dts"
+#include "tegra264-p4071-0000-thrmax.dtsi"
+//#include "tegra264-p4071-0000-rec-usb-host.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Jetson AGX Thor T5000 for DSBOARD-THRMAX";
+};

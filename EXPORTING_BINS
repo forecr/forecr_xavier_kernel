@@ -1,0 +1,20 @@
+# For DSBOARD-THRMAX with AGX Thor SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_thrmax_agx_thor
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.1_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
+	sudo -E make install -C kernel
+	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_thrmax_agx_thor/Image
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0000-nv-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-p4071-0000+p3834-0000-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-p4071-0000+p3834-0008-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-bpmp-3834-0000-4071-xxxx-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-bpmp-3834-0000-4071-xxxx.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-bpmp-3834-0008-4071-xxxx-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-bpmp-3834-0008-4071-xxxx.dtb
+	sudo -E make modules_install
+	cd $INSTALL_MOD_PATH/..
+	sudo ./tools/l4t_update_initrd.sh
+	sudo rm rootfs/lib/modules/6.8.12*tegra/build
+	cd rootfs/
+	sudo tar --owner root --group root -cjf kernel_supplements.tbz2 lib/modules
+	sync
+	cp $INSTALL_MOD_PATH/kernel_supplements.tbz2 $HOME/kernel_out_dsboard_thrmax_agx_thor/
+	sudo rm $INSTALL_MOD_PATH/kernel_supplements.tbz2
+	cd $KERNEL_HEADERS/../..
+

@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2025, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/ {
+	bus@0 {
+		ethernet@a808a10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+	        ethernet@a808b10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+	        ethernet@a808d10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+	        ethernet@a808e10000 {
+			/delete-property/ nvidia,phy-iface-mode;
+			nvidia,uphy-gbe-mode = <2>;
+
+			fixed-link {
+				speed = <25000>;
+			};
+		};
+
+		pcie@a808400000 { // PCIe C1 for M.2 Key-E
+			status = "okay";
+		};
+
+		pcie@a808420000 { // PCIe C2 for Intel Ethernet
+			status = "okay";
+		};
+
+		pcie@a808440000 { // PCIe C3 for M.2 Key-M
+			status = "okay";
+		};
+
+		pcie@a808460000 { // PCIe C4
+			status = "disabled";
+		};
+
+		pcie@a808480000 { // PCIe C5 for M.2 Key-M
+			status = "okay";
+		};
+
+		pcie_ep@a808420000 { // PCIe C2 EP
+			status = "disabled";
+		};
+
+		pcie_ep@a808460000 { // PCIe C4 EP
+			status = "disabled";
+		};
+
+		pcie_ep@a808480000 { // PCIe C5 EP
+			status = "disabled";
+		};
+
+		i2c@c610000 { // I2C4
+			status = "okay";
+			// IMU & Temp Sensor 2536030320001 - 0x6b
+			// EEPROM CAT24C04WI-GT3 - 0x56
+		};
+
+		serial@810c540000 { // for RS232-422-485 communication
+			status = "okay";
+		};
+
+		padctl@a808680000 {
+			ports {
+				usb2-0 {
+					mode = "otg";
+                                        usb-role-switch;
+                                        role-switch-default-mode = "peripheral";
+                                        status = "okay";
+				};
+				usb3-0 { // M.2 Key-B
+					nvidia,usb2-companion = <3>;
+					status = "okay";
+				};
+				usb3-1 { // Recovery USB
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+				};
+				usb3-2 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+			};
+		};
+	};
+};

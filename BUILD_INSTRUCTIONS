@@ -1,0 +1,30 @@
+#Load Environment
+	source environment_nvidia
+
+#[OPTIONAL] Applying RT-Patch
+	./generic_rt_build.sh "enable"
+	export IGNORE_PREEMPT_RT_PRESENCE=1
+
+#DSBOARD-THRMAX configuration for AGX Thor
+	export KERNEL_DEF_CONFIG=dsboard_thrmax_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_thrmax
+
+#Compilation
+	make -C kernel
+	make modules
+	make dtbs
+
+#[INFO] Compiling DTB files only
+	make -C kernel dtc
+	make dtbs
+
+#[INFO] Changing & updating kernel config
+	make -C kernel dtc
+	make -C kernel menuconfig
+	make -C kernel update-defconfig
+
+#[INFO] Cleanup the source tree
+	make -C kernel clean
+	make clean
+	make extra-objs-clean
+
