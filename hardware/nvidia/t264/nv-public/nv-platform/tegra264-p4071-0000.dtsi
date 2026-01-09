@@ -287,6 +287,8 @@
 			status = "okay";
 		};
 
+		/* PCIe C0 - pcie@d0b0000000 */
+
 		/* PCIe C1 for M.2 Key E(J505) */
 		pcie@a808400000 {
 			status = "okay";
@@ -313,6 +315,12 @@
 		pcie@a808480000 {
 			status = "okay";
 		};
+
+		/* PCIe C2 EP - pcie_ep@a808420000 */
+
+		/* PCIe C4 EP - pcie_ep@a808460000 */
+
+		/* PCIe C5 EP - pcie_ep@a808480000 */
 
 		padctl@a808680000 {
 			status = "okay";
