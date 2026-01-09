@@ -1,0 +1,92 @@
+/* SPDX-License-Identifier: GPL-2.0-only OR MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2017-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ */
+
+#ifndef NVGPU_PMU_CMD_H
+#define NVGPU_PMU_CMD_H
+
+#include <nvgpu/flcnif_cmn.h>
+#include <nvgpu/pmu/pmuif/perfmon.h>
+#include <nvgpu/pmu/pmuif/pg.h>
+#include <nvgpu/pmu/pmuif/acr.h>
+#include <nvgpu/pmu/pmuif/pmgr.h>
+#include <nvgpu/pmu/pmuif/rpc.h>
+#include <nvgpu/pmu/seq.h>
+
+struct gk20a;
+struct pmu_payload;
+struct nvgpu_pmu;
+struct pmu_msg;
+struct pmu_sequence;
+struct falcon_payload_alloc;
+
+struct pmu_cmd {
+	struct pmu_hdr hdr;
+	union {
+		struct pmu_perfmon_cmd perfmon;
+		struct pmu_pg_cmd pg;
+		struct pmu_zbc_cmd zbc;
+		struct pmu_acr_cmd acr;
+		struct nv_pmu_boardobj_cmd obj;
+		struct nv_pmu_pmgr_cmd pmgr;
+		struct nv_pmu_rpc_cmd rpc;
+	} cmd;
+};
+
+/* send a cmd to pmu */
+int nvgpu_pmu_cmd_post(struct gk20a *g, struct pmu_cmd *cmd,
+		struct pmu_payload *payload,
+		u32 queue_id, pmu_callback callback, void *cb_param);
+/* PTCB */
+int nvgpu_pmu_cmd_post_ptcb(struct gk20a *g,
+		struct nv_pmu_rpc_header *rpc_header,
+		u32 size_rpc, pmu_callback callback, void *cb_param);
+
+/* PMU RPC */
+int nvgpu_pmu_rpc_execute(struct nvgpu_pmu *pmu, u8 *rpc,
+	u16 size_rpc, u16 size_scratch, pmu_callback caller_cb,
+	void *caller_cb_param, bool is_copy_back);
+
+/* RPC */
+#define PMU_RPC_EXECUTE(_stat, _pmu, _unit, _func, _prpc, _size)\
+	do {                                                 \
+		(void) memset(&((_prpc)->hdr), 0, sizeof((_prpc)->hdr));\
+		\
+		(_prpc)->hdr.unit_id   = PMU_UNIT_##_unit;       \
+		(_prpc)->hdr.function = NV_PMU_RPC_ID_##_unit##_##_func;\
+		(_prpc)->hdr.flags    = 0x0;    \
+		\
+		_stat = nvgpu_pmu_rpc_execute(_pmu, (u8 *)_prpc,    \
+			(u16)(sizeof(*(_prpc)) - sizeof((_prpc)->scratch)), \
+			(_size), NULL, NULL, false);	\
+	} while (false)
+
+/* RPC blocking call to copy back data from PMU to  _prpc */
+#define PMU_RPC_EXECUTE_CPB(_stat, _pmu, _unit, _func, _prpc, _size)\
+	do {                                                 \
+		(void) memset(&((_prpc)->hdr), 0, sizeof((_prpc)->hdr));\
+		\
+		(_prpc)->hdr.unit_id   = PMU_UNIT_##_unit;       \
+		(_prpc)->hdr.function = NV_PMU_RPC_ID_##_unit##_##_func;\
+		(_prpc)->hdr.flags    = 0x0;    \
+		\
+		_stat = nvgpu_pmu_rpc_execute(_pmu, (u8 *)_prpc,    \
+			(u16)(sizeof(*(_prpc)) - sizeof((_prpc)->scratch)),\
+			(_size), NULL, NULL, true);	\
+	} while (false)
+
+/* RPC non-blocking with call_back handler option */
+#define PMU_RPC_EXECUTE_CB(_stat, _pmu, _unit, _func, _prpc, _size, _cb, _cbp)\
+	do {                                                 \
+		(void) memset(&((_prpc)->hdr), 0, sizeof((_prpc)->hdr));\
+		\
+		(_prpc)->hdr.unit_id   = PMU_UNIT_##_unit;       \
+		(_prpc)->hdr.function = NV_PMU_RPC_ID_##_unit##_##_func;\
+		(_prpc)->hdr.flags    = 0x0;    \
+		\
+		_stat = nvgpu_pmu_rpc_execute(_pmu, (u8 *)_prpc,    \
+			(sizeof(*(_prpc)) - sizeof((_prpc)->scratch)),\
+			(_size), _cb, _cbp, false);	\
+	} while (false)
+
+#endif /* NVGPU_PMU_CMD_H*/
