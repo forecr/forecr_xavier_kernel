@@ -40,6 +40,8 @@ enable_rt()
 		#make temporary copy of the forecr custom defconfig files
 		cp -p "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/dsboard_thrmax_defconfig\
 			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.dsboard_thrmax_defconfig
+		cp -p "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/milboard_thr_defconfig\
+			"${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/arch/arm64/configs/.orig.milboard_thr_defconfig
 
 		if [ -d "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/rt-patches ]; then
 			file_list=$(find "${SCRIPT_DIR}"/kernel/"${KERNEL_SRC_DIR}"/rt-patches -name \*.patch -type f | sort)
@@ -65,6 +67,8 @@ enable_rt()
 		#make temporary copy of the forecr custom defconfig files
 		cp -pf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/dsboard_thrmax_defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.dsboard_thrmax_defconfig"
+		cp -pf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/milboard_thr_defconfig"\
+			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.milboard_thr_defconfig"
 
 		"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/scripts/config" --file "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"\
 			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
@@ -96,11 +100,22 @@ enable_rt()
 			--disable CPU_FREQ_TIMES \
 			--disable FAIR_GROUP_SCHED || any_failure=1
 
+		"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/scripts/config" --file "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.milboard_thr_defconfig"\
+			--enable PREEMPT_RT  --disable DEBUG_PREEMPT\
+			--disable KVM\
+			--enable EMBEDDED\
+			--enable NAMESPACES\
+			--disable CPU_IDLE_TEGRA18X\
+			--disable CPU_FREQ_GOV_INTERACTIVE\
+			--disable CPU_FREQ_TIMES \
+			--disable FAIR_GROUP_SCHED || any_failure=1
+
 		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"
 		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_defconfig"
 		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"
 
 		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/dsboard_thrmax_defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/dsboard_thrmax_defconfig"
+		[[ -f "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/milboard_thr_defconfig" ]] && rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/milboard_thr_defconfig"
 
 		cp -pfnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"\
 				"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"
@@ -111,6 +126,8 @@ enable_rt()
 
 		cp -pfnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.dsboard_thrmax_defconfig"\
 				"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/dsboard_thrmax_defconfig"
+		cp -pfnrs "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.milboard_thr_defconfig"\
+				"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/milboard_thr_defconfig"
 
 		echo "PREEMPT RT config is set successfully!"
 	fi
@@ -133,6 +150,7 @@ disable_rt()
 		rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/tegra_prod_defconfig"
 
 		rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/dsboard_thrmax_defconfig"
+		rm "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/milboard_thr_defconfig"
 
 		cp -p "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/defconfig"
@@ -143,6 +161,8 @@ disable_rt()
 
 		cp -p "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.dsboard_thrmax_defconfig"\
 			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/dsboard_thrmax_defconfig"
+		cp -p "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.milboard_thr_defconfig"\
+			"${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/milboard_thr_defconfig"
 
 		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.defconfig"
 		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.defconfig"
@@ -151,6 +171,8 @@ disable_rt()
 
 		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.dsboard_thrmax_defconfig"
 		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.dsboard_thrmax_defconfig"
+		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.orig.milboard_thr_defconfig"
+		rm -rf "${SCRIPT_DIR}/kernel/${KERNEL_SRC_DIR}/arch/arm64/configs/.updated.milboard_thr_defconfig"
 		echo "PREEMPT RT config is disabled successfully!"
 	else
 		echo "PREEMPT RT config not applied to the kernel!"

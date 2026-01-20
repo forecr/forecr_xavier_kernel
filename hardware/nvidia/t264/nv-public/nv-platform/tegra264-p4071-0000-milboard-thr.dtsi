@@ -1,0 +1,167 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2025, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+#include <dt-bindings/clock/tegra264-clk.h>
+#include <dt-bindings/gpio/tegra264-gpio.h>
+#include "tegra264-p4071-0080-p3834-0008-dcb-quad-hdmi.dtsi"
+
+/ {
+	aliases {
+		rtc2 = &pcf8523_68;
+	};
+
+	display@8808c00000 {
+		status = "okay";
+		os_gpio_hotplug_a = <&gpio_main TEGRA264_MAIN_GPIO(F, 3) GPIO_ACTIVE_LOW>;
+		os_gpio_hotplug_b = <&gpio_main TEGRA264_MAIN_GPIO(F, 4) GPIO_ACTIVE_LOW>;
+		os_gpio_hotplug_c = <&gpio_main TEGRA264_MAIN_GPIO(F, 5) GPIO_ACTIVE_LOW>;
+		os_gpio_hotplug_d = <&gpio_main TEGRA264_MAIN_GPIO(F, 6) GPIO_ACTIVE_LOW>;
+	};
+
+	bus@0 {
+		pcie@a808400000 { // PCIe C1 for M.2 Key-M
+			status = "okay";
+		};
+		pcie@a808420000 { // PCIe C2
+			status = "okay";
+		};
+		pcie@a808440000 { // PCIe C3 for M.2 Key-M
+			status = "okay";
+		};
+		pcie@a808460000 { // PCIe C4
+			status = "disabled";
+		};
+		pcie@a808480000 { // PCIe C5 for M.2 Key-M
+			status = "okay";
+		};
+		pcie_ep@a808420000 { // PCIe C2 EP
+			status = "disabled";
+		};
+		pcie_ep@a808460000 { // PCIe C4 EP
+			status = "disabled";
+		};
+		pcie_ep@a808480000 { // PCIe C5 EP
+			status = "disabled";
+		};
+
+		padctl@a808680000 {
+			ports {
+				usb2-0 {
+					mode = "otg";
+                                        usb-role-switch;
+                                        role-switch-default-mode = "peripheral";
+                                        status = "okay";
+				};
+				usb3-0 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+				usb3-1 { // Recovery USB
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+				};
+				usb3-2 {
+					nvidia,usb2-companion = <2>;
+					status = "okay";
+				};
+			};
+		};
+
+		i2c@810c640000 { // I2C1 (CAM_I2C)
+			status = "okay";
+		};
+
+		i2c@c600000 { // I2C2
+			status = "okay";
+		};
+
+		i2c@810c6d0000 { // I2C3
+			status = "okay";
+
+			pcf8523_68: pcf8523@68 { // RTC
+				status = "okay";
+				compatible = "nxp,pcf8523";
+				reg = <0x68>;
+			};
+		};
+
+		i2c@c610000 { // I2C4
+			status = "okay";
+			// EEPROM CAT24C04WI-GT3 - 0x56
+			// IMU & Temp Sensor 2536030320001 - 0x6A
+		};
+
+		i2c@810c6a0000 { // I2C5
+			status = "okay";
+		};
+
+		i2c@810c680000 { // I2C8
+			status = "okay";
+
+			tca9535_22: tca9535@22 {
+				status = "okay";
+				compatible = "nxp,pca9535";
+				reg = <0x22>;
+				gpio-controller;
+				#gpio-cells = <2>;
+				gpio-line-names = 
+				    "SERIAL_CH0.RS485/RS232#",
+				    "SERIAL_CH0.TERM",
+				    "SERIAL_CH1.RS485/RS232#",
+				    "SERIAL_CH1.TERM",
+				    "SERIAL_CH2.RS485/RS232#",
+				    "SERIAL_CH2.TERM",
+				    "SERIAL_CH3.RS485/RS232#",
+				    "SERIAL_CH3.TERM",
+				    "DIGITAL_IO_CH0",
+				    "DIGITAL_IO_CH1",
+				    "DIGITAL_IO_CH2",
+				    "DIGITAL_IO_CH3",
+				    "DIGITAL_IO_CH4",
+				    "DIGITAL_IO_CH5",
+				    "DIGITAL_IO_CH6",
+				    "DIGITAL_IO_CH7";
+			};
+		};
+
+		spi@810c590000 { // SPI1
+			status = "okay";
+			num-cs = <1>;
+			cs-gpios = <&gpio_main TEGRA264_MAIN_GPIO(K, 2) GPIO_ACTIVE_LOW>;
+			/delete-node/ spi@0;
+			/delete-node/ spi@1;
+
+			tpm@0 {
+				compatible = "tcg,tpm_tis_spi";
+				reg = <0>;
+				spi-max-frequency = <10000000>;
+				status = "okay";
+
+				controller-data {
+					nvidia,variable-length-transfer;
+					nvidia,rx-clk-tap-delay = <0x10>;
+				};
+			};
+		};
+
+		spi@810c440000 { // SPI3
+			status = "okay";
+			num-cs = <2>;
+			cs-gpios = <&gpio_main TEGRA264_MAIN_GPIO(J, 1) GPIO_ACTIVE_LOW>,
+			           <&gpio_main TEGRA264_MAIN_GPIO(J, 2) GPIO_ACTIVE_LOW>;
+		};
+
+		serial@810c530000 { // UART1 for Channel-0 RS232-422
+			status = "okay";
+		};
+		serial@810c540000 { // UART2 for Channel-1 RS232-422
+			status = "okay";
+		};
+		serial@c5f0000 { // UART3 (Debug) for Channel-2 RS232-422
+			status = "disabled";
+		};
+		serial@810c510000 { // UART5 for Channel-3 RS232-422
+			status = "okay";
+		};
+	};
+};
