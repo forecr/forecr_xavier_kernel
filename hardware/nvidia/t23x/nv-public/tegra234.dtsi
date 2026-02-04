@@ -694,8 +694,8 @@
 			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&bpmp TEGRA234_CLK_UARTD>;
 			resets = <&bpmp TEGRA234_RESET_UARTD>;
-			dmas = <&gpcdma 19>, <&gpcdma 19>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 19>, <&gpcdma 19>;
+			//dma-names = "rx", "tx";
 			status = "disabled";
 		};
 
