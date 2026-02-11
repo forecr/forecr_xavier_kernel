@@ -5,7 +5,7 @@
 	./generic_rt_build.sh "enable"
 	export IGNORE_PREEMPT_RT_PRESENCE=1
 
-#DSBOARD-AGX & DSBOARD-AGXMAX for AGX Orin
+#DSBOARD-AGX, DSBOARD-AGXMAX & DSBOARD-AGXS for AGX Orin
 	export KERNEL_DEF_CONFIG=dsboard_agx_defconfig
 	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_agx
 	make -C kernel
