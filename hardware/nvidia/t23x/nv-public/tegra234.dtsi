@@ -2763,8 +2763,19 @@
 			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&bpmp TEGRA234_CLK_UARTA>;
 			resets = <&bpmp TEGRA234_RESET_UARTA>;
-			dmas = <&gpcdma 8>, <&gpcdma 8>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 8>, <&gpcdma 8>;
+			//dma-names = "rx", "tx";
+			status = "disabled";
+		};
+
+		uartd: serial@3130000 {
+			compatible = "nvidia,tegra234-uart", "nvidia,tegra20-uart";
+			reg = <0x0 0x03130000 0x0 0x10000>;
+			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&bpmp TEGRA234_CLK_UARTD>;
+			resets = <&bpmp TEGRA234_RESET_UARTD>;
+			//dmas = <&gpcdma 19>, <&gpcdma 19>;
+			//dma-names = "rx", "tx";
 			status = "disabled";
 		};
 
@@ -2774,8 +2785,8 @@
 			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&bpmp TEGRA234_CLK_UARTE>;
 			resets = <&bpmp TEGRA234_RESET_UARTE>;
-			dmas = <&gpcdma 20>, <&gpcdma 20>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 20>, <&gpcdma 20>;
+			//dma-names = "rx", "tx";
 			status = "disabled";
 		};
 

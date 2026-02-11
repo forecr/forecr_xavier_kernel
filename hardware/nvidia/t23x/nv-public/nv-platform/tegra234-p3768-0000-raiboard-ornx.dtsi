@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
+
+/ {
+	aliases {
+		serial3 = &uartb;
+	};
+
+	bus@0 {
+		serial@3100000 { // UART1 (uarta) Channel-1
+			status = "okay";
+		};
+
+		uartb: serial@3110000 { // UART0 (uartb) Channel-0
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+		};
+
+		i2c@3160000 {
+			tmp102: tmp102@49 { // Temperature Sensor
+				status = "okay";
+				compatible = "ti,tmp102";
+				reg = <0x49>;
+				#thermal-sensor-cells = <0>;
+			};
+		};
+
+		i2c@c250000 {
+			iam20680@68 {
+				compatible = "invensense,iam20680ht";
+				reg = <0x68>;
+				interrupt-parent = <&gpio>;
+				interrupts = <TEGRA234_MAIN_GPIO(Y, 6) IRQ_TYPE_LEVEL_LOW>; //Unused pin
+			};
+		};
+
+		padctl@3520000 {
+			ports {
+				usb3-0 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+				usb3-1 {
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+				};
+				usb3-2 {
+					//nvidia,usb2-companion = <2>;
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+				};
+			};
+		};
+		usb@3550000 {
+			status = "okay";
+			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>;
+			phy-names = "usb2-0", "usb3-1";
+		};
+
+		clocks {
+			can_clock: can_clock {
+				compatible = "fixed-clock";
+				#clock-cells = <0>;
+				clock-frequency = <20000000>;
+				clock-accuracy = <100>;
+			};
+		};
+		spi@3210000{ // SPI0 with CS0 for SPI2CAN
+			status = "okay";
+			nvidia,clock-always-on;
+			spi@0 {
+				status = "okay";
+				compatible = "microchip,mcp2515";
+				reg = <0x0>;
+				spi-max-frequency = <10000000>;
+				interrupt-parent = <&gpio_aon>;
+				interrupts = <TEGRA234_AON_GPIO(EE, 2) IRQ_TYPE_LEVEL_LOW>;
+				clocks = <&can_clock>;
+				nvidia,enable-hw-based-cs;
+			};
+			spi@1 {
+				status = "disabled";
+			};
+		};
+		spi@3230000{
+			status = "disabled";
+		};
+
+		pcie@141e0000 { /* C7x1 node */
+			status = "okay";
+			num-lanes = <1>;
+			phys = <&p2u_gbe_0>;
+			phy-names = "p2u-0";
+		};
+
+		pcie@140c0000 { /* C9x1 node */
+			status = "okay";
+			num-lanes = <1>;
+			phys = <&p2u_gbe_1>;
+			phy-names = "p2u-0";
+		};
+	};
+};

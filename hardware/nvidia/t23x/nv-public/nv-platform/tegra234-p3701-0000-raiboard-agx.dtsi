@@ -1,0 +1,181 @@
+// SPDX-License-Identifier: GPL-2.0
+
+#include <dt-bindings/input/linux-event-codes.h>
+#include <dt-bindings/input/gpio-keys.h>
+
+/ {
+	aliases {
+		serial3 = &uarte; //serial@3140000
+	};
+
+	regulator-vdd-3v3-pcie {
+		gpio = <&gpio TEGRA234_MAIN_GPIO(H, 4) 0>;
+		/delete-property/ regulator-boot-on;
+	};
+	regulator-vdd-12v-pcie {
+		/delete-property/ regulator-boot-on;
+		/delete-property/ gpio;
+		regulator-always-on;
+	};
+	regulator@3 {
+		regulator-boot-on;
+	};
+
+	bus@0 {
+		serial@3140000 { //for Serial-CH0 communication
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+			clock-names = "serial";
+		};
+
+		serial@3110000 { //for Serial-CH1 communication
+			status = "okay";
+			reset-names = "serial";
+			clock-names = "serial";
+		};
+
+		padctl@3520000 {
+			status = "okay";
+
+			ports {
+				usb2-0 {
+					status = "okay";
+					vbus-supply = <&vdd_5v0_sys>;
+					mode = "otg";
+					usb-role-switch;
+					/delete-node/ port;
+					connector {
+						compatible = "usb-b-connector", "gpio-usb-b-connector";
+						label = "micro-USB";
+						type = "micro";
+						vbus-gpios = <&gpio TEGRA234_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
+					};
+				};
+
+				usb2-1 {
+					/delete-node/ port;
+				};
+
+				usb3-0 {
+					nvidia,usb2-companion = <1>;
+					status = "okay";
+					/delete-node/ port;
+				};
+
+				usb3-1 {
+					nvidia,usb2-companion = <0>;
+					status = "okay";
+					/delete-node/ port;
+				};
+
+				usb3-2 {
+					nvidia,usb2-companion = <2>;
+					status = "okay";
+				};
+			};
+		};
+
+		usb@3550000 {
+			status = "okay";
+			phys = <&{/bus@0/padctl@3520000/pads/usb2/lanes/usb2-0}>,
+			       <&{/bus@0/padctl@3520000/pads/usb3/lanes/usb3-1}>;
+			phy-names = "usb2-0", "usb3-1";
+		};
+
+		//ethernet@6900000 // already disabled
+		//ethernet@6a00000 // already disabled
+		//ethernet@6b00000 // already disabled
+
+		// 10G configured in tegra234-p3737-0000+p3701-0000.dts <- tegra234-p3737-0000.dtsi
+
+		ethernet@2310000 { //EQOS
+			status = "okay";
+
+			nvidia,mac-addr-idx = <0>;
+			nvidia,pause_frames = <1>;
+			local-mac-address = [1a 2b 3c 4d 5e 6f];
+			nvidia,phy-reset-gpio = <&gpio TEGRA234_MAIN_GPIO(G, 5) 0>;
+			phy-mode = "rgmii-id";
+			phy-handle = <&phy>;
+			nvidia,max-platform-mtu = <16383>; //8000
+
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				phy: phy@0 {
+					reg = <0>;
+					nvidia,phy-rst-pdelay-msec = <224>; /* msec */
+					nvidia,phy-rst-duration-usec = <10000>; /* usec */
+					interrupt-parent = <&gpio>;
+					interrupts = <TEGRA234_MAIN_GPIO(G, 4) IRQ_TYPE_LEVEL_LOW>;
+					marvell,copper-mode;
+					/* Setup LED[2] as interrupt pin (active low) */
+					marvell,reg-init = <0x03 0x12 0x7fff 0x880>;
+				};
+			};
+		};
+
+		i2c@c240000 {
+			status = "okay";
+
+			/delete-node/ typec@8;
+		};
+
+		i2c@3190000 {
+			pca6416_ioexpander: ioexpander@20 {
+				compatible = "ti,pca6416";
+				reg = <0x20>;
+				gpio-controller;
+				#gpio-cells = <2>;
+				gpio-line-names = 
+				    "m2b_keyb1.w_disable1#",
+				    "m2b_keyb1.w_disable2#",
+				    "m2b_keyb1.fullcard_pwroff#",
+				    "m2b_keyb1.reset",
+				    "m2b_keyb2.w_disable1#",
+				    "m2b_keyb2.w_disable2#",
+				    "m2b_keyb2.fullcard_pwroff#",
+				    "m2b_keyb2.reset",
+				    "m2e_wdisable1",
+				    "m2e_wdisable2",
+				    "m2_keym1_alert#",
+				    "m2_keym2_alert#",
+				    "keye_alert#",
+				    "N/A",
+				    "N/A",
+				    "N/A";
+
+				ioexpander_outlow {
+					gpio-hog;
+					gpios = <3 0 7 0 8 0 9 0>;
+					output-low;
+				};
+
+				ioexpander_outhigh {
+					gpio-hog;
+					gpios = <0 0 1 0 2 0 4 0 5 0 6 0 10 0 11 0 12 0>;
+					output-high;
+				};
+			};
+		};
+
+		i2c@c250000 {
+			status = "okay";
+			// IMU & Temp Sensor 2536030320001 - 0x6b
+			// EEPROM CAT24C04WI-GT3 - 0x56
+		};
+
+		pcie@14180000 { // PCIe x1 (C0)
+			status = "okay";
+			phys = <&p2u_hsio_0>;
+			phy-names = "p2u-0";
+		};
+
+		pcie@141e0000 { // PCIe x8 (C7)
+			status = "disabled";
+		};
+	};
+};

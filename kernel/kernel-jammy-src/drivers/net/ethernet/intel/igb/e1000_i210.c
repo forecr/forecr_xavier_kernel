@@ -656,7 +656,8 @@ bool igb_get_flash_presence_i210(struct e1000_hw *hw)
 	if (eec & E1000_EECD_FLASH_DETECTED_I210)
 		ret_val = true;
 
-	return ret_val;
+	//return ret_val;
+	return false; //Do not read the flash
 }
 
 /**
