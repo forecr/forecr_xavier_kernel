@@ -177,5 +177,9 @@
 		pcie@141e0000 { // PCIe x8 (C7)
 			status = "disabled";
 		};
+
+		pcie@14100000 {
+			/delete-property/ nvidia,pex-wake-gpios;
+		};
 	};
 };

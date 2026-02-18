@@ -216,6 +216,7 @@
 		pcie@14100000 { // PCIe x1 (C1) - Ethernet
 			status = "okay";
 			nvidia,max-speed = <2>; // i210 is GEN2
+			/delete-property/ nvidia,pex-wake-gpios;
 		};
 
 		pcie@14160000 { //* PCIe x4 (C4) - M.2 Key-M

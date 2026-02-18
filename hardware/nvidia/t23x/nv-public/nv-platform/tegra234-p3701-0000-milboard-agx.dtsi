@@ -170,6 +170,7 @@
 			status = "okay";
 			//nvidia,disable-clock-request; // no CLKREQ signal route from i210 to C1
 			nvidia,max-speed = <2>; // i210 is GEN2
+			/delete-property/ nvidia,pex-wake-gpios;
 		};
 
 		pcie@14160000 { //* PCIe x4 (C4)
