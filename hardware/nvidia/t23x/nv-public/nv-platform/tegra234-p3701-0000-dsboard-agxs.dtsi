@@ -12,6 +12,11 @@
 		gpio = <&gpio TEGRA234_MAIN_GPIO(H, 4) 0>;
 		/delete-property/ regulator-boot-on;
 	};
+	regulator-vdd-3v3-sd {
+		/delete-property/ enable-active-high;
+		/delete-property/ gpio;
+		regulator-always-on;
+	};
 	regulator-vdd-12v-pcie {
 		/delete-property/ regulator-boot-on;
 		/delete-property/ gpio;
