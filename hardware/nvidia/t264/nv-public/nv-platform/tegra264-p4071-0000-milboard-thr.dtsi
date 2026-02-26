@@ -88,7 +88,7 @@
 		i2c@c610000 { // I2C4
 			status = "okay";
 			// EEPROM CAT24C04WI-GT3 - 0x56
-			// IMU & Temp Sensor 2536030320001 - 0x6A
+			// IMU & Temp Sensor 2536030320001 - 0x6B
 		};
 
 		i2c@810c6a0000 { // I2C5
