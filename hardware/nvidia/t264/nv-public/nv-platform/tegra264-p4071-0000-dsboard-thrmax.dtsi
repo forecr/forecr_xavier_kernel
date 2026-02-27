@@ -4,13 +4,9 @@
 #include <dt-bindings/input/linux-event-codes.h>
 #include <dt-bindings/input/gpio-keys.h>
 #include <dt-bindings/sound/rt5640.h>
-#include "tegra264-p4071-0080-p3834-0008-dcb-quad-hdmi.dtsi"
+#include "tegra264-p4071-0080-p3834-0008-dcb.dtsi"
 
 / {
-	aliases {
-		rtc2 = &pcf8523_68;
-	};
-
 	bus@0 {
 		aconnect@9000000 {
 			status = "okay";
@@ -105,7 +101,7 @@
 			};
 		};
 
-		i2c@810c640000 { // I2C1 (CAM_I2C)
+		i2c@810c640000 {
 			status = "okay";
 			/* CVB EEPROM */
 			eeprom@56 {
@@ -121,7 +117,7 @@
 			};
 		};
 
-		i2c@810c680000 { // I2C8
+		i2c@810c680000 {
 			status = "okay";
 
 			rt5640: audio-codec@1c {
@@ -151,31 +147,6 @@
 					};
 				};
 			};
-
-			tca9535_22: tca9535@22 {
-				status = "okay";
-				compatible = "nxp,pca9535";
-				reg = <0x22>;
-				gpio-controller;
-				#gpio-cells = <2>;
-				gpio-line-names =
-				    "SERIAL_CH0.RS485/RS232#",
-				    "SERIAL_CH0.TERM",
-				    "SERIAL_CH1.RS485/RS232#",
-				    "SERIAL_CH1.TERM",
-				    "SERIAL_CH2.RS485/RS232#",
-				    "SERIAL_CH2.TERM",
-				    "SERIAL_CH3.RS485/RS232#",
-				    "SERIAL_CH3.TERM",
-				    "DIGITAL_IO_CH0",
-				    "DIGITAL_IO_CH1",
-				    "DIGITAL_IO_CH2",
-				    "DIGITAL_IO_CH3",
-				    "DIGITAL_IO_CH4",
-				    "DIGITAL_IO_CH5",
-				    "DIGITAL_IO_CH6",
-				    "DIGITAL_IO_CH7";
-			};
 		};
 
 		/* i2c6 */
@@ -203,20 +174,16 @@
 			status = "okay";
 		};
 
-		serial@810c510000 { // UART5 for Channel-3 RS232-422
+		serial@810c510000 {
 			status = "okay";
 		};
 
-		serial@810c530000 { // UART1 for Channel-0 RS232-422
+		serial@810c530000 {
 			status = "okay";
 		};
 
-		serial@810c540000 { // UART2 for Channel-1 RS232-422
+		serial@810c540000 { // for RS232-422-485 communication
 			status = "okay";
-		};
-
-		serial@c5f0000 { // UART3 (Debug) for Channel-2 RS232-422 (using ttyUTC0)
-			status = "disabled";
 		};
 
 		/* SoC FAN-TACH */
@@ -224,12 +191,8 @@
 			status = "okay";
 		};
 
-		spi@810c440000 { // SPI3
+		spi@810c440000 {
 			status = "okay";
-			num-cs = <2>;
-			cs-gpios = <&gpio_main TEGRA264_MAIN_GPIO(J, 1) GPIO_ACTIVE_LOW>,
-			           <&gpio_main TEGRA264_MAIN_GPIO(J, 2) GPIO_ACTIVE_LOW>;
-
 			spi@0 {
 				/* chip select 0 */
 				compatible = "tegra-spidev";
@@ -238,87 +201,77 @@
 			};
 		};
 
-		spi@810c590000 { // SPI1
+		spi@810c590000 {
 			status = "okay";
-			num-cs = <1>;
-			cs-gpios = <&gpio_main TEGRA264_MAIN_GPIO(K, 2) GPIO_ACTIVE_LOW>;
-			/delete-node/ spi@0;
-			/delete-node/ spi@1;
-
-			tpm@0 {
-				compatible = "tcg,tpm_tis_spi";
-				reg = <0>;
-				spi-max-frequency = <10000000>;
-				status = "okay";
-
-				controller-data {
-					nvidia,variable-length-transfer;
-					nvidia,rx-clk-tap-delay = <0x10>;
-				};
+			spi@0 {
+				/* chip select 0 */
+				compatible = "tegra-spidev";
+				reg = <0x0>;
+				spi-max-frequency = <50000000>;
 			};
 		};
 
 		/* MGBE 0 */
 		mgbe0: ethernet@a808a10000 {
 			nvidia,mac-addr-idx = <1>;
-			nvidia,uphy-gbe-mode = <1>;
-			nvidia,phy-iface-mode = <0x0>;
+			nvidia,uphy-gbe-mode = <2>;
 			nvidia,max-platform-mtu = <9000>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe0_0";
 			nvidia,force-restart-lane-bringup = <1>;
+			/delete-property/ nvidia,phy-iface-mode;
 
 			fixed-link {
 				full-duplex;
-				speed = <10000>;
+				speed = <25000>;
 			};
 		};
 
 		/* MGBE 1 */
 	        mgbe1: ethernet@a808b10000 {
 			nvidia,mac-addr-idx = <2>;
-			nvidia,uphy-gbe-mode = <1>;
-			nvidia,phy-iface-mode = <0x0>;
+			nvidia,uphy-gbe-mode = <2>;
 			nvidia,max-platform-mtu = <9000>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe1_0";
 			nvidia,force-restart-lane-bringup = <1>;
+			/delete-property/ nvidia,phy-iface-mode;
 
 			fixed-link {
 				full-duplex;
-				speed = <10000>;
+				speed = <25000>;
 			};
 		};
 
 		/* MGBE 2 */
 	        mgbe2: ethernet@a808d10000 {
 			nvidia,mac-addr-idx = <3>;
-			nvidia,uphy-gbe-mode = <1>;
-			nvidia,phy-iface-mode = <0x0>;
+			nvidia,uphy-gbe-mode = <2>;
 			nvidia,max-platform-mtu = <9000>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe2_0";
 			nvidia,force-restart-lane-bringup = <1>;
+			/delete-property/ nvidia,phy-iface-mode;
 
 			fixed-link {
 				full-duplex;
-				speed = <10000>;
+				speed = <25000>;
 			};
 		};
 
 		/* MGBE 3 */
 	        mgbe3: ethernet@a808e10000 {
 			nvidia,mac-addr-idx = <4>;
-			nvidia,uphy-gbe-mode = <1>;
-			nvidia,phy-iface-mode = <0x0>;
+			nvidia,uphy-gbe-mode = <2>;
 			nvidia,max-platform-mtu = <9000>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe3_0";
 			nvidia,force-restart-lane-bringup = <1>;
+			/delete-property/ nvidia,phy-iface-mode;
 
 			fixed-link {
 				full-duplex;
-				speed = <10000>;
+				speed = <25000>;
 			};
 		};
 
@@ -334,13 +287,13 @@
 			status = "okay";
 		};
 
-		/* PCIe C0 - pcie@d0b0000000 */
+		// PCIe C0 - pcie@d0b0000000
 
-		pcie@a808400000 { // PCIe C1 for M.2 Key-M
+		pcie@a808400000 { // PCIe C1 for M.2 Key-E
 			status = "okay";
 		};
 
-		pcie@a808420000 { // PCIe C2
+		pcie@a808420000 { // PCIe C2 for Intel Ethernet
 			status = "okay";
 			interrupts = <TEGRA264_AON_GPIO(AA, 5) GPIO_ACTIVE_LOW>;
 			interrupt-names = "wakeup";
@@ -423,8 +376,8 @@
 					mode = "host";
 					status = "okay";
 				};
-				usb3-0 {
-					nvidia,usb2-companion = <1>;
+				usb3-0 { // M.2 Key-B
+					nvidia,usb2-companion = <3>;
 					status = "okay";
 				};
 				usb3-1 { // Recovery USB
@@ -432,7 +385,7 @@
 					status = "okay";
 				};
 				usb3-2 {
-					nvidia,usb2-companion = <2>;
+					nvidia,usb2-companion = <1>;
 					status = "okay";
 				};
 			};
@@ -471,8 +424,8 @@
 
 		i2c@c610000 { // I2C4
 			status = "okay";
+			// IMU & Temp Sensor 2536030320001 - 0x6b
 			// EEPROM CAT24C04WI-GT3 - 0x56
-			// IMU & Temp Sensor 2536030320001 - 0x6B
 		};
 
 		i2c@810c630000 {
@@ -491,21 +444,15 @@
 			status = "okay";
 		};
 
-		i2c@810c6a0000 { // I2C5
+		i2c@810c6a0000 {
 			status = "okay";
 		};
 
-		i2c@810c6d0000 { // I2C3
+		i2c@810c6d0000 {
 			status = "okay";
-
-			pcf8523_68: pcf8523@68 { // RTC
-				status = "okay";
-				compatible = "nxp,pcf8523";
-				reg = <0x68>;
-			};
 		};
 
-		i2c@c600000 { // I2C2
+		i2c@c600000 {
 			ina238@44 {
 				compatible = "ti,ina238";
 				reg = <0x44>;
@@ -638,10 +585,7 @@
 
 	display@8808c00000 {
 		status = "okay";
-		os_gpio_hotplug_a = <&gpio_main TEGRA264_MAIN_GPIO(F, 3) GPIO_ACTIVE_LOW>;
-		os_gpio_hotplug_b = <&gpio_main TEGRA264_MAIN_GPIO(F, 4) GPIO_ACTIVE_LOW>;
-		os_gpio_hotplug_c = <&gpio_main TEGRA264_MAIN_GPIO(F, 5) GPIO_ACTIVE_LOW>;
-		os_gpio_hotplug_d = <&gpio_main TEGRA264_MAIN_GPIO(F, 6) GPIO_ACTIVE_LOW>;
+		os_gpio_hotplug_a = <&gpio_main TEGRA264_MAIN_GPIO(F, 4) GPIO_ACTIVE_LOW>;
 		nvdisplay-niso {
 			status = "okay";
 		};
