@@ -4,7 +4,7 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_thrmax_agx_thor/Image
 	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-p4071-0000+p3834-0008-nv.dtb
-	cp kernel-devicetree/generic-dts/dtbs/tegra264-bpmp-3834-0008-4071-xxxx-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-bpmp-3834-0008-4071-xxxx.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-bpmp-3834-0008-4071-xxxx-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-bpmp-3834-0008-4071-xxxx.dtb
 	sudo -E make modules_install
 	cd $INSTALL_MOD_PATH/..
 	sudo ./tools/l4t_update_initrd.sh
