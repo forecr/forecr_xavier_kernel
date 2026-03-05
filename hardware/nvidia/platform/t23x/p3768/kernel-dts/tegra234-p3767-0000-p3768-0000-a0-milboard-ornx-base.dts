@@ -1,0 +1,236 @@
+/*
+ * Top level DTS file for CVM:P3767-0000 and CVB:MILBOARD-ORNX.
+ *
+ * Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ */
+
+/dts-v1/;
+
+#include "tegra234-dcb-p3767-0000-hdmi.dtsi"
+#include <tegra234-soc/mods-simple-bus.dtsi>
+#include <t234-common-cvm/tegra234-thermal.dtsi>
+#include <t234-common-cvm/tegra234-cpuidle.dtsi>
+#include <t234-common-cvm/tegra234-thermal-cooling.dtsi>
+#include <t234-common-cvm/tegra234-thermal-userspace-alert.dtsi>
+#include "cvm/tegra234-p3767-0000.dtsi"
+#include "cvb/tegra234-p3768-0000-a0-milboard.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	compatible = "nvidia,p3768-0000+p3767-0000", "nvidia,tegra234", "nvidia,tegra23x";
+	model = "Orin NX 16GB for MILBOARD-ORNX";
+
+	fixed-regulators {
+		regulator@102 { //p3768_vdd_1v8
+			//vin-supply = <&p3768_vdd_3v3_sys>;
+			/delete-property/ vin-supply;
+		};
+	};
+
+	pcie@141e0000 { /* C7x1 node */
+		status = "okay";
+		num-lanes = <1>;
+		phys = <&p2u_gbe_0>;
+		phy-names = "p2u-0";
+	};
+
+	pcie@140c0000 { /* C9x1 node */
+		status = "okay";
+		num-lanes = <1>;
+		phys = <&p2u_gbe_1>;
+		phy-names = "p2u-0";
+	};
+
+	i2c@3160000 {
+		// EEPROM CAT24C04WI-GT3 - 0x56
+
+		tmp102: tmp102@49 { // Temperature Sensor
+			compatible = "ti,tmp102";
+			reg = <0x49>;
+			#thermal-sensor-cells = <0>;
+		};
+
+		tca9535_27: tca9535@27 {
+			compatible = "nxp,pca9535";
+			reg = <0x27>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-line-names = 
+			    "SERIAL_CH0.DE",
+			    "SERIAL_CH0.SHDN#",
+			    "SERIAL_CH0.SLEW#",
+			    "SERIAL_CH0.TERM",
+			    "SERIAL_CH0.RS485/RS232#",
+			    "SERIAL_CH0.HALF/FULL#",
+			    "SERIAL_CH0.RE#",
+			    "CAN0_TERM_SEL_N",
+			    "SERIAL_CH1.DE",
+			    "SERIAL_CH1.SHDN#",
+			    "SERIAL_CH1.SLEW#",
+			    "SERIAL_CH1.TERM",
+			    "SERIAL_CH1.RS485/RS232#",
+			    "SERIAL_CH1.HALF/FULL#",
+			    "SERIAL_CH1.RE#",
+			    "CAN1_TERM_SEL_N";
+
+			/*
+			ioexpander_outlow {
+				gpio-hog;
+				gpios = <3 0 4 0 5 0 6 0 7 0 11 0 12 0 13 0 14 0 15 0>;
+				output-low;
+			};
+
+			ioexpander_outhigh {
+				gpio-hog;
+				gpios = <0 0 1 0 2 0 8 0 9 0 10 0>;
+				output-high;
+			};
+			*/
+		};
+	};
+
+	i2c@c250000 {
+		iam20680@68 {
+			compatible = "invensense,iam20680ht";
+			reg = <0x68>;
+			interrupt-parent = <&tegra_main_gpio>;
+			interrupts = <TEGRA234_MAIN_GPIO(Y, 6) IRQ_TYPE_LEVEL_LOW>; //Unused pin
+		};
+	};
+
+	i2c@3180000 {
+		tca9544a_70: tca9544a@70 {
+			status = "okay";
+			compatible = "nxp,pca9544";
+			reg = <0x70>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			//i2c-mux-idle-disconnect;
+			//idle-state = <1>;
+			//skip_mux_detect = "yes";
+
+			i2c@0 {
+				status = "okay";
+				reg = <0>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				pca6416_20: pca6416@20 {
+					compatible = "ti,pca6416";
+					reg = <0x20>;
+					gpio-controller;
+					#gpio-cells = <2>;
+					gpio-line-names = 
+					    "CAM_FRSYNC1",
+					    "CAM_FRSYNC2",
+					    "CAM_FRSYNC3",
+					    "CAM_FRSYNC4",
+					    "CAM_ERROR1",
+					    "CAM_ERROR2",
+					    "CAM_ERROR3",
+					    "CAM_ERROR4",
+					    "CAM_INT1",
+					    "CAM_INT2",
+					    "CAM_INT3",
+					    "CAM_INT4",
+					    "CAM0_RST",
+					    "CAM1_RST",
+					    "CAM_TE_RSV",
+					    "CAM_VDD_SYS_EN";
+
+					/*
+					ioexpander_outlow {
+						gpio-hog;
+						gpios = <0 0 1 0 2 0 3 0 12 0 13 0 14 0>;
+						output-low;
+					};
+
+					ioexpander_outhigh {
+						gpio-hog;
+						gpios = <15 0>;
+						output-high;
+					};
+
+					ioexpander_input {
+						gpio-hog;
+						gpios = <4 0 5 0 6 0 7 0 8 0 9 0 10 0 11 0>;
+						input;
+					};
+					*/
+				};
+			};
+			i2c@1 {
+				status = "okay";
+				reg = <1>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+			};
+			i2c@2 {
+				status = "okay";
+				reg = <2>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+			};
+			i2c@3 {
+				status = "okay";
+				reg = <3>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+			};
+		};
+	};
+
+	clocks {
+		can_clock: can_clock {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <20000000>;
+			clock-accuracy = <100>;
+		};
+	};
+	spi@3210000{ // SPI0 with CS0 for SPI2CAN
+		status = "okay";
+		nvidia,clock-always-on;
+		spi@0 {
+			status = "okay";
+			compatible = "microchip,mcp2515";
+			reg = <0x0>;
+			spi-max-frequency = <10000000>;
+			nvidia,enable-hw-based-cs;
+			nvidia,rx-clk-tap-delay = <0x7>;
+			clocks = <&can_clock>;
+			interrupt-parent = <&tegra_main_gpio>;
+			interrupts = <TEGRA234_MAIN_GPIO(Z, 7) IRQ_TYPE_EDGE_FALLING>;
+		};
+		spi@1 {
+			status = "disabled";
+		};
+	};
+	spi@3230000{
+		status = "okay";
+	};
+
+
+	serial@3100000 { // UART1 (uarta) RS232/422/485 Channel-1
+		status = "okay";
+	};
+
+	serial@3110000 { // UART0 (uartb) RS232/422/485 Channel-0
+		status = "okay";
+	};
+
+};

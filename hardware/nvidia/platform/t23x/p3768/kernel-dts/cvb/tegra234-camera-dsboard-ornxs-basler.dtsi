@@ -1,0 +1,293 @@
+/*
+ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include <dt-bindings/media/camera.h>
+
+/ {
+	tegra-capture-vi  {
+		num-channels = <2>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			port@0 {
+				status = "okay";
+				reg = <0>;
+				dsboard_ornxs_vi_in0: endpoint {
+					status = "okay";
+					port-index = <0>;
+					bus-width = <2>;
+					remote-endpoint = <&dsboard_ornxs_csi_out0>;
+				};
+			};
+			port@1 {
+				status = "okay";
+				reg = <1>;
+				dsboard_ornxs_vi_in1: endpoint {
+					status = "okay";
+					port-index = <2>;
+					bus-width = <2>;
+					remote-endpoint = <&dsboard_ornxs_csi_out1>;
+				};
+			};
+		};
+	};
+
+	host1x@13e00000 {
+		nvcsi@15a00000 {
+			num-channels = <2>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+			channel@0 {
+				status = "okay";
+				reg = <0>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						status = "okay";
+						reg = <0>;
+						dsboard_ornxs_csi_in0: endpoint@0 {
+							status = "okay";
+							port-index = <0>;
+							bus-width = <2>;
+							remote-endpoint = <&dsboard_ornxs_basler_out0>;
+						};
+					};
+					port@1 {
+						status = "okay";
+						reg = <1>;
+						dsboard_ornxs_csi_out0: endpoint@1 {
+							status = "okay";
+							remote-endpoint = <&dsboard_ornxs_vi_in0>;
+						};
+					};
+				};
+			};
+			channel@1 {
+				status = "okay";
+				reg = <1>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						status = "okay";
+						reg = <0>;
+						dsboard_ornxs_csi_in1: endpoint@2 {
+							status = "okay";
+							port-index = <2>;
+							bus-width = <2>;
+							remote-endpoint = <&dsboard_ornxs_basler_out1>;
+						};
+					};
+					port@1 {
+						status = "okay";
+						reg = <1>;
+						dsboard_ornxs_csi_out1: endpoint@3 {
+							status = "okay";
+							remote-endpoint = <&dsboard_ornxs_vi_in1>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	cam_i2cmux {
+		i2c@0 {
+			status = "okay";
+
+			basler_a@36 {
+				status="okay";
+
+				compatible = "basler,basler-camera";
+				/* I2C device address */
+				reg = <0x36>;
+
+				/* V4L2 device node location */
+				devnode = "video0";
+
+				/* Physical dimensions of sensor */
+				physical_w = "3.680";
+				physical_h = "2.760";
+
+				sensor_model = "basler-mcm";
+
+				mode0 {
+					tegra_sinterface = "serial_a";
+					lane_polarity = "6";
+				};
+
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					port@0 {
+						status = "okay";
+						reg = <0>;
+						dsboard_ornxs_basler_out0: endpoint {
+							status = "okay";
+							port-index = <0>;
+							bus-width = <2>;
+							remote-endpoint = <&dsboard_ornxs_csi_in0>;
+							data-lanes = <1 2>;
+							clock-lanes = <0>;
+							link-frequencies = /bits/ 64 <600000000>;
+						};
+					};
+				};
+			};
+		};
+
+		i2c@1 {
+			status = "okay";
+
+			basler_c@36 {
+				status="okay";
+
+				compatible = "basler,basler-camera";
+				/* I2C device address */
+				reg = <0x36>;
+
+				/* V4L2 device node location */
+				devnode = "video1";
+
+				/* Physical dimensions of sensor */
+				physical_w = "3.680";
+				physical_h = "2.760";
+
+				sensor_model = "basler-mcm";
+
+				mode0 {
+					tegra_sinterface = "serial_c";
+					lane_polarity = "0";
+				};
+
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					port@0 {
+						status = "okay";
+						reg = <0>;
+						dsboard_ornxs_basler_out1: endpoint {
+							status = "okay";
+							port-index = <2>;
+							bus-width = <2>;
+							remote-endpoint = <&dsboard_ornxs_csi_in1>;
+							data-lanes = <1 2>;
+							clock-lanes = <0>;
+							link-frequencies = /bits/ 64 <600000000>;
+						};
+					};
+				};
+			};
+		};
+	};
+
+	dsboard_ornxs_lens_basler@P5V27C {
+		min_focus_distance = "0.0";
+		hyper_focal = "0.0";
+		focal_length = "3.04";
+		f_number = "2.0";
+		aperture = "0.0";
+	};
+};
+/ {
+	tegra-camera-platform {
+		compatible = "nvidia, tegra-camera-platform";
+		/**
+		* Physical settings to calculate max ISO BW
+		*
+		* num_csi_lanes = <>;
+		* Total number of CSI lanes when all cameras are active
+		*
+		* max_lane_speed = <>;
+		* Max lane speed in Kbit/s
+		*
+		* min_bits_per_pixel = <>;
+		* Min bits per pixel
+		*
+		* vi_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the VI ISO case
+		*
+		* vi_bw_margin_pct = <>;
+		* Vi bandwidth margin in percentage
+		*
+		* max_pixel_rate = <>;
+		* Max pixel rate in Kpixel/s for the ISP ISO case
+		*
+		* isp_peak_byte_per_pixel = <>;
+		* Max byte per pixel for the ISP ISO case
+		*
+		* isp_bw_margin_pct = <>;
+		* Isp bandwidth margin in percentage
+		*/
+		num_csi_lanes = <4>;
+		max_lane_speed = <1500000>;
+		min_bits_per_pixel = <10>;
+		vi_peak_byte_per_pixel = <2>;
+		vi_bw_margin_pct = <25>;
+		max_pixel_rate = <240000>;
+		isp_peak_byte_per_pixel = <5>;
+		isp_bw_margin_pct = <25>;
+
+		/**
+		 * The general guideline for naming badge_info contains 3 parts, and is as follows,
+		 * The first part is the camera_board_id for the module; if the module is in a FFD
+		 * platform, then use the platform name for this part.
+		 * The second part contains the position of the module, ex. "rear" or "front".
+		 * The third part contains the last 6 characters of a part number which is found
+		 * in the module's specsheet from the vendor.
+		 */
+		modules {
+			module0 {
+				status = "okay";
+				badge = "dsboard_ornxs_front";
+				position = "front";
+				orientation = "1";
+				drivernode0 {
+					status = "okay";
+					pcl_id = "v4l2_sensor";
+					devname = "basler 9-0036";
+					proc-device-tree = "/proc/device-tree/cam_i2cmux/i2c@0/basler_a@36";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_ornxs_lens_basler@P5V27C/";
+				};
+			};
+			module1 {
+				status = "okay";
+				badge = "dsboard_ornxs_rear";
+				position = "rear";
+				orientation = "1";
+				drivernode0 {
+					status = "okay";
+					pcl_id = "v4l2_sensor";
+					devname = "basler 10-0036";
+					proc-device-tree = "/proc/device-tree/cam_i2cmux/i2c@1/basler_c@36";
+				};
+				drivernode1 {
+					status = "okay";
+					pcl_id = "v4l2_lens";
+					proc-device-tree = "/proc/device-tree/dsboard_ornxs_lens_basler@P5V27C/";
+				};
+			};
+		};
+	};
+};
