@@ -15,7 +15,7 @@
 
 / {
 	overlay-name = "DSBOARD-NX2 IMX477 Dual";
-	jetson-header-name = "Jetson 24pin CSI Connector";
+	jetson-header-name = "Jetson 22pin CSI Connector";
 	compatible = JETSON_COMPATIBLE_P3768;
 
 	fragment-camera@0 {
