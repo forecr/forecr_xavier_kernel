@@ -4,7 +4,7 @@
 #include <dt-bindings/input/linux-event-codes.h>
 #include <dt-bindings/input/gpio-keys.h>
 #include <dt-bindings/sound/rt5640.h>
-#include "tegra264-p4071-0080-p3834-0008-dcb.dtsi"
+#include "tegra264-p4071-0080-p3834-0008-dcb-hdmi0-hdmi1-dp2-dp3.dtsi"
 
 / {
 	bus@0 {
@@ -585,7 +585,8 @@
 
 	display@8808c00000 {
 		status = "okay";
-		os_gpio_hotplug_a = <&gpio_main TEGRA264_MAIN_GPIO(F, 4) GPIO_ACTIVE_LOW>;
+		os_gpio_hotplug_a = <&gpio_main TEGRA264_MAIN_GPIO(F, 3) GPIO_ACTIVE_LOW>;
+		os_gpio_hotplug_b = <&gpio_main TEGRA264_MAIN_GPIO(F, 4) GPIO_ACTIVE_LOW>;
 		nvdisplay-niso {
 			status = "okay";
 		};
