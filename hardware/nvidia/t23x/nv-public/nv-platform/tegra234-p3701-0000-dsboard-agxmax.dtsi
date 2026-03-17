@@ -105,7 +105,6 @@
 			phy-mode = "10gbase-r";
 
 			local-mac-address = [1a 2b 3c 4d 5e 6e];
-			nvidia,phy-reset-gpio = <&gpio TEGRA234_MAIN_GPIO(Y, 1) 0>;
 			nvidia,mdio_addr = <0>;
 
 			/* 1:10G, 0:5G */
@@ -118,6 +117,7 @@
 			/delete-property/ phy-handle;
 			/delete-property/ nvidia,macsec-enable;
 			/delete-property/ nvidia,mdio_addr;
+			/delete-property/ nvidia,phy-reset-gpio;
 			/delete-node/ stmmac-axi-config;
 			/delete-node/ mdio;
 
