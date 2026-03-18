@@ -458,14 +458,12 @@
 			interrupt-names = "xhci", "mbox",
 					"wake0", "wake1", "wake2", "wake3",
 					"wake4", "wake5", "wake6";
-			phys = <&{/bus@0/padctl@a808680000/pads/usb2/lanes/usb2-0}>,
-				<&{/bus@0/padctl@a808680000/pads/usb2/lanes/usb2-1}>,
+			phys = <&{/bus@0/padctl@a808680000/pads/usb2/lanes/usb2-1}>,
 				<&{/bus@0/padctl@a808680000/pads/usb2/lanes/usb2-2}>,
 				<&{/bus@0/padctl@a808680000/pads/usb2/lanes/usb2-3}>,
 				<&{/bus@0/padctl@a808680000/pads/usb3/lanes/usb3-0}>,
-				<&{/bus@0/padctl@a808680000/pads/usb3/lanes/usb3-1}>,
 				<&{/bus@0/padctl@a808680000/pads/usb3/lanes/usb3-2}>;
-			phy-names = "usb2-0", "usb2-1", "usb2-2", "usb2-3", "usb3-0", "usb3-1", "usb3-2";
+			phy-names = "usb2-1", "usb2-2", "usb2-3", "usb3-0", "usb3-2";
 			status = "okay";
 		};
 
