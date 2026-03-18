@@ -38,6 +38,30 @@
 	rm -rf $INSTALL_MOD_PATH
 
 
+# For DSBOARD_AGXS with AGX Orin SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_agxs_orin
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxs_orin/Image
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3701-0005-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0000-p3737-0000-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3701-0000-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0004-p3737-0000-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3701-0004-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0005-p3737-0000-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3701-0005-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.120-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agxs_orin/
+	rm -rf $INSTALL_MOD_PATH
+
+
+# For DSBOARD_AGXS with AGX Orin Industrial SoM, type these commands below:
+	mkdir $HOME/kernel_out_dsboard_agxs_orin_ind
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxs_orin_ind/Image
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin_ind/0_tegra234-p3701-0008-p3737-0000.dtb
+	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/dts/nvidia/tegra234-p3701-0008-p3737-0000-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin_ind/tegra234-p3701-0008-p3737-0000.dtb
+	make ARCH=arm64 O=$HOME/kernel_out_dsboard_agx modules_install INSTALL_MOD_PATH=$INSTALL_MOD_PATH INSTALL_MOD_STRIP=1
+	cp $INSTALL_MOD_PATH/lib/modules/5.10.120-tegra/kernel/drivers/gpu/nvgpu/nvgpu.ko $HOME/kernel_out_dsboard_agxs_orin_ind/
+	rm -rf $INSTALL_MOD_PATH
+
+
 # For DSBOARD_AGXMAX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agxmax_orin
 	cp $HOME/kernel_out_dsboard_agx/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin/Image
