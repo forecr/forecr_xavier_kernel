@@ -3,7 +3,8 @@
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.0_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_thrmax_agx_thor/Image
-	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-p4071-0000+p3834-0008-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/0_tegra264-p4071-0000+p3834-0008-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax-base.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-p4071-0000+p3834-0008-nv.dtb
 	cp kernel-devicetree/generic-dts/dtbs/tegra264-bpmp-3834-0008-4071-xxxx-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/tegra264-bpmp-3834-0008-4071-xxxx.dtb
 	sudo -E make modules_install
 	cd $INSTALL_MOD_PATH/..
@@ -21,7 +22,8 @@
 	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.0_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_thr_agx_thor/Image
-	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-milboard-thr.dtb $HOME/kernel_out_milboard_thr_agx_thor/tegra264-p4071-0000+p3834-0008-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-milboard-thr.dtb $HOME/kernel_out_milboard_thr_agx_thor/0_tegra264-p4071-0000+p3834-0008-nv.dtb
+	cp kernel-devicetree/generic-dts/dtbs/tegra264-p4071-0000+p3834-0008-nv-milboard-thr-base.dtb $HOME/kernel_out_milboard_thr_agx_thor/tegra264-p4071-0000+p3834-0008-nv.dtb
 	cp kernel-devicetree/generic-dts/dtbs/tegra264-bpmp-3834-0008-4071-xxxx-milboard-thr.dtb $HOME/kernel_out_milboard_thr_agx_thor/tegra264-bpmp-3834-0008-4071-xxxx.dtb
 	sudo -E make modules_install
 	cd $INSTALL_MOD_PATH/..
