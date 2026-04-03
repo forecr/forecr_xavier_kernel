@@ -265,68 +265,152 @@
 		/* MGBE 0 */
 		mgbe0: ethernet@a808a10000 {
 			status = "okay";
+			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <1>;
 			nvidia,uphy-gbe-mode = <1>;
 			nvidia,phy-iface-mode = <0x0>;
-			nvidia,max-platform-mtu = <9000>;
+			nvidia,max-platform-mtu = <16383>;
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe0_0";
 
-			fixed-link {
-				full-duplex;
-				speed = <10000>;
+			nvidia,mdio_addr = <0>;
+			phy-mode = "10gbase-r";
+			nvidia,pause_frames = <1>;
+			phy-handle = <&mgbe0_aqr113c_phy>;
+			nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(DD, 5) GPIO_ACTIVE_HIGH>;
+
+			/delete-node/ fixed-link;
+
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+				status = "okay";
+
+				mgbe0_aqr113c_phy: phy@0 {
+					status = "okay";
+					compatible = "ethernet-phy-ieee802.3-c45";
+					reg = <0>;
+					nvidia,phy-rst-pdelay-msec = <150>;
+					nvidia,phy-rst-duration-usec = <221000>;
+					interrupt-parent = <&gpio_main>;
+					interrupts = <TEGRA264_MAIN_GPIO(V, 7) IRQ_TYPE_LEVEL_LOW>;
+				};
 			};
 		};
 
 		/* MGBE 1 */
 	        mgbe1: ethernet@a808b10000 {
 			status = "okay";
+			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <2>;
 			nvidia,uphy-gbe-mode = <1>;
 			nvidia,phy-iface-mode = <0x0>;
-			nvidia,max-platform-mtu = <9000>;
+			nvidia,max-platform-mtu = <16383>;
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe1_0";
 
-			fixed-link {
-				full-duplex;
-				speed = <10000>;
+			nvidia,mdio_addr = <0>;
+			phy-mode = "10gbase-r";
+			nvidia,pause_frames = <1>;
+			phy-handle = <&mgbe1_aqr113c_phy>;
+			nvidia,phy-reset-gpio = <&gpio_main TEGRA264_MAIN_GPIO(W, 0) GPIO_ACTIVE_HIGH>;
+
+			/delete-node/ fixed-link;
+
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+				status = "okay";
+
+				mgbe1_aqr113c_phy: phy@0 {
+					status = "okay";
+					compatible = "ethernet-phy-ieee802.3-c45";
+					reg = <0>;
+					nvidia,phy-rst-pdelay-msec = <150>;
+					nvidia,phy-rst-duration-usec = <221000>;
+					interrupt-parent = <&gpio_main>;
+					interrupts = <TEGRA264_MAIN_GPIO(W, 1) IRQ_TYPE_LEVEL_LOW>;
+				};
 			};
 		};
 
 		/* MGBE 2 */
 	        mgbe2: ethernet@a808d10000 {
 			status = "okay";
+			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <3>;
 			nvidia,uphy-gbe-mode = <1>;
 			nvidia,phy-iface-mode = <0x0>;
-			nvidia,max-platform-mtu = <9000>;
+			nvidia,max-platform-mtu = <16383>;
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe2_0";
 
-			fixed-link {
-				full-duplex;
-				speed = <10000>;
+			nvidia,mdio_addr = <0>;
+			phy-mode = "10gbase-r";
+			nvidia,pause_frames = <1>;
+			phy-handle = <&mgbe2_aqr113c_phy>;
+			nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(EE, 0) GPIO_ACTIVE_HIGH>;
+
+			/delete-node/ fixed-link;
+
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+				status = "okay";
+
+				mgbe2_aqr113c_phy: phy@0 {
+					status = "okay";
+					compatible = "ethernet-phy-ieee802.3-c45";
+					reg = <0>;
+					nvidia,phy-rst-pdelay-msec = <150>;
+					nvidia,phy-rst-duration-usec = <221000>;
+					interrupt-parent = <&gpio_aon>;
+					interrupts = <TEGRA264_AON_GPIO(DD, 3) IRQ_TYPE_LEVEL_LOW>;
+				};
 			};
 		};
 
 		/* MGBE 3 */
 	        mgbe3: ethernet@a808e10000 {
 			status = "okay";
+			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <4>;
 			nvidia,uphy-gbe-mode = <1>;
 			nvidia,phy-iface-mode = <0x0>;
-			nvidia,max-platform-mtu = <9000>;
+			nvidia,max-platform-mtu = <16383>;
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe3_0";
 
-			fixed-link {
-				full-duplex;
-				speed = <10000>;
+			nvidia,mdio_addr = <0>;
+			phy-mode = "10gbase-r";
+			nvidia,pause_frames = <1>;
+			phy-handle = <&mgbe3_aqr113c_phy>;
+			nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(DD, 4) GPIO_ACTIVE_HIGH>;
+
+			/delete-node/ fixed-link;
+
+			mdio {
+				compatible = "nvidia,eqos-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+				status = "okay";
+
+				mgbe3_aqr113c_phy: phy@0 {
+					status = "okay";
+					compatible = "ethernet-phy-ieee802.3-c45";
+					reg = <0>;
+					nvidia,phy-rst-pdelay-msec = <150>;
+					nvidia,phy-rst-duration-usec = <221000>;
+					//interrupt-parent = <&gpio_aon>;
+					//interrupts = <TEGRA264_AON_GPIO(DD, 7) IRQ_TYPE_LEVEL_LOW>;
+				};
 			};
 		};
 
