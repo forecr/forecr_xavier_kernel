@@ -273,7 +273,9 @@
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe0_0";
+			nvidia,force-restart-lane-bringup = <1>;
 
+			nvidia,mdc-cr = <2>;
 			nvidia,mdio_addr = <0>;
 			phy-mode = "10gbase-r";
 			nvidia,pause_frames = <1>;
@@ -292,7 +294,8 @@
 					status = "okay";
 					compatible = "ethernet-phy-ieee802.3-c45";
 					reg = <0>;
-					nvidia,phy-rst-pdelay-msec = <150>;
+					phy-mode = "10gbase-r";
+					nvidia,phy-rst-pdelay-msec = <1000>;
 					nvidia,phy-rst-duration-usec = <221000>;
 					interrupt-parent = <&gpio_main>;
 					interrupts = <TEGRA264_MAIN_GPIO(V, 7) IRQ_TYPE_LEVEL_LOW>;
@@ -301,7 +304,7 @@
 		};
 
 		/* MGBE 1 */
-	        mgbe1: ethernet@a808b10000 {
+		mgbe1: ethernet@a808b10000 {
 			status = "okay";
 			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <2>;
@@ -311,7 +314,9 @@
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe1_0";
+			nvidia,force-restart-lane-bringup = <1>;
 
+			nvidia,mdc-cr = <2>;
 			nvidia,mdio_addr = <0>;
 			phy-mode = "10gbase-r";
 			nvidia,pause_frames = <1>;
@@ -330,7 +335,8 @@
 					status = "okay";
 					compatible = "ethernet-phy-ieee802.3-c45";
 					reg = <0>;
-					nvidia,phy-rst-pdelay-msec = <150>;
+					phy-mode = "10gbase-r";
+					nvidia,phy-rst-pdelay-msec = <1000>;
 					nvidia,phy-rst-duration-usec = <221000>;
 					interrupt-parent = <&gpio_main>;
 					interrupts = <TEGRA264_MAIN_GPIO(W, 1) IRQ_TYPE_LEVEL_LOW>;
@@ -339,7 +345,7 @@
 		};
 
 		/* MGBE 2 */
-	        mgbe2: ethernet@a808d10000 {
+		mgbe2: ethernet@a808d10000 {
 			status = "okay";
 			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <3>;
@@ -349,7 +355,9 @@
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe2_0";
+			nvidia,force-restart-lane-bringup = <1>;
 
+			nvidia,mdc-cr = <2>;
 			nvidia,mdio_addr = <0>;
 			phy-mode = "10gbase-r";
 			nvidia,pause_frames = <1>;
@@ -368,7 +376,8 @@
 					status = "okay";
 					compatible = "ethernet-phy-ieee802.3-c45";
 					reg = <0>;
-					nvidia,phy-rst-pdelay-msec = <150>;
+					phy-mode = "10gbase-r";
+					nvidia,phy-rst-pdelay-msec = <1000>;
 					nvidia,phy-rst-duration-usec = <221000>;
 					interrupt-parent = <&gpio_aon>;
 					interrupts = <TEGRA264_AON_GPIO(DD, 3) IRQ_TYPE_LEVEL_LOW>;
@@ -377,7 +386,7 @@
 		};
 
 		/* MGBE 3 */
-	        mgbe3: ethernet@a808e10000 {
+		mgbe3: ethernet@a808e10000 {
 			status = "okay";
 			nvidia,macsec-enable = <0>;
 			nvidia,mac-addr-idx = <4>;
@@ -387,7 +396,9 @@
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 			nvidia,pps_op_ctrl = <8>;
 			nvidia,if-name = "mgbe3_0";
+			nvidia,force-restart-lane-bringup = <1>;
 
+			nvidia,mdc-cr = <2>;
 			nvidia,mdio_addr = <0>;
 			phy-mode = "10gbase-r";
 			nvidia,pause_frames = <1>;
@@ -406,7 +417,8 @@
 					status = "okay";
 					compatible = "ethernet-phy-ieee802.3-c45";
 					reg = <0>;
-					nvidia,phy-rst-pdelay-msec = <150>;
+					phy-mode = "10gbase-r";
+					nvidia,phy-rst-pdelay-msec = <1000>;
 					nvidia,phy-rst-duration-usec = <221000>;
 					//interrupt-parent = <&gpio_aon>;
 					//interrupts = <TEGRA264_AON_GPIO(DD, 7) IRQ_TYPE_LEVEL_LOW>;
