@@ -16,7 +16,7 @@
 #include "common/tegra186-p3509-0000-cvb.dtsi"
 #include "common/tegra186-p3509-0000-a00-fixed-regulator.dtsi"
 #include "common/tegra186-p3636-0001-a00-prod.dtsi"
-#include "common/tegra186-camera-lanai-rbpcv2-imx219.dtsi"
+//#include "common/tegra186-camera-lanai-rbpcv2-imx219.dtsi"
 
 /* plugin manager */
 #include "common/tegra186-super-module-e2614-p3509-0000-a00.dtsi"
@@ -52,11 +52,11 @@
 			#gpio-cells = <2>;
 		};
 	};
-
+/*
 	cam_i2cmux {
 		mux-gpios = <&tegra_aon_gpio TEGRA_AON_GPIO(EE, 2) GPIO_ACTIVE_HIGH>;
 	};
-
+*/
 	spi@3210000{
 		status = "okay";
 		nvidia,clock-always-on;
@@ -231,7 +231,7 @@
 			win-mask = <0x7>;
 		};
 		nvdisplay@15210000 {
-			status = "okay";
+			status = "disabled";
 			bootloader-status = "disabled";
 			nvidia,dc-or-node = "/host1x/sor";
 			nvidia,dc-connector = <&sor0>;
@@ -239,10 +239,10 @@
 			win-mask = <0x38>;
 		};
 		sor {
-			status = "okay";
+			status = "disabled";
 			nvidia,active-panel = <&sor0_dp_display>;
 			dp-display {
-				status = "okay";
+				status = "disabled";
 			};
 		};
 		sor1 {
