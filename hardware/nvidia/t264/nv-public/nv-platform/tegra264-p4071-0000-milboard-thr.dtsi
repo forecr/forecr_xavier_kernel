@@ -569,8 +569,14 @@
 
 		i2c@c610000 { // I2C4
 			status = "okay";
+
 			// EEPROM CAT24C04WI-GT3 - 0x56
+
 			// IMU & Temp Sensor 2536030320001 - 0x6B
+			imu@6b {
+				compatible  = "we,wsen-isds-2536030320001";
+				reg = <0x6b>;
+			};
 		};
 
 		i2c@810c630000 {
