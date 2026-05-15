@@ -186,7 +186,12 @@
 			};
 
 			// 0x56 - EEPROM CAT24C04WI-GT3
+
 			// 0x6B - 2536030320001 6-AXIS IMU & TEMP SENSOR
+			imu@6b {
+				compatible  = "we,wsen-isds-2536030320001";
+				reg = <0x6b>;
+			};
 		};
 
 		spi@3210000 {
