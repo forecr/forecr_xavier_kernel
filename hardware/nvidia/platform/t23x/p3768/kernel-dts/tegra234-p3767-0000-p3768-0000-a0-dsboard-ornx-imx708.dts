@@ -56,6 +56,8 @@
 	};
 
 	i2c@3160000 {
+		status = "okay";
+
 		tmp102: tmp102@49 { // Temperature Sensor - removed since rev-2.0
 			compatible = "ti,tmp102";
 			reg = <0x49>;
@@ -64,6 +66,8 @@
 	};
 
 	i2c@c250000 { // using since rev-2.0
+		status = "okay";
+
 		// 0x44 - INA700 Power Monitor
 		ina700@44 {
 			status = "okay";
@@ -79,6 +83,10 @@
 		};
 
 		// 0x6B - 2536030320001 6-AXIS IMU & TEMP SENSOR
+		imu@6b {
+			compatible  = "we,wsen-isds-2536030320001";
+			reg = <0x6b>;
+		};
 	};
 
 	spi@3210000{ // SPI0 with CS0 on expansion connector

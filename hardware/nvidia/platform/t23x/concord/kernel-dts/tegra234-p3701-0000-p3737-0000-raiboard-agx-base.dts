@@ -84,6 +84,8 @@
 	};
 
 	i2c@3190000 {
+		status = "okay";
+
 		pca6416_ioexpander: ioexpander@20 {
 			compatible = "ti,pca6416";
 			reg = <0x20>;
@@ -122,7 +124,14 @@
 	};
 
 	i2c@c250000 {
+		status = "okay";
+
 		// IMU & Temp Sensor 2536030320001 - 0x6b
+		imu@6b {
+			compatible  = "we,wsen-isds-2536030320001";
+			reg = <0x6b>;
+		};
+
 		// EEPROM CAT24C04WI-GT3 - 0x56
 	};
 
