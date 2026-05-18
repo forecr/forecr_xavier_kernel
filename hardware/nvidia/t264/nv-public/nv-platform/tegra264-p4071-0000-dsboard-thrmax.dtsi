@@ -7,6 +7,10 @@
 #include "tegra264-p4071-0080-p3834-0008-dcb-quad-hdmi.dtsi"
 
 / {
+	aliases {
+		rtc2 = &pcf8523_68;
+	};
+
 	bus@0 {
 		aconnect@9000000 {
 			status = "okay";
@@ -117,6 +121,22 @@
 			};
 		};
 
+		i2c@810c6c0000 { // since rev-1.1
+			status = "okay";
+
+			ina228@40 {
+				compatible = "ti,ina228";
+				status = "okay";
+				reg = <0x40>;
+			};
+
+			pcf8523_68: pcf8523@68 { // RTC
+				status = "okay";
+				compatible = "nxp,pcf8523";
+				reg = <0x68>;
+			};
+		};
+
 		i2c@810c680000 {
 			status = "okay";
 
@@ -201,13 +221,23 @@
 			};
 		};
 
-		spi@810c590000 {
+		spi@810c590000 { // SPI1
 			status = "okay";
-			spi@0 {
-				/* chip select 0 */
-				compatible = "tegra-spidev";
-				reg = <0x0>;
-				spi-max-frequency = <50000000>;
+			num-cs = <1>;
+			cs-gpios = <&gpio_main TEGRA264_MAIN_GPIO(K, 2) GPIO_ACTIVE_LOW>;
+			/delete-node/ spi@0;
+			/delete-node/ spi@1;
+
+			tpm@0 { // since rev-1.1
+				compatible = "tcg,tpm_tis-spi";
+				reg = <0>;
+				spi-max-frequency = <10000000>;
+				status = "okay";
+
+				controller-data {
+					nvidia,variable-length-transfer;
+					nvidia,rx-clk-tap-delay = <0x10>;
+				};
 			};
 		};
 
