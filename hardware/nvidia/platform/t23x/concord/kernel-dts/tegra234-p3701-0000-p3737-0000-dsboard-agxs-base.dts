@@ -84,7 +84,12 @@
 
 	i2c@c250000 {
 		status = "okay";
+
 		// IMU & Temp Sensor 2536030320001 - 0x6b
+		imu@6b {
+			compatible  = "we,wsen-isds-2536030320001";
+			reg = <0x6b>;
+		};
 	};
 
 	serial@3110000 { //for Serial-CH1 (/dev/ttyTHS1) communication
