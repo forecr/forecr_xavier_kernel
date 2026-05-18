@@ -152,8 +152,7 @@
 				};
 			};
 
-			/*
-			tca9535_22: tca9535@22 { // only rev-1.0
+			tca9535_22: tca9535@22 {
 				status = "okay";
 				compatible = "nxp,pca9535";
 				reg = <0x22>;
@@ -177,7 +176,6 @@
 				    "DIGITAL_IO_CH6",
 				    "DIGITAL_IO_CH7";
 			};
-			*/
 		};
 
 		/* i2c6 */
@@ -188,17 +186,6 @@
 		/* i2c10 */
 		i2c@810c6b0000 {
 			status = "okay";
-		};
-
-		/* i2c11 */
-		i2c@810c6c0000 { // I2C7 - since rev-1.1
-			status = "okay";
-
-			ina228@40 { // INA228 Power Monitor - since rev-1.1
-				status = "okay";
-				compatible = "ti,ina228";
-				reg = <0x40>;
-			};
 		};
 
 		/* PWM10 */
@@ -289,8 +276,7 @@
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 
 			phy-handle = <&mgbe0_aqr113c_phy>;
-			nvidia,phy-reset-gpio = <&gpio_main TEGRA264_MAIN_GPIO(Q, 1) GPIO_ACTIVE_HIGH>; // since rev-1.1
-			//nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(DD, 5) GPIO_ACTIVE_HIGH>; // only rev-1.0
+			nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(DD, 5) GPIO_ACTIVE_HIGH>;
 
 			/delete-node/ fixed-link;
 
@@ -372,8 +358,7 @@
 			nvidia,pcs-rx-eq-sw-ovrd = <1>;
 
 			phy-handle = <&mgbe2_aqr113c_phy>;
-			nvidia,phy-reset-gpio = <&gpio_main TEGRA264_MAIN_GPIO(P, 6) GPIO_ACTIVE_HIGH>; // since rev-1.1
-			//nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(EE, 0) GPIO_ACTIVE_HIGH>; // only rev-1.0
+			nvidia,phy-reset-gpio = <&gpio_aon TEGRA264_AON_GPIO(EE, 0) GPIO_ACTIVE_HIGH>;
 
 			/delete-node/ fixed-link;
 
@@ -431,10 +416,8 @@
 					phy-mode = "10gbase-r";
 					nvidia,phy-rst-pdelay-msec = <1000>;
 					nvidia,phy-rst-duration-usec = <221000>;
-					interrupt-parent = <&gpio_main>;
-					interrupts = <TEGRA264_MAIN_GPIO(P, 5) IRQ_TYPE_LEVEL_LOW>; // since rev-1.1
 					//interrupt-parent = <&gpio_aon>;
-					//interrupts = <TEGRA264_AON_GPIO(DD, 7) IRQ_TYPE_LEVEL_LOW>; // only rev-1.0
+					//interrupts = <TEGRA264_AON_GPIO(DD, 7) IRQ_TYPE_LEVEL_LOW>;
 				};
 			};
 		};
@@ -596,33 +579,8 @@
 			};
 		};
 
-		i2c@810c630000 { // I2C0 - since rev-1.1
+		i2c@810c630000 {
 			status = "okay";
-
-			tca9535_22: tca9535@22 { // since rev-1.1
-				status = "okay";
-				compatible = "nxp,pca9535";
-				reg = <0x22>;
-				gpio-controller;
-				#gpio-cells = <2>;
-				gpio-line-names =
-				    "SERIAL_CH0.RS485/RS232#",
-				    "SERIAL_CH0.TERM",
-				    "SERIAL_CH1.RS485/RS232#",
-				    "SERIAL_CH1.TERM",
-				    "SERIAL_CH2.RS485/RS232#",
-				    "SERIAL_CH2.TERM",
-				    "SERIAL_CH3.RS485/RS232#",
-				    "SERIAL_CH3.TERM",
-				    "DIGITAL_IO_CH0",
-				    "DIGITAL_IO_CH1",
-				    "DIGITAL_IO_CH2",
-				    "DIGITAL_IO_CH3",
-				    "DIGITAL_IO_CH4",
-				    "DIGITAL_IO_CH5",
-				    "DIGITAL_IO_CH6",
-				    "DIGITAL_IO_CH7";
-			};
 		};
 
 		i2c@810c650000 {
