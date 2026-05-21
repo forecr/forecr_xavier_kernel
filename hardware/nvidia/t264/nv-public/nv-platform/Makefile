@@ -31,6 +31,8 @@ dtb-y += tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax.dtb
 dtb-y += tegra264-p4071-0000+p3834-0008-nv-dsboard-thrmax-base.dtb
 dtb-y += tegra264-p4071-0000+p3834-0008-nv-milboard-thr.dtb
 dtb-y += tegra264-p4071-0000+p3834-0008-nv-milboard-thr-base.dtb
+dtb-y += tegra264-p4071-0000+p3834-0008-nv-milboard-thr-rev10.dtb
+dtb-y += tegra264-p4071-0000+p3834-0008-nv-milboard-thr-base-rev10.dtb
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))

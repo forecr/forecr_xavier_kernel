@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2024-2025, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+/dts-v1/;
+
+#include "tegra264-p4071-0000+p3834-0008-nv-milboard-thr-base-rev10.dts"
+#include "tegra264-p4071-0080-p3834-0008-rec-usb-host.dtsi"
+
+/ {
+	model = "Jetson AGX Thor for MILBOARD-THR rev-1.0";
+	compatible = "nvidia,p4071-0000+p3834-0008", "nvidia,p3834-0008", "nvidia,tegra264";
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+};
