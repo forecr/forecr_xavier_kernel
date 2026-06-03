@@ -1,0 +1,163 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+// SPDX-FileCopyrightText: Copyright (c) 2019-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+#include <nvgpu/gk20a.h>
+#include <nvgpu/static_analysis.h>
+
+#include <nvgpu/gr/config.h>
+#include <nvgpu/gr/fs_state.h>
+#include <nvgpu/gr/gr_instances.h>
+#include <nvgpu/grmgr.h>
+
+int nvgpu_gr_load_sm_id_config(struct gk20a *g, struct nvgpu_gr_config *config)
+{
+	int err;
+	u32 *tpc_sm_id;
+	u32 sm_id_size = g->ops.gr.init.get_sm_id_size();
+
+	nvgpu_log(g, gpu_dbg_fn | gpu_dbg_gr, " ");
+
+	tpc_sm_id = nvgpu_kcalloc(g, sm_id_size, sizeof(u32));
+	if (tpc_sm_id == NULL) {
+		return -ENOMEM;
+	}
+
+	err = g->ops.gr.init.sm_id_config(g, tpc_sm_id, config, NULL, false);
+
+	nvgpu_kfree(g, tpc_sm_id);
+
+	nvgpu_log(g, gpu_dbg_fn | gpu_dbg_gr, "done");
+	return err;
+}
+
+int nvgpu_gr_fs_state_init(struct gk20a *g, struct nvgpu_gr_config *config)
+{
+	u32 tpc_index, gpc_index;
+	u32 sm_id = 0;
+#ifdef CONFIG_NVGPU_NON_FUSA
+	u32 fuse_tpc_mask;
+	u32 max_tpc_cnt;
+	u32 cur_gr_instance = nvgpu_gr_get_cur_instance_id(g);
+	u32 gpc_phys_id;
+#endif
+	u32 gpc_cnt, tpc_cnt;
+	u32 num_sm;
+	int err = 0;
+
+	nvgpu_log(g, gpu_dbg_fn | gpu_dbg_gr, " ");
+
+	g->ops.gr.init.fs_state(g);
+
+	err = g->ops.gr.config.init_sm_id_table(g, config);
+	if (err != 0) {
+		return err;
+	}
+
+	num_sm = nvgpu_gr_config_get_no_of_sm(config);
+	nvgpu_assert(num_sm > 0U);
+
+	for (sm_id = 0; sm_id < num_sm; sm_id++) {
+		struct nvgpu_sm_info *sm_info =
+			nvgpu_gr_config_get_sm_info(config, sm_id);
+		nvgpu_assert(sm_info != NULL);
+		tpc_index = nvgpu_gr_config_get_sm_info_tpc_index(sm_info);
+		gpc_index = nvgpu_gr_config_get_sm_info_gpc_index(sm_info);
+
+		g->ops.gr.init.sm_id_numbering(g, gpc_index, tpc_index, sm_id,
+					       config, NULL, false);
+	}
+
+	if (nvgpu_support_gfx_with_numa(g) ||
+			nvgpu_grmgr_is_cur_instance_support_gfx(g)){
+		g->ops.gr.init.pd_tpc_per_gpc(g, config);
+	}
+
+#ifdef CONFIG_NVGPU_GRAPHICS
+	if (nvgpu_support_gfx_with_numa(g) ||
+			nvgpu_grmgr_is_cur_instance_support_gfx(g)) {
+		/* gr__setup_pd_mapping */
+		err = g->ops.gr.init.rop_mapping(g, config);
+		if (err != 0) {
+			nvgpu_err(g, "gr__setup_pd_mapping failed");
+			return err;
+		}
+
+		g->ops.gr.init.pd_skip_table_gpc(g, config);
+	}
+#endif
+
+	gpc_cnt = nvgpu_gr_config_get_gpc_count(config);
+	tpc_cnt = nvgpu_gr_config_get_tpc_count(config);
+
+#ifdef CONFIG_NVGPU_NON_FUSA
+	if (!nvgpu_is_enabled(g, NVGPU_SUPPORT_MIG) ||
+			nvgpu_grmgr_is_cur_instance_support_gfx(g)) {
+		/*
+		 * Fuse registers must be queried with physical gpc-id and not
+		 * the logical ones. For tu104 and before chips logical gpc-id
+		 * is same as physical gpc-id for non-floorswept config but for
+		 * chips after tu104 it may not be true.
+		 */
+		gpc_phys_id = nvgpu_grmgr_get_gr_gpc_phys_id(g,
+				cur_gr_instance, 0U);
+		fuse_tpc_mask = g->ops.gr.config.get_gpc_tpc_mask(g, config, gpc_phys_id);
+		max_tpc_cnt = nvgpu_gr_config_get_max_tpc_count(config);
+
+		if ((g->tpc_fs_mask_user != 0U) &&
+			(fuse_tpc_mask ==
+				nvgpu_safe_sub_u32(BIT32(max_tpc_cnt), U32(1)))) {
+			u32 val = g->tpc_fs_mask_user;
+			val &= nvgpu_safe_sub_u32(BIT32(max_tpc_cnt), U32(1));
+			tpc_cnt = (u32)hweight32(val);
+		}
+	}
+#endif
+
+	g->ops.gr.init.cwd_gpcs_tpcs_num(g, gpc_cnt, tpc_cnt);
+
+	if (g->ops.gr.init.gr_load_tpc_mask != NULL) {
+		g->ops.gr.init.gr_load_tpc_mask(g, config);
+	}
+
+	err = nvgpu_gr_load_sm_id_config(g, config);
+	if (err != 0) {
+		nvgpu_err(g, "load_smid_config failed err=%d", err);
+	}
+
+	nvgpu_log(g, gpu_dbg_fn | gpu_dbg_gr, "done");
+	return err;
+}
+
+int nvgpu_gr_init_sm_id_early_config(struct gk20a *g, struct nvgpu_gr_config *config)
+{
+	u32 tpc_index, gpc_index;
+	u32 sm_id = 0;
+	u32 num_sm;
+	int err = 0;
+
+	nvgpu_log(g, gpu_dbg_fn | gpu_dbg_gr, " ");
+
+	err = g->ops.gr.config.init_sm_id_table(g, config);
+	if (err != 0) {
+		return err;
+	}
+
+	num_sm = nvgpu_gr_config_get_no_of_sm(config);
+	nvgpu_assert(num_sm > 0U);
+
+	for (sm_id = 0; sm_id < num_sm; sm_id++) {
+		struct nvgpu_sm_info *sm_info =
+			nvgpu_gr_config_get_sm_info(config, sm_id);
+		if (sm_info == NULL) {
+			nvgpu_err(g, "nvgpu_gr_config_get_sm_info failed");
+			return -EINVAL;
+		}
+		tpc_index = nvgpu_gr_config_get_sm_info_tpc_index(sm_info);
+		gpc_index = nvgpu_gr_config_get_sm_info_gpc_index(sm_info);
+
+		g->ops.gr.init.sm_id_numbering(g, gpc_index, tpc_index, sm_id,
+					       config, NULL, false);
+	}
+
+	return err;
+}

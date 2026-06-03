@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: GPL-2.0-only OR MIT
+# SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+/**
+ * @page nvgpu-rm_interface_specification Interface Specification
+ *
+ * nvgpu-rm driver uses an operating system device control interface to expose APIs. On Linux, nvgpu-rm provides device files with commands (custom ids) as an interface.
+ *
+ * <table>
+ *   <caption>nvgpu-rm interface details</caption>
+ *   <tr> <th> Device File, Permissions                                               </th> <th> Command                                                 </th><th> Description                                   </th></tr>
+ *   <tr> <td valign="middle">/dev/nvgpu/igpu0/channel, rw</td>           <td> @ref NVGPURM_LINUX_IOCTL_CHANNEL                              </td><td> Ioctls description for channel node.                 </td></tr>
+ *   <tr> <td valign="middle">/dev/nvgpu/igpu0/tsg, rw</td>               <td> @ref NVGPURM_LINUX_IOCTL_TSG                                  </td><td> Ioctls description for tsg node.                     </td></tr>
+ *   <tr> <td valign="middle">/dev/nvgpu/igpu0/as, rw</td>                <td> @ref NVGPURM_LINUX_IOCTL_AS                                   </td><td> Ioctls description for address space node.           </td></tr>
+ *   <tr> <td valign="middle">/dev/nvgpu/igpu0/ctrl, rw</td>              <td> @ref NVGPURM_LINUX_IOCTL_CTRL                                 </td><td> Ioctls description for control node.                 </td></tr>
+  * </table>
+ */

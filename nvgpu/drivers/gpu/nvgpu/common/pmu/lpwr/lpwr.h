@@ -1,0 +1,14 @@
+/* SPDX-License-Identifier: GPL-2.0-only OR MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2016-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ */
+#ifndef NVGPU_LPWR_LPWR_H
+#define NVGPU_LPWR_LPWR_H
+
+#include <nvgpu/bitops.h>
+
+#define MAX_SWASR_MCLK_FREQ_WITHOUT_WR_TRAINING_MAXWELL_MHZ   540U
+
+#define NV_PMU_PG_PARAM_MCLK_CHANGE_MS_SWASR_ENABLED		BIT32(0x1)
+#define NV_PMU_PG_PARAM_MCLK_CHANGE_GDDR5_WR_TRAINING_ENABLED	BIT32(0x3)
+
+#endif /* NVGPU_LPWR_LPWR_H */
