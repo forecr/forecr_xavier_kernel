@@ -17,6 +17,7 @@ properties:
     oneOf:
       - enum:
           - invensense,iam20680
+          - invensense,iam20680ht
           - invensense,icm20608
           - invensense,icm20609
           - invensense,icm20689
