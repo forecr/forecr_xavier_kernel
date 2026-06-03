@@ -308,7 +308,7 @@
 					freq_hz = <30>;
 					duty_cycle = <25>;
 					offset_ms = <0>;
-					gpio_pinmux = <&gpio_aon TEGRA264_AON_GPIO(DD, 7) GPIO_ACTIVE_LOW>;
+					//gpio_pinmux = <&gpio_aon TEGRA264_AON_GPIO(DD, 7) GPIO_ACTIVE_LOW>;
 					status = "okay";
 				};
 			};
