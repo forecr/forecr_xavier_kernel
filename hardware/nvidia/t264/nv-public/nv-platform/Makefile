@@ -23,8 +23,12 @@ dtb-y += tegra264-p4071-0008+p3834-0008-nv-safety.dtb
 
 dtb-y += tegra264-bpmp-3834-0000-4071-xxxx.dtb
 dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-25gbe.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-dsboard-thrmax.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-milboard-thr.dtb
 dtb-y += tegra264-bpmp-3834-0008-4071-xxxx.dtb
 dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-25gbe.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-dsboard-thrmax.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-milboard-thr.dtb
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))

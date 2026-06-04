@@ -1,0 +1,37 @@
+/dts-v1/;
+
+#include "tegra264-bpmp-3834-0000-4071-xxxx.dts"
+
+/ {
+	pcie {
+		pcie@1 { // PCIe C1 RP
+			status = "okay";
+		};
+
+		pcie@2 { // PCIe C2 RP - PCIe C2 EP
+			status = "okay";
+		};
+
+		pcie@3 { // PCIe C3
+			status = "okay";
+		};
+
+		pcie@4 { // PCIe C4 RP - PCIe C4 EP
+			status = "disabled";
+		};
+
+		pcie@5 { // PCIe C5 RP - PCIe C5 EP
+			status = "okay";
+		};
+	};
+
+	uphy {
+		status = "okay";
+		uphy0-config = <6>;      // Configure UPHY0-Lane6-7 for C3 to enable PCIe
+		uphy1-config = <8>;      // Configure UPHY1-Lane0-3 for C5 to enable MGbE
+		mgbe0-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+		mgbe1-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+		mgbe2-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+		mgbe3-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+	};
+};
