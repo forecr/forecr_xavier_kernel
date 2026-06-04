@@ -139,7 +139,7 @@ static int s5p_mfc_close_inst_cmd_v6(struct s5p_mfc_ctx *ctx)
 }
 
 static int s5p_mfc_cmd_host2risc_v6_args(struct s5p_mfc_dev *dev, int cmd,
-				    const struct s5p_mfc_cmd_args *ignored)
+				    struct s5p_mfc_cmd_args *ignored)
 {
 	return s5p_mfc_cmd_host2risc_v6(dev, cmd);
 }
