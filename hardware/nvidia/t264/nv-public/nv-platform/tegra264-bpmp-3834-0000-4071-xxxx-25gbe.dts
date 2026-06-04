@@ -1,0 +1,15 @@
+/dts-v1/;
+
+#include "tegra264-bpmp-3834-0000-4071-xxxx.dts"
+
+/ {
+	uphy {
+		status = "okay";
+		uphy0-config = <7>;      // Configure UPHY0-Lane6-7 for UFS
+		uphy1-config = <8>;      // Configure UPHY1-Lane0-3 for C5 to enable mgbe
+		mgbe0-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+		mgbe1-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+		mgbe2-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+		mgbe3-speed = <3>;       /* 0 for 2.5G, 1 for 5G, 2 for 10G, 3 for 25G */
+	};
+};
