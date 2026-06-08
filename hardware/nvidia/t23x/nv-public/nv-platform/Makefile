@@ -59,6 +59,15 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax.dtb
 
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-raiboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-raiboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-raiboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-raiboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-raiboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-raiboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-raiboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-raiboard-agx.dtb
+
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
 endif
