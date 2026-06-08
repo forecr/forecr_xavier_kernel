@@ -32,6 +32,33 @@ dtb-y += tegra234-p3971-0000+p3701-0000-nv.dtb
 dtb-y += tegra234-p3971-0000+p3701-0008-nv.dtb
 dtb-y += tegra234-p3971-0000+p3701-0008-nv-safety.dtb
 
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agx.dtb
+
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agxs-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agxs.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxs-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxs.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxs-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxs.dtb
+
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agxmax-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-dsboard-agxmax.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax.dtb
+
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
 endif
