@@ -103,6 +103,23 @@ dtb-y += tegra234-p3768-0000+p3767-0003-nv-super-milboard-ornx.dtb
 dtb-y += tegra234-p3768-0000+p3767-0004-nv-milboard-ornx.dtb
 dtb-y += tegra234-p3768-0000+p3767-0004-nv-super-milboard-ornx.dtb
 
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-super-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-super-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-super-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-super-raiboard-ornx-base.dtb
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0000-nv-super-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0001-nv-super-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0003-nv-super-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-raiboard-ornx.dtb
+dtb-y += tegra234-p3768-0000+p3767-0004-nv-super-raiboard-ornx.dtb
+
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
 endif
