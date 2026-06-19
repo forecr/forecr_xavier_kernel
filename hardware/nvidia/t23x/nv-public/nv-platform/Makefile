@@ -40,6 +40,8 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agx.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agx.dtb
 
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs.dtb
@@ -49,6 +51,8 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxs-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxs.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxs-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxs.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxs-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxs.dtb
 
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax.dtb
@@ -58,6 +62,8 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxmax-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxmax.dtb
 
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-milboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-milboard-agxmax.dtb
@@ -67,6 +73,8 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-milboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0005-nv-milboard-agxmax.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-milboard-agxmax-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-milboard-agxmax.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-milboard-agxmax-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-milboard-agxmax.dtb
 
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-milboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-milboard-agx.dtb
@@ -76,6 +84,8 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-milboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0005-nv-milboard-agx.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-milboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-milboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-milboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-milboard-agx.dtb
 
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-raiboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0000-nv-raiboard-agx.dtb
@@ -85,6 +95,8 @@ dtb-y += tegra234-p3737-0000+p3701-0005-nv-raiboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0005-nv-raiboard-agx.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-raiboard-agx-base.dtb
 dtb-y += tegra234-p3737-0000+p3701-0008-nv-raiboard-agx.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-raiboard-agx-base.dtb
+dtb-y += tegra234-p3737-0000+p3701-0004-nv-super-raiboard-agx.dtb
 
 dtb-y += tegra234-p3768-0000+p3767-0000-nv-dsboard-nx2.dtb
 dtb-y += tegra234-p3768-0000+p3767-0000-nv-super-dsboard-nx2.dtb

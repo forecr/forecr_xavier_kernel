@@ -55,9 +55,11 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agx_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-dsboard-agx.dtb $HOME/kernel_out_dsboard_agx_orin/0_tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-dynamic.dtbo $HOME/kernel_out_dsboard_agx_orin/
@@ -79,9 +81,11 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-dsboard-agxmax.dtb $HOME/kernel_out_dsboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-dynamic.dtbo $HOME/kernel_out_dsboard_agxmax_orin/
@@ -123,9 +127,11 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxs_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-dsboard-agxs.dtb $HOME/kernel_out_dsboard_agxs_orin/0_tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-dynamic.dtbo $HOME/kernel_out_dsboard_agxs_orin/
@@ -167,9 +173,11 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_agx_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-raiboard-agx.dtb $HOME/kernel_out_raiboard_agx_orin/0_tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-dynamic.dtbo $HOME/kernel_out_raiboard_agx_orin/
@@ -211,9 +219,11 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_orin/tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_orin/tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_orin/tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-milboard-agx.dtb $HOME/kernel_out_milboard_agx_orin/0_tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-milboard-agx.dtb $HOME/kernel_out_milboard_agx_orin/0_tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-milboard-agx.dtb $HOME/kernel_out_milboard_agx_orin/0_tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-milboard-agx.dtb $HOME/kernel_out_milboard_agx_orin/0_tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-dynamic.dtbo $HOME/kernel_out_milboard_agx_orin/
@@ -255,9 +265,11 @@
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_agxmax_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-milboard-agxmax-base.dtb $HOME/kernel_out_milboard_agxmax_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-milboard-agxmax-base.dtb $HOME/kernel_out_milboard_agxmax_orin/tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-milboard-agxmax-base.dtb $HOME/kernel_out_milboard_agxmax_orin/tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-milboard-agxmax-base.dtb $HOME/kernel_out_milboard_agxmax_orin/tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-milboard-agxmax.dtb $HOME/kernel_out_milboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0000-nv.dtb
+	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-super-milboard-agxmax.dtb $HOME/kernel_out_milboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0004-nv-super.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0004-nv-milboard-agxmax.dtb $HOME/kernel_out_milboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0004-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0005-nv-milboard-agxmax.dtb $HOME/kernel_out_milboard_agxmax_orin/0_tegra234-p3737-0000+p3701-0005-nv.dtb
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-dynamic.dtbo $HOME/kernel_out_milboard_agxmax_orin/
