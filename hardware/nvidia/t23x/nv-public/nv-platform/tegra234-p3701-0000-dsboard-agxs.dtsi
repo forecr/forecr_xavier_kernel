@@ -122,8 +122,9 @@
 					interrupt-parent = <&gpio>;
 					interrupts = <TEGRA234_MAIN_GPIO(G, 4) IRQ_TYPE_LEVEL_LOW>;
 					marvell,copper-mode;
-					/* Setup LED[2] as interrupt pin (active low) */
-					marvell,reg-init = <0x03 0x12 0x7fff 0x880>;
+					/* Setup LED[2] as interrupt pin (active low), LED[0] as LINK, LED[1] as ACT */
+					marvell,reg-init = <0x03 0x12 0x7fff 0x880>, /* LED[2] = interrupt */
+					                   <0x03 0x10 0xff00 0x0030>; /* LED[0]=LINK only(0x0), LED[1]=ACT(0x3) */
 				};
 			};
 		};
