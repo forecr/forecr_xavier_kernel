@@ -24,6 +24,19 @@
 #include <linux/spi/spi.h>
 #include <linux/tegra_prod.h>
 
+static bool spi_tegra114_debug_cs;
+module_param(spi_tegra114_debug_cs, bool, 0644);
+MODULE_PARM_DESC(spi_tegra114_debug_cs,
+		 "Enable debug logging for SPI chip select behavior (default: false)");
+
+#define spi_cs_dbg(dev, fmt, ...)					\
+	do {								\
+		if (spi_tegra114_debug_cs)				\
+			dev_info(dev, "[DEBUG-SPI-CS] " fmt, ##__VA_ARGS__); \
+		else							\
+			dev_dbg(dev, "[DEBUG-SPI-CS] " fmt, ##__VA_ARGS__); \
+	} while (0)
+
 #define SPI_COMMAND1				0x000
 #define SPI_BIT_LENGTH(x)			(((x) & 0x1f) << 0)
 #define SPI_PACKED				(1 << 5)
@@ -811,7 +824,7 @@ static int tegra_spi_set_hw_cs_timing(struct spi_device *spi)
 static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
 					struct spi_transfer *t,
 					bool is_first_of_msg,
-					bool is_single_xfer)
+					bool use_hw_cs)
 {
 	struct tegra_spi_data *tspi = spi_controller_get_devdata(spi->controller);
 	struct tegra_spi_client_data *cdata = spi->controller_data;
@@ -860,21 +873,44 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
 			command1 &= ~SPI_BIDIROE;
 
 		if (tspi->cs_control) {
-			if (tspi->cs_control != spi)
+			if (tspi->cs_control != spi) {
 				tegra_spi_writel(tspi, command1, SPI_COMMAND1);
-			tspi->cs_control = NULL;
-		} else
+				tspi->cs_control = NULL;
+			} else {
+				/*
+				 * Same device wants CS kept asserted across
+				 * messages (cs_change=1 on previous last xfer).
+				 * Preserve the SW CS bits from the running
+				 * command1_reg so the register write in
+				 * start_transfer_one doesn't glitch CS.
+				 */
+				command1 = (command1 &
+					    ~(SPI_CS_SW_HW | SPI_CS_SW_VAL)) |
+					   (tspi->command1_reg &
+					    (SPI_CS_SW_HW | SPI_CS_SW_VAL));
+				tspi->use_hw_based_cs = false;
+				tspi->cs_control = NULL;
+				spi_cs_dbg(tspi->dev,
+					   "setup_xfer: cs_control same dev, preserving CS bits cmd1=0x%08x\n",
+					   command1);
+				goto skip_cs_setup;
+			}
+		} else {
 			if (SPI_MODE_VAL(command1) !=
 				SPI_MODE_VAL(tspi->def_command1_reg))
 				tegra_spi_writel(tspi, command1, SPI_COMMAND1);
+		}
 
 		/* GPIO based chip select control */
 		if (spi_get_csgpiod(spi, 0))
 			gpiod_set_value(spi_get_csgpiod(spi, 0), 1);
 
-		if (is_single_xfer && !(t->cs_change)) {
+		if (use_hw_cs) {
 			tspi->use_hw_based_cs = true;
 			command1 &= ~(SPI_CS_SW_HW | SPI_CS_SW_VAL);
+			spi_cs_dbg(tspi->dev,
+				   "setup_xfer: using HW CS, cmd1=0x%08x\n",
+				   command1);
 		} else {
 			tspi->use_hw_based_cs = false;
 			command1 |= SPI_CS_SW_HW;
@@ -882,7 +918,12 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
 				command1 |= SPI_CS_SW_VAL;
 			else
 				command1 &= ~SPI_CS_SW_VAL;
+			spi_cs_dbg(tspi->dev,
+				   "setup_xfer: using SW CS, cmd1=0x%08x cs_high=%d\n",
+				   command1,
+				   !!(spi->mode & SPI_CS_HIGH));
 		}
+skip_cs_setup:
 
 		if (!tspi->prod_list) {
 			if (tspi->last_used_cs != spi_get_chipselect(spi, 0)) {
@@ -1045,6 +1086,10 @@ static void tegra_spi_transfer_end(struct spi_device *spi)
 	struct tegra_spi_data *tspi = spi_controller_get_devdata(spi->controller);
 	int cs_val = (spi->mode & SPI_CS_HIGH) ? 0 : 1;
 
+	spi_cs_dbg(tspi->dev,
+		   "transfer_end: hw_cs=%d cs_val=%d cmd1=0x%08x\n",
+		   tspi->use_hw_based_cs, cs_val, tspi->command1_reg);
+
 	/* GPIO based chip select control */
 	if (spi_get_csgpiod(spi, 0))
 		gpiod_set_value(spi_get_csgpiod(spi, 0), 0);
@@ -1083,19 +1128,64 @@ static int tegra_spi_transfer_one_message(struct spi_controller *host,
 	struct spi_device *spi = msg->spi;
 	int ret;
 	bool skip = false;
-	int single_xfer;
+	bool use_hw_cs = false;
 
 	msg->status = 0;
 	msg->actual_length = 0;
 
-	single_xfer = list_is_singular(&msg->transfers);
+	/*
+	 * Decide HW vs SW chip-select mode for this message.
+	 *
+	 * If the previous message left CS asserted for this same device
+	 * (cs_control != NULL), we must stay in SW CS mode.  Switching to
+	 * HW CS would momentarily release CS while the hardware waits for
+	 * the next packet start, breaking protocols like TPM TIS-SPI that
+	 * hold CS across multiple spi_message submissions under bus lock.
+	 *
+	 * Otherwise, for single-transfer messages use HW CS when cs_change
+	 * is not set.  For multi-transfer messages use HW CS when no
+	 * intermediate transfer requests CS toggling.
+	 */
+	if (tspi->cs_control == spi) {
+		use_hw_cs = false;
+		spi_cs_dbg(tspi->dev,
+			   "msg: cs_control held for this dev, forcing SW CS\n");
+	} else if (list_is_singular(&msg->transfers)) {
+		xfer = list_first_entry(&msg->transfers,
+					struct spi_transfer, transfer_list);
+		use_hw_cs = !xfer->cs_change;
+		spi_cs_dbg(tspi->dev,
+			   "msg: single xfer, cs_change=%d -> use_hw_cs=%d\n",
+			   xfer->cs_change, use_hw_cs);
+	} else {
+		int xfer_idx = 0;
+
+		use_hw_cs = true;
+		list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+			spi_cs_dbg(tspi->dev,
+				   "msg: scan xfer[%d] len=%u cs_change=%d is_last=%d\n",
+				   xfer_idx, xfer->len, xfer->cs_change,
+				   list_is_last(&xfer->transfer_list,
+						&msg->transfers));
+			if (!list_is_last(&xfer->transfer_list,
+					  &msg->transfers) &&
+			    xfer->cs_change) {
+				use_hw_cs = false;
+				break;
+			}
+			xfer_idx++;
+		}
+		spi_cs_dbg(tspi->dev,
+			   "msg: multi xfer -> use_hw_cs=%d\n", use_hw_cs);
+	}
+
 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
 		u32 cmd1;
 
 		reinit_completion(&tspi->xfer_completion);
 
 		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg,
-						    single_xfer);
+						    use_hw_cs);
 
 		if (!xfer->len) {
 			ret = 0;
@@ -1141,19 +1231,31 @@ static int tegra_spi_transfer_one_message(struct spi_controller *host,
 
 complete_xfer:
 		if (ret < 0 || skip) {
+			spi_cs_dbg(tspi->dev,
+				   "xfer done: error/skip, ending transfer\n");
 			tegra_spi_transfer_end(spi);
 			spi_transfer_delay_exec(xfer);
 			goto exit;
 		} else if (list_is_last(&xfer->transfer_list,
 					&msg->transfers)) {
-			if (xfer->cs_change)
+			if (xfer->cs_change) {
+				spi_cs_dbg(tspi->dev,
+					   "xfer done: last, cs_change=1, keeping CS\n");
 				tspi->cs_control = spi;
-			else {
+			} else {
+				spi_cs_dbg(tspi->dev,
+					   "xfer done: last, cs_change=0, ending transfer\n");
 				tegra_spi_transfer_end(spi);
 				spi_transfer_delay_exec(xfer);
 			}
 		} else if (xfer->cs_change) {
+			spi_cs_dbg(tspi->dev,
+				   "xfer done: intermediate, cs_change=1, toggling CS\n");
 			tegra_spi_transfer_end(spi);
+			spi_transfer_delay_exec(xfer);
+		} else {
+			spi_cs_dbg(tspi->dev,
+				   "xfer done: intermediate, cs_change=0, CS stays asserted\n");
 			spi_transfer_delay_exec(xfer);
 		}
 
