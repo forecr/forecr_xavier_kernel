@@ -74,6 +74,7 @@ dtbo-y += tegra234-p3767-camera-dsboard-ornx-imx477.dtbo
 dtbo-y += tegra234-p3767-camera-dsboard-ornxs-basler.dtbo
 dtbo-y += tegra234-p3767-camera-dsboard-ornxs-imx219.dtbo
 dtbo-y += tegra234-p3767-camera-dsboard-ornxs-imx477.dtbo
+dtbo-y += dsaddon-mipi-camera-jp6.dtbo
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
