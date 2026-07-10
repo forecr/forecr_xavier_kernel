@@ -747,7 +747,7 @@
 		 */
 		modules {
 			module0 {
-				badge = "dsboard_ornxs_front";
+				badge = "dsboard_ornxs_front_RBP194";
 				position = "front";
 				orientation = "1";
 				drivernode0 {
@@ -760,7 +760,7 @@
 				};
 			};
 			module1 {
-				badge = "dsboard_ornxs_rear";
+				badge = "dsboard_ornxs_rear_RBP194";
 				position = "rear";
 				orientation = "1";
 				drivernode0 {
