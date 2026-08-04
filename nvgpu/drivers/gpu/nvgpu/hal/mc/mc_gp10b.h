@@ -1,0 +1,41 @@
+/* SPDX-License-Identifier: GPL-2.0-only OR MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2014-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ */
+
+#ifndef NVGPU_MC_GP10B_H
+#define NVGPU_MC_GP10B_H
+
+#include <nvgpu/types.h>
+
+#ifdef CONFIG_NVGPU_NON_FUSA
+#define MAX_MC_INTR_REGS	2U
+#endif
+
+struct gk20a;
+struct nvgpu_device;
+enum nvgpu_fifo_engine;
+
+void mc_gp10b_intr_mask(struct gk20a *g);
+void mc_gp10b_intr_stall_unit_config(struct gk20a *g, u32 unit, bool enable);
+void mc_gp10b_intr_nonstall_unit_config(struct gk20a *g, u32 unit, bool enable);
+void mc_gp10b_isr_stall_secondary_1(struct gk20a *g, u32 mc_intr_0);
+void mc_gp10b_isr_stall_secondary_0(struct gk20a *g, u32 mc_intr_0);
+void mc_gp10b_isr_stall_engine(struct gk20a *g, const struct nvgpu_device *dev);
+void mc_gp10b_isr_stall(struct gk20a *g);
+bool mc_gp10b_is_intr1_pending(struct gk20a *g, u32 unit, u32 mc_intr_1);
+
+#ifdef CONFIG_NVGPU_NON_FUSA
+void mc_gp10b_log_pending_intrs(struct gk20a *g);
+#endif
+u32  mc_gp10b_intr_stall(struct gk20a *g);
+void mc_gp10b_intr_stall_pause(struct gk20a *g);
+void mc_gp10b_intr_stall_resume(struct gk20a *g);
+u32  mc_gp10b_intr_nonstall(struct gk20a *g);
+void mc_gp10b_intr_nonstall_pause(struct gk20a *g);
+void mc_gp10b_intr_nonstall_resume(struct gk20a *g);
+
+/** @cond DOXYGEN_SHOULD_SKIP_THIS */
+void mc_gp10b_ltc_isr(struct gk20a *g);
+/** @endcond DOXYGEN_SHOULD_SKIP_THIS */
+
+#endif /* NVGPU_MC_GP10B_H */

@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+// SPDX-FileCopyrightText: Copyright (c) 2011-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+#include <nvgpu/channel.h>
+#include <nvgpu/log.h>
+#include <nvgpu/atomic.h>
+#include <nvgpu/io.h>
+#include <nvgpu/barrier.h>
+#include <nvgpu/bug.h>
+#include <nvgpu/gk20a.h>
+#include <nvgpu/string.h>
+
+#include "hal/fifo/pbdma_gm20b.h"
+
+#include "channel_gk20a.h"
+
+#include <nvgpu/hw/gk20a/hw_ccsr_gk20a.h>
+
+void gk20a_channel_enable(struct gk20a *g, u32 runlist_id, u32 chid)
+{
+	(void)runlist_id;
+	nvgpu_writel(g, ccsr_channel_r(chid),
+		gk20a_readl(g, ccsr_channel_r(chid)) |
+		ccsr_channel_enable_set_true_f());
+}
+
+void gk20a_channel_disable(struct gk20a *g, u32 runlist_id, u32 chid)
+{
+	(void)runlist_id;
+	nvgpu_writel(g, ccsr_channel_r(chid),
+		gk20a_readl(g,
+			ccsr_channel_r(chid)) |
+			ccsr_channel_enable_clr_true_f());
+}
+
+/* ccsr_channel_status_v is four bits long */
+static const char * const ccsr_chan_status_str[] = {
+	"idle",
+	"pending",
+	"pending_ctx_reload",
+	"pending_acquire",
+	"pending_acq_ctx_reload",
+	"on_pbdma",
+	"on_pbdma_and_eng",
+	"on_eng",
+	"on_eng_pending_acquire",
+	"on_eng_pending",
+	"on_pbdma_ctx_reload",
+	"on_pbdma_and_eng_ctx_reload",
+	"on_eng_ctx_reload",
+	"on_eng_pending_ctx_reload",
+	"on_eng_pending_acq_ctx_reload",
+	"N/A",
+};
+
+void gk20a_channel_read_state(struct gk20a *g, u32 runlist_id, u32 chid,
+		struct nvgpu_channel_hw_state *state)
+{
+	u32 reg = nvgpu_readl(g, ccsr_channel_r(chid));
+	u32 status_v = ccsr_channel_status_v(reg);
+
+	(void)runlist_id;
+
+	state->next = ccsr_channel_next_v(reg) == ccsr_channel_next_true_v();
+	state->enabled = ccsr_channel_enable_v(reg) ==
+			    ccsr_channel_enable_in_use_v();
+	state->ctx_reload =
+		(status_v ==
+			ccsr_channel_status_pending_ctx_reload_v()) ||
+		(status_v ==
+			ccsr_channel_status_pending_acq_ctx_reload_v()) ||
+		(status_v ==
+			ccsr_channel_status_on_pbdma_ctx_reload_v()) ||
+		(status_v ==
+			ccsr_channel_status_on_pbdma_and_eng_ctx_reload_v()) ||
+		(status_v ==
+			ccsr_channel_status_on_eng_ctx_reload_v()) ||
+		(status_v ==
+			ccsr_channel_status_on_eng_pending_ctx_reload_v()) ||
+		(status_v ==
+			ccsr_channel_status_on_eng_pending_acq_ctx_reload_v());
+	state->busy = ccsr_channel_busy_v(reg) == ccsr_channel_busy_true_v();
+	state->pending_acquire =
+		(status_v == ccsr_channel_status_pending_acquire_v()) ||
+		(status_v == ccsr_channel_status_on_eng_pending_acquire_v());
+
+	/* Copy at the most NVGPU_CHANNEL_STATUS_STRING_LENGTH characters */
+	(void) strncpy(state->status_string, ccsr_chan_status_str[status_v],
+		NVGPU_CHANNEL_STATUS_STRING_LENGTH - 1U);
+
+	state->status_string[NVGPU_CHANNEL_STATUS_STRING_LENGTH - 1U] = '\0';
+}
