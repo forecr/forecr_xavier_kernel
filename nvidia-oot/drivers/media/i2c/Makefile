@@ -21,6 +21,7 @@ ifndef CONFIG_TEGRA_SYSTEM_TYPE_ACK
 obj-m += max96712.o
 
 ifdef CONFIG_MEDIA_SUPPORT
+obj-m += adv7280-m.o
 obj-m += ar1335_common.o
 obj-m += lt6911uxc.o
 obj-m += nv_imx185.o

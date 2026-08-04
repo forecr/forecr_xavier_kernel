@@ -1,0 +1,883 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/tegra264-clk.h>
+#include <dt-bindings/gpio/tegra264-gpio.h>
+//#include <dt-bindings/media/camera.h>
+
+#define JETSON_COMPATIBLE	"nvidia,p3971-0089+p3834-0008", "nvidia,p3971-0050+p3834-0005", "nvidia,p3971-0080+p3834-0008", "nvidia,p3834-0008", "nvidia,tegra264"
+
+#define CAMERA_I2C_MUX_BUS(x) (0x28 + x)
+
+/* Shared reset line for the ADV7280 decoders on the AVDCDR daughter card
+ * (named CAM0_RST_L on every other camera overlay in this repo; on
+ * dsboard-thrmax nothing else claims this pin, so it floats/reads low by
+ * default). Hog it high so it's released from reset at boot instead of
+ * left low. Note: on target, driving it high alone did not make the
+ * decoders ack on I2C -- there is likely a separate power-enable step
+ * still missing for this card, so this hog is necessary but may not be
+ * sufficient by itself. */
+#define CAM0_RST_L	TEGRA264_MAIN_GPIO(V, 2)
+
+// Test commands:
+// $ v4l2-ctl --set-ctrl preferred_stride=1472
+// $ gst-launch-1.0 v4l2src device=/dev/video0 ! video/x-raw,format=UYVY,width=720,height=480,framerate=30/1 ! xvimagesink
+
+
+/ {
+	overlay-name = "DSADDON-AVDCDR-AGX-6CH";
+	jetson-header-name = "Jetson AGX CSI Connector";
+	compatible = JETSON_COMPATIBLE;
+	
+	fragment-camera@0 {
+		target-path = "/";
+		__overlay__ {
+			
+			tegra-capture-vi  {
+				num-channels = <6>;
+				ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+					port@0 {
+						status = "okay";
+						reg = <0>;
+						cam_vi_in0: endpoint {
+							status = "okay";
+							port-index = <0>;
+							bus-width = <1>;
+							remote-endpoint = <&cam_csi_out0>;
+						};
+					};
+					port@1 {
+						status = "okay";
+						reg = <1>;
+						cam_vi_in1: endpoint {
+							status = "okay";
+							port-index = <1>;
+							bus-width = <1>;
+							remote-endpoint = <&cam_csi_out1>;
+						};
+					};
+					port@2 {
+						status = "okay";
+						reg = <2>;
+						cam_vi_in2: endpoint {
+							status = "okay";
+							port-index = <2>;
+							bus-width = <1>;
+							remote-endpoint = <&cam_csi_out2>;
+						};
+					};
+					port@3 {
+						status = "okay";
+						reg = <3>;
+						cam_vi_in3: endpoint {
+							status = "okay";
+							port-index = <3>;
+							bus-width = <1>;
+							remote-endpoint = <&cam_csi_out3>;
+						};
+					};
+					port@4 {
+						status = "okay";
+						reg = <4>;
+						cam_vi_in4: endpoint {
+							status = "okay";
+							port-index = <4>;
+							bus-width = <1>;
+							remote-endpoint = <&cam_csi_out4>;
+						};
+					};
+					port@5 {
+						status = "okay";
+						reg = <5>;
+						cam_vi_in5: endpoint {
+							status = "okay";
+							port-index = <5>;
+							bus-width = <1>;
+							remote-endpoint = <&cam_csi_out5>;
+						};
+					};
+				};
+			};
+			
+			bus@0 {
+				host1x@8181200000 {
+					nvcsi@8188000000 {
+						num-channels = <6>;
+						#address-cells = <1>;
+						#size-cells = <0>;
+						status = "okay";
+						channel@0 {
+							status = "okay";
+							reg = <0>;
+							discontinuous_clk = "no";
+							
+							ports {
+								#address-cells = <1>;
+								#size-cells = <0>;
+								port@0 {
+									status = "okay";
+									reg = <0>;
+									cam_csi_in0: endpoint@0 {
+										status = "okay";
+										port-index = <0>;
+										bus-width = <1>;
+										remote-endpoint = <&adv7280_out_0>;
+									};
+								};
+								port@1 {
+									status = "okay";
+									reg = <1>;
+									cam_csi_out0: endpoint@1 {
+										status = "okay";
+										bus-width = <1>;
+										remote-endpoint = <&cam_vi_in0>;
+									};
+								};
+							};
+						};
+						channel@1 {
+							status = "okay";
+							reg = <1>;
+							discontinuous_clk = "no";
+							
+							ports {
+								#address-cells = <1>;
+								#size-cells = <0>;
+								port@0 {
+									status = "okay";
+									reg = <0>;
+									cam_csi_in1: endpoint@2 {
+										status = "okay";
+										port-index = <1>;
+										bus-width = <1>;
+										remote-endpoint = <&adv7280_out_1>;
+									};
+								};
+								port@1 {
+									status = "okay";
+									reg = <1>;
+									cam_csi_out1: endpoint@3 {
+										status = "okay";
+										bus-width = <1>;
+										remote-endpoint = <&cam_vi_in1>;
+									};
+								};
+							};
+						};
+						channel@2 {
+							status = "okay";
+							reg = <2>;
+							discontinuous_clk = "no";
+							
+							ports {
+								#address-cells = <1>;
+								#size-cells = <0>;
+								port@0 {
+									status = "okay";
+									reg = <0>;
+									cam_csi_in2: endpoint@4 {
+										status = "okay";
+										port-index = <2>;
+										bus-width = <1>;
+										remote-endpoint = <&adv7280_out_2>;
+									};
+								};
+								port@1 {
+									status = "okay";
+									reg = <1>;
+									cam_csi_out2: endpoint@5 {
+										status = "okay";
+										bus-width = <1>;
+										remote-endpoint = <&cam_vi_in2>;
+									};
+								};
+							};
+						};
+						channel@3 {
+							status = "okay";
+							reg = <3>;
+							discontinuous_clk = "no";
+							
+							ports {
+								#address-cells = <1>;
+								#size-cells = <0>;
+								port@0 {
+									status = "okay";
+									reg = <0>;
+									cam_csi_in3: endpoint@6 {
+										status = "okay";
+										port-index = <3>;
+										bus-width = <1>;
+										remote-endpoint = <&adv7280_out_3>;
+									};
+								};
+								port@1 {
+									status = "okay";
+									reg = <1>;
+									cam_csi_out3: endpoint@7 {
+										status = "okay";
+										bus-width = <1>;
+										remote-endpoint = <&cam_vi_in3>;
+									};
+								};
+							};
+						};
+						channel@4 {
+							status = "okay";
+							reg = <4>;
+							discontinuous_clk = "no";
+							
+							ports {
+								#address-cells = <1>;
+								#size-cells = <0>;
+								port@0 {
+									status = "okay";
+									reg = <0>;
+									cam_csi_in4: endpoint@8 {
+										status = "okay";
+										port-index = <4>;
+										bus-width = <1>;
+										remote-endpoint = <&adv7280_out_4>;
+									};
+								};
+								port@1 {
+									status = "okay";
+									reg = <1>;
+									cam_csi_out4: endpoint@9 {
+										status = "okay";
+										bus-width = <1>;
+										remote-endpoint = <&cam_vi_in4>;
+									};
+								};
+							};
+						};
+						channel@5 {
+							status = "okay";
+							reg = <5>;
+							discontinuous_clk = "no";
+							
+							ports {
+								#address-cells = <1>;
+								#size-cells = <0>;
+								port@0 {
+									status = "okay";
+									reg = <0>;
+									cam_csi_in5: endpoint@10 {
+										status = "okay";
+										port-index = <6>;
+										bus-width = <1>;
+										remote-endpoint = <&adv7280_out_5>;
+									};
+								};
+								port@1 {
+									status = "okay";
+									reg = <1>;
+									cam_csi_out5: endpoint@11 {
+										status = "okay";
+										bus-width = <1>;
+										remote-endpoint = <&cam_vi_in5>;
+									};
+								};
+							};
+						};
+					};
+				};
+				
+				gpio@810c300000 {
+					avdcdr-cam0-rst {
+						gpio-hog;
+						output-high;
+						gpios = <CAM0_RST_L 0>;
+						label = "avdcdr-cam0-rst";
+					};
+				};
+
+				i2c@810c640000 {
+					status = "okay";
+					#address-cells = <1>;
+					#size-cells = <0>;
+					clock-frequency = <100000>;
+					tca9548_72: tca9548@72 {
+						status = "okay";
+						compatible = "nxp,pca9548";
+						reg = <0x72>;
+						#address-cells = <1>;
+						#size-cells = <0>;
+						i2c-mux-idle-disconnect;
+						idle-state = <1>;
+						skip_mux_detect = "yes";
+						vcc_lp = "vcc";
+						
+						
+						
+						i2c@0 {
+							status = "okay";
+							reg = <0>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+							adv7280m_a: composite-in@21 {
+								status = "okay";
+								compatible = "forecr,adv7280-m";
+								reg = <0x21>;
+								devnode = "video0";
+								physical_w = "4.713";
+								physical_h = "3.494";
+								sensor_model = "adv7280-m";
+								use_sensor_mode_id = "false";
+								analog_input_select = <0>;
+								active_w = "720";
+								active_h = "576";
+								mclk = "extperiph1";
+								refclk_hz = <28636363>;
+
+								embedded_metadata_height = "0";
+
+								/* Required by nvidia-oot's sensor_common.c mode
+								 * parsing (adv7280-m.c is camera_common-based,
+								 * unlike the generic adv7180.c). pix_clk_hz is
+								 * the standard ITU-R BT.656 SD digitized-video
+								 * pixel clock (27MHz), not the MIPI CSI-2
+								 * link/bit clock -- the framework derives that
+								 * internally as
+								 * pix_clk_hz * csi_pixel_bit_depth / num_lanes,
+								 * which comes out to 432 Mbps here, matching
+								 * the ADV7280-M datasheet's stated nominal
+								 * CSI-2 output data rate exactly. */
+								mode0 {
+									num_lanes = "1";
+									mclk_khz = "28636";
+									tegra_sinterface = "serial_a";
+									phy_mode = "DPHY";
+									discontinuous_clk = "no";
+									dpcm_enable = "false";
+									cil_settletime = "0";
+									csi_pixel_bit_depth = "16";
+									pixel_t = "yuv_uyvy16";
+
+									active_w = "720";
+									active_h = "576";
+									readout_orientation = "0";
+									line_length = "864";
+									inherent_gain = "1";
+									pix_clk_hz = "27000000";
+
+									embedded_metadata_height = "0";
+								};
+
+								ports {
+									#address-cells = <1>;
+									#size-cells = <0>;
+									
+									port@0 {
+										reg = <0>;
+										adv7280_out_0: endpoint {
+											status = "okay";
+											port-index = <0>;
+											bus-width = <1>;
+											remote-endpoint = <&cam_csi_in0>;
+										};
+									};
+								};
+							};
+						};
+						
+						i2c@1 {
+							status = "okay";
+							reg = <1>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+							adv7280m_b: composite-in@21 {
+								status = "okay";
+								compatible = "forecr,adv7280-m";
+								reg = <0x21>;
+								devnode = "video1";
+								physical_w = "4.713";
+								physical_h = "3.494";
+								sensor_model = "adv7280-m";
+								use_sensor_mode_id = "false";
+								analog_input_select = <1>;
+								active_w = "720";
+								active_h = "576";
+								mclk = "extperiph1";
+								refclk_hz = <28636363>;
+
+								embedded_metadata_height = "0";
+
+								/* Required by nvidia-oot's sensor_common.c mode
+								 * parsing (adv7280-m.c is camera_common-based,
+								 * unlike the generic adv7180.c). pix_clk_hz is
+								 * the standard ITU-R BT.656 SD digitized-video
+								 * pixel clock (27MHz), not the MIPI CSI-2
+								 * link/bit clock -- the framework derives that
+								 * internally as
+								 * pix_clk_hz * csi_pixel_bit_depth / num_lanes,
+								 * which comes out to 432 Mbps here, matching
+								 * the ADV7280-M datasheet's stated nominal
+								 * CSI-2 output data rate exactly. */
+								mode0 {
+									num_lanes = "1";
+									mclk_khz = "28636";
+									tegra_sinterface = "serial_b";
+									phy_mode = "DPHY";
+									discontinuous_clk = "no";
+									dpcm_enable = "false";
+									cil_settletime = "0";
+									csi_pixel_bit_depth = "16";
+									pixel_t = "yuv_uyvy16";
+
+									active_w = "720";
+									active_h = "576";
+									readout_orientation = "0";
+									line_length = "864";
+									inherent_gain = "1";
+									pix_clk_hz = "27000000";
+
+									embedded_metadata_height = "0";
+								};
+
+								ports {
+									#address-cells = <1>;
+									#size-cells = <0>;
+									
+									port@0 {
+										reg = <0>;
+										adv7280_out_1: endpoint {
+											status = "okay";
+											port-index = <1>;
+											bus-width = <1>;
+											remote-endpoint = <&cam_csi_in1>;
+										};
+									};
+								};
+							};
+						};
+						
+						i2c@2 {
+							status = "okay";
+							reg = <2>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+							adv7280m_c: composite-in@21 {
+								status = "okay";
+								compatible = "forecr,adv7280-m";
+								reg = <0x21>;
+								devnode = "video2";
+								physical_w = "4.713";
+								physical_h = "3.494";
+								sensor_model = "adv7280-m";
+								use_sensor_mode_id = "false";
+								analog_input_select = <2>;
+								adv,force-bt656-4;
+								active_w = "720";
+								active_h = "576";
+								mclk = "extperiph1";
+								refclk_hz = <28636363>;
+
+								embedded_metadata_height = "0";
+
+								/* Required by nvidia-oot's sensor_common.c mode
+								 * parsing (adv7280-m.c is camera_common-based,
+								 * unlike the generic adv7180.c). pix_clk_hz is
+								 * the standard ITU-R BT.656 SD digitized-video
+								 * pixel clock (27MHz), not the MIPI CSI-2
+								 * link/bit clock -- the framework derives that
+								 * internally as
+								 * pix_clk_hz * csi_pixel_bit_depth / num_lanes,
+								 * which comes out to 432 Mbps here, matching
+								 * the ADV7280-M datasheet's stated nominal
+								 * CSI-2 output data rate exactly. */
+								mode0 {
+									num_lanes = "1";
+									mclk_khz = "28636";
+									tegra_sinterface = "serial_c";
+									phy_mode = "DPHY";
+									discontinuous_clk = "no";
+									dpcm_enable = "false";
+									cil_settletime = "0";
+									csi_pixel_bit_depth = "16";
+									pixel_t = "yuv_uyvy16";
+
+									active_w = "720";
+									active_h = "576";
+									readout_orientation = "0";
+									line_length = "864";
+									inherent_gain = "1";
+									pix_clk_hz = "27000000";
+
+									embedded_metadata_height = "0";
+								};
+
+								ports {
+									#address-cells = <1>;
+									#size-cells = <0>;
+									
+									port@0 {
+										reg = <0>;
+										adv7280_out_2: endpoint {
+											status = "okay";
+											port-index = <2>;
+											bus-width = <1>;
+											remote-endpoint = <&cam_csi_in2>;
+										};
+									};
+								};
+							};
+						};
+						
+						i2c@3 {
+							status = "okay";
+							reg = <3>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+							adv7280m_d: composite-in@21 {
+								status = "okay";
+								compatible = "forecr,adv7280-m";
+								reg = <0x21>;
+								devnode = "video3";
+								physical_w = "4.713";
+								physical_h = "3.494";
+								sensor_model = "adv7280-m";
+								use_sensor_mode_id = "false";
+								analog_input_select = <4>;
+								active_w = "720";
+								active_h = "576";
+								mclk = "extperiph1";
+								refclk_hz = <28636363>;
+
+								embedded_metadata_height = "0";
+
+								/* Required by nvidia-oot's sensor_common.c mode
+								 * parsing (adv7280-m.c is camera_common-based,
+								 * unlike the generic adv7180.c). pix_clk_hz is
+								 * the standard ITU-R BT.656 SD digitized-video
+								 * pixel clock (27MHz), not the MIPI CSI-2
+								 * link/bit clock -- the framework derives that
+								 * internally as
+								 * pix_clk_hz * csi_pixel_bit_depth / num_lanes,
+								 * which comes out to 432 Mbps here, matching
+								 * the ADV7280-M datasheet's stated nominal
+								 * CSI-2 output data rate exactly. */
+								mode0 {
+									num_lanes = "1";
+									mclk_khz = "28636";
+									tegra_sinterface = "serial_e";
+									phy_mode = "DPHY";
+									discontinuous_clk = "no";
+									dpcm_enable = "false";
+									cil_settletime = "0";
+									csi_pixel_bit_depth = "16";
+									pixel_t = "yuv_uyvy16";
+
+									active_w = "720";
+									active_h = "576";
+									readout_orientation = "0";
+									line_length = "864";
+									inherent_gain = "1";
+									pix_clk_hz = "27000000";
+
+									embedded_metadata_height = "0";
+								};
+
+								ports {
+									#address-cells = <1>;
+									#size-cells = <0>;
+									
+									port@0 {
+										reg = <0>;
+										adv7280_out_4: endpoint {
+											status = "okay";
+											port-index = <4>;
+											bus-width = <1>;
+											remote-endpoint = <&cam_csi_in4>;
+										};
+									};
+								};
+							};
+						};
+						i2c@4 {
+							status = "okay";
+							reg = <4>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+							adv7280m_e: composite-in@20 {
+								status = "okay";
+								compatible = "forecr,adv7280-m";
+								reg = <0x20>;
+								devnode = "video4";
+								physical_w = "4.713";
+								physical_h = "3.494";
+								sensor_model = "adv7280-m";
+								use_sensor_mode_id = "false";
+								analog_input_select = <5>;
+								active_w = "720";
+								active_h = "576";
+								mclk = "extperiph1";
+								refclk_hz = <28636363>;
+
+								embedded_metadata_height = "0";
+
+								/* Required by nvidia-oot's sensor_common.c mode
+								 * parsing (adv7280-m.c is camera_common-based,
+								 * unlike the generic adv7180.c). pix_clk_hz is
+								 * the standard ITU-R BT.656 SD digitized-video
+								 * pixel clock (27MHz), not the MIPI CSI-2
+								 * link/bit clock -- the framework derives that
+								 * internally as
+								 * pix_clk_hz * csi_pixel_bit_depth / num_lanes,
+								 * which comes out to 432 Mbps here, matching
+								 * the ADV7280-M datasheet's stated nominal
+								 * CSI-2 output data rate exactly. */
+								mode0 {
+									num_lanes = "1";
+									mclk_khz = "28636";
+									tegra_sinterface = "serial_f";
+									phy_mode = "DPHY";
+									discontinuous_clk = "no";
+									dpcm_enable = "false";
+									cil_settletime = "0";
+									csi_pixel_bit_depth = "16";
+									pixel_t = "yuv_uyvy16";
+
+									active_w = "720";
+									active_h = "576";
+									readout_orientation = "0";
+									line_length = "864";
+									inherent_gain = "1";
+									pix_clk_hz = "27000000";
+
+									embedded_metadata_height = "0";
+								};
+
+								ports {
+									#address-cells = <1>;
+									#size-cells = <0>;
+									
+									port@0 {
+										reg = <0>;
+										adv7280_out_5: endpoint {
+											status = "okay";
+											port-index = <5>;
+											bus-width = <1>;
+											remote-endpoint = <&cam_csi_in5>;
+										};
+									};
+								};
+							};
+						};
+						i2c5: i2c@5 {
+							status = "okay";
+							reg = <5>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+							adv7280m_f: composite-in@21 {
+								status = "okay";
+								compatible = "forecr,adv7280-m";
+								reg = <0x21>;
+								devnode = "video5";
+								physical_w = "4.713";
+								physical_h = "3.494";
+								sensor_model = "adv7280-m";
+								use_sensor_mode_id = "false";
+								analog_input_select = <3>;
+								active_w = "720";
+								active_h = "576";
+								mclk = "extperiph1";
+								refclk_hz = <28636363>;
+
+								embedded_metadata_height = "0";
+
+								/* Required by nvidia-oot's sensor_common.c mode
+								 * parsing (adv7280-m.c is camera_common-based,
+								 * unlike the generic adv7180.c). pix_clk_hz is
+								 * the standard ITU-R BT.656 SD digitized-video
+								 * pixel clock (27MHz), not the MIPI CSI-2
+								 * link/bit clock -- the framework derives that
+								 * internally as
+								 * pix_clk_hz * csi_pixel_bit_depth / num_lanes,
+								 * which comes out to 432 Mbps here, matching
+								 * the ADV7280-M datasheet's stated nominal
+								 * CSI-2 output data rate exactly. */
+								mode0 {
+									num_lanes = "1";
+									mclk_khz = "28636";
+									tegra_sinterface = "serial_d";
+									phy_mode = "DPHY";
+									discontinuous_clk = "no";
+									dpcm_enable = "false";
+									cil_settletime = "0";
+									csi_pixel_bit_depth = "16";
+									pixel_t = "yuv_uyvy16";
+
+									active_w = "720";
+									active_h = "576";
+									readout_orientation = "0";
+									line_length = "864";
+									inherent_gain = "1";
+									pix_clk_hz = "27000000";
+
+									embedded_metadata_height = "0";
+								};
+
+								ports {
+									#address-cells = <1>;
+									#size-cells = <0>;
+									
+									port@0 {
+										reg = <0>;
+										adv7280_out_3: endpoint {
+											status = "okay";
+											port-index = <3>;
+											bus-width = <1>;
+											remote-endpoint = <&cam_csi_in3>;
+										};
+									};
+								};
+							};
+						};
+						i2c6: i2c@6 {
+							status = "disabled";
+							reg = <6>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+						};
+						i2c7: i2c@7 {
+							status = "disabled";
+							reg = <7>;
+							i2c-mux,deselect-on-exit;
+							#address-cells = <1>;
+							#size-cells = <0>;
+						};
+					};
+				};
+			};
+			
+			tegra-camera-platform {
+				compatible = "nvidia, tegra-camera-platform";
+				/**
+				* Physical settings to calculate max ISO BW
+				*
+				* num_csi_lanes = <>;
+				* Total number of CSI lanes when all cameras are active
+				*
+				* max_lane_speed = <>;
+				* Max lane speed in Kbit/s
+				*
+				* min_bits_per_pixel = <>;
+				* Min bits per pixel
+				*
+				* vi_peak_byte_per_pixel = <>;
+				* Max byte per pixel for the VI ISO case
+				*
+				* vi_bw_margin_pct = <>;
+				* Vi bandwidth margin in percentage
+				*
+				* max_pixel_rate = <>;
+				* Max pixel rate in Kpixel/s for the ISP ISO case
+				*
+				* isp_peak_byte_per_pixel = <>;
+				* Max byte per pixel for the ISP ISO case
+				*
+				* isp_bw_margin_pct = <>;
+				* Isp bandwidth margin in percentage
+				*/
+				num_csi_lanes = <6>;
+				max_lane_speed = <4000000>;
+				min_bits_per_pixel = <10>;
+				vi_peak_byte_per_pixel = <2>;
+				vi_bw_margin_pct = <25>;
+				isp_peak_byte_per_pixel = <5>;
+				isp_bw_margin_pct = <25>;
+				
+				/**
+				* The general guideline for naming badge_info contains 3 parts, and is as follows,
+				* The first part is the camera_board_id for the module; if the module is in a FFD
+				* platform, then use the platform name for this part.
+				* The second part contains the position of the module, ex. "rear" or "front".
+				* The third part contains the last 6 characters of a part number which is found
+				* in the module's specsheet from the vendor.
+				*/
+				modules {
+					module0 {
+						status = "okay";
+						badge = "dsaddon_avdcdr_ain1";
+						position = "highest";
+						orientation = "1";
+						drivernode0 {
+							status = "okay";
+							pcl_id = "v4l2_sensor";
+							sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@810c640000/tca9548@72/i2c@0/composite-in@21";
+						};
+					};
+					module1 {
+						status = "okay";
+						badge = "dsaddon_avdcdr_ain2";
+						position = "high";
+						orientation = "1";
+						drivernode0 {
+							status = "okay";
+							pcl_id = "v4l2_sensor";
+							sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@810c640000/tca9548@72/i2c@1/composite-in@21";
+						};
+					};
+					module2 {
+						status = "okay";
+						badge = "dsaddon_avdcdr_ain3";
+						position = "high_middle";
+						orientation = "1";
+						drivernode0 {
+							status = "okay";
+							pcl_id = "v4l2_sensor";
+							sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@810c640000/tca9548@72/i2c@2/composite-in@21";
+						};
+					};
+					module3 {
+						status = "okay";
+						badge = "dsaddon_avdcdr_ain5";
+						position = "low";
+						orientation = "1";
+						drivernode0 {
+							status = "okay";
+							pcl_id = "v4l2_sensor";
+							sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@810c640000/tca9548@72/i2c@3/composite-in@21";
+						};
+					};
+					module4 {
+						status = "okay";
+						badge = "dsaddon_avdcdr_ain6";
+						position = "lowest";
+						orientation = "1";
+						drivernode0 {
+							status = "okay";
+							pcl_id = "v4l2_sensor";
+							sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@810c640000/tca9548@72/i2c@4/composite-in@21";
+						};
+					};
+					module5 {
+						status = "okay";
+						badge = "dsaddon_avdcdr_ain4";
+						position = "low_middle";
+						orientation = "1";
+						drivernode0 {
+							status = "okay";
+							pcl_id = "v4l2_sensor";
+							sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@810c640000/tca9548@72/i2c@5/composite-in@21";
+						};
+					};
+				};
+			};
+			
+		};//__overlay__ ends
+	};//fragment-camera@0 ends
+};

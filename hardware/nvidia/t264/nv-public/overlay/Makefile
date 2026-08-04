@@ -13,6 +13,7 @@ dtbo-y += tegra264-ftpm.dtbo
 dtbo-y += tegra264-p3971-camera-dual-hawk-ar0234-p3762-overlay.dtbo
 dtbo-y += tegra264-p3971-camera-dual-imx274-overlay.dtbo
 dtbo-y += tegra264-p3971-camera-eCAM130A-overlay.dtbo
+dtbo-y += tegra264-p3971-camera-avdcdr-overlay.dtbo
 dtbo-y += tegra264-p3971-camera-e3331-overlay.dtbo
 dtbo-y += tegra264-p3971-camera-e3333-overlay.dtbo
 dtbo-y += tegra264-p3971-camera-imx185-overlay.dtbo
