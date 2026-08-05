@@ -10,8 +10,11 @@ dtbo-y :=
 makefile-path := t264/nv-public/nv-platform
 
 dtb-y += tegra264-bpmp-3834-0000-4071-xxxx.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-25gbe.dtb
 dtb-y += tegra264-bpmp-3834-0008-4071-0008.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-0008-25gbe.dtb
 dtb-y += tegra264-bpmp-3834-0008-4071-xxxx.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-25gbe.dtb
 
 dtb-y += tegra264-p3971-0050+p3834-0005-qspi-nvme.dtb
 dtb-y += tegra264-p3971-0080+p3834-0008-qspi-nvme.dtb
