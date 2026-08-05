@@ -151,9 +151,9 @@ config SERIAL_8250_EXAR
 	depends on SERIAL_8250 && PCI
 	default SERIAL_8250
 	help
-	  This builds support for XR17C1xx, XR17V3xx and some Commtech
-	  422x PCIe serial cards that are not covered by the more generic
-	  SERIAL_8250_PCI option.
+	  This builds support for XR17C1xx, XR17V3xx, XR17V25x, XR17V8354,
+	  XR17D15x and some Commtech 422x PCIe serial cards that are not
+	  covered by the more generic SERIAL_8250_PCI option.
 
 config SERIAL_8250_HP300
 	tristate
