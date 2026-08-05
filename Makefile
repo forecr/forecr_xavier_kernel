@@ -192,3 +192,13 @@ conftest-clean:
 	@echo   "================================================================================"
 	rm -fr $(NVIDIA_CONFTEST)
 
+extra-objs-clean:
+	@echo   "================================================================================"
+	@echo   "make $(MAKECMDGOALS) - rest of object files ..."
+	@echo   "================================================================================"
+	bash -c "find nvethernetrm/ -name *.o -exec rm -f {} \;"
+	bash -c "find nvethernetrm/ -name *.o.cmd -exec rm -f {} \;"
+	rm -f unifiedgpudisp/kernel-open/nv_compiler.h
+	rm -f unifiedgpudisp/kernel-open/nvidia-modeset/nv-modeset-kernel.o_binary
+	rm -f unifiedgpudisp/kernel-open/nvidia/nv-kernel.o_binary
+
