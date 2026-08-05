@@ -9,13 +9,6 @@ dtb-y :=
 dtbo-y :=
 makefile-path := t264/nv-public/nv-platform
 
-dtb-y += tegra264-bpmp-3834-0000-4071-xxxx.dtb
-dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-25gbe.dtb
-dtb-y += tegra264-bpmp-3834-0008-4071-0008.dtb
-dtb-y += tegra264-bpmp-3834-0008-4071-0008-25gbe.dtb
-dtb-y += tegra264-bpmp-3834-0008-4071-xxxx.dtb
-dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-25gbe.dtb
-
 dtb-y += tegra264-p3971-0050+p3834-0005-qspi-nvme.dtb
 dtb-y += tegra264-p3971-0080+p3834-0008-qspi-nvme.dtb
 dtb-y += tegra264-p3971-0089+p3834-0008-qspi-ufs.dtb
@@ -31,6 +24,19 @@ dtbo-y += tegra264-p3971-0000+p3834-xxxx-dynamic.dtbo
 dtbo-y += tegra264-p4071-0000+p3834-xxxx-dynamic.dtbo
 dtbo-y += tegra264-android.dtbo
 dtbo-y += tegra264-ufs-provision.dtbo
+
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-25gbe.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-dsboard-thrmax.dtb
+dtb-y += tegra264-bpmp-3834-0000-4071-xxxx-milboard-thr.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-0008.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-0008-25gbe.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-0008-dsboard-thrmax.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-0008-milboard-thr.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-25gbe.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-dsboard-thrmax.dtb
+dtb-y += tegra264-bpmp-3834-0008-4071-xxxx-milboard-thr.dtb
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
