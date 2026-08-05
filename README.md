@@ -2,6 +2,8 @@
 Forecr Linux Kernel source files for Jetson Xavier, Xavier NX, Orin, Orin NX and Orin Nano based products
 
 ## Available JetPack Branches
+### IGX-SW
+- [IGX-SW 2.0](https://github.com/forecr/forecr_xavier_kernel/tree/IGX-SW_2.0)
 ### JetPack-7.x
 - [JetPack-7.2](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-7.2)
 - [JetPack-7.1](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-7.1)
