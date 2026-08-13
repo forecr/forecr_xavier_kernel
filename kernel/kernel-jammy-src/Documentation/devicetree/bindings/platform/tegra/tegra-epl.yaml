@@ -1,0 +1,94 @@
+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/platform/tegra/tegra-epl.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: Device tree binding for NVIDIA Tegra EPL
+
+maintainers:
+  - Rahul Bedarkar <rabedarkar@nvidia.com>
+
+description: |
+   The tegra-epl driver provides interface for reporting software detected errors
+   to Functional Safety Island (FSI) via HSP mailbox or MISC EC registers.
+
+properties:
+  compatible:
+    enum:
+      - nvidia,tegra234-epl-client
+
+  mboxes:
+    maxItems: 1
+    description: |
+       Specifies TX mailbox.
+
+  mbox-names:
+    maxItems: 1
+    description: |
+       Specifies the name for TX mailbox. It should be "epl-tx".
+
+  reg:
+    minItems: 11
+    maxItems: 11
+    description: |
+       Address and size pairs of MISC EC error and assert registers followed by
+       address and size of mission error status register.
+
+  client-misc-sw-generic-err0:
+    description: |
+       Device driver's name for reporting errors via MISCREG_MISC_EC_ERR0_SW_ERR_CODE_0.
+
+  client-misc-sw-generic-err1:
+    description: |
+       Device driver's name for reporting errors via MISCREG_MISC_EC_ERR1_SW_ERR_CODE_0.
+
+  client-misc-sw-generic-err2:
+    description: |
+       Device driver's name for reporting errors via MISCREG_MISC_EC_ERR2_SW_ERR_CODE_0.
+
+  client-misc-sw-generic-err3:
+    description: |
+       Device driver's name for reporting errors via MISCREG_MISC_EC_ERR3_SW_ERR_CODE_0.
+
+  client-misc-sw-generic-err4:
+    description: |
+       Device driver's name for reporting errors via MISCREG_MISC_EC_ERR4_SW_ERR_CODE_0.
+
+required:
+  - compatible
+  - mboxes
+  - mbox-names
+  - reg
+
+additionalProperties: false
+
+examples:
+  - |
+    #include <dt-bindings/mailbox/tegra186-hsp.h>
+
+    soc {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        epl_client@110000 {
+            compatible = "nvidia,tegra234-epl-client";
+            mboxes =
+                <&hsp_top2 (TEGRA_HSP_MBOX_TYPE_SM | TEGRA_HSP_MBOX_TYPE_SM_128BIT) TEGRA_HSP_SM_RX(1)>;
+            mbox-names = "epl-tx";
+            reg = <0x0 0x00110000 0x0 0x4>,
+                  <0x0 0x00110004 0x0 0x4>,
+                  <0x0 0x00120000 0x0 0x4>,
+                  <0x0 0x00120004 0x0 0x4>,
+                  <0x0 0x00130000 0x0 0x4>,
+                  <0x0 0x00130004 0x0 0x4>,
+                  <0x0 0x00140000 0x0 0x4>,
+                  <0x0 0x00140004 0x0 0x4>,
+                  <0x0 0x00150000 0x0 0x4>,
+                  <0x0 0x00150004 0x0 0x4>,
+                  <0x0 0x024e0038 0x0 0x4>;
+            client-misc-sw-generic-err0 = "fsicom_client";
+            client-misc-sw-generic-err4 = "gk20e";
+        };
+
+     };
+...
