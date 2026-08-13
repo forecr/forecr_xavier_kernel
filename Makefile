@@ -226,3 +226,19 @@ conftest-clean:
 	@echo   "make $(MAKECMDGOALS) - conftest ..."
 	@echo   "================================================================================"
 	rm -fr $(NVIDIA_CONFTEST)
+
+extra-objs-clean:
+	@echo   "================================================================================"
+	@echo   "make $(MAKECMDGOALS) - rest of object files ..."
+	@echo   "================================================================================"
+	bash -c "find nvethernetrm/ -name *.o -exec rm -f {} \;"
+	bash -c "find nvethernetrm/ -name *.o.cmd -exec rm -f {} \;"
+	bash -c "find nvgpu/ -name *.o -exec rm -f {} \;"
+	bash -c "find nvgpu/ -name *.o.cmd -exec rm -f {} \;"
+	rm -f $(NVIDIA_DISPLAY_SRC_DIR)/kernel-open/nv_compiler.h
+	rm -f $(NVIDIA_DISPLAY_SRC_DIR)/kernel-open/nvidia-modeset/nv-modeset-kernel.o_binary
+	rm -f $(NVIDIA_DISPLAY_SRC_DIR)/kernel-open/nvidia/nv-kernel.o_binary
+	rm -f $(NVIDIA_GPU_DISPLAY_SRC_DIR)/kernel-open/nv_compiler.h
+	rm -f $(NVIDIA_GPU_DISPLAY_SRC_DIR)/kernel-open/nvidia-modeset/nv-modeset-kernel.o_binary
+	rm -f $(NVIDIA_GPU_DISPLAY_SRC_DIR)/kernel-open/nvidia/nv-kernel.o_binary
+
