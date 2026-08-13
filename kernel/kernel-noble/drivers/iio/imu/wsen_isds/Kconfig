@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Würth Elektronik WSEN-ISDS IMU driver configuration
+#
+
+config WSEN_ISDS
+	tristate "Wurth Elektronik WSEN-ISDS 6-Axis IMU"
+	depends on IIO
+	select REGMAP
+	help
+	  Say Y or M here to build support for the Wurth Elektronik
+	  WSEN-ISDS (order code 2536030320001) inertial measurement unit.
+
+	  This device provides 3-axis acceleration, 3-axis angular rate
+	  (gyroscope) and an internal temperature sensor via I2C or SPI.
+
+	  To compile this driver as a module, choose M here. The module
+	  will be called wsen_isds.
+
+config WSEN_ISDS_I2C
+	tristate "WSEN-ISDS I2C support"
+	depends on WSEN_ISDS && I2C
+	select REGMAP_I2C
+	help
+	  Say Y or M here to enable I2C interface support for the
+	  WSEN-ISDS IMU driver.
