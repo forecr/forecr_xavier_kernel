@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/dts-v1/;
+
+#include "tegra234-p3768-0000+p3767-0000.dts"
+#include "tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi"
+#include "tegra234-p3768-0000-dsboard-nx2.dtsi"
+
+/ {
+	compatible = "nvidia,p3768-0000+p3767-0001", "nvidia,p3767-0001", "nvidia,tegra234";
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Orin NX 8GB for DSBOARD-NX2";
+};

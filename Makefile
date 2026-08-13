@@ -13,7 +13,7 @@ ifneq ($(words $(subst :, ,$(MAKEFILE_DIR))), 1)
 $(error source directory cannot contain spaces or colons)
 endif
 
-NPROC ?= $(shell nproc)
+NPROC ?= $(($(shell nproc)-1))
 
 ifeq ("$(wildcard $(KERNEL_OUTPUT))","")
 $(error kernel headers/output directory "$(KERNEL_OUTPUT)" does not exist!)
@@ -182,6 +182,7 @@ nvidia-dtbs:
 	$(MAKE) -f $(NVIDIA_DTS_BUILD_SCRIPTS)/scripts/Makefile.build \
 		obj=$(NVIDIA_DTS_BUILD_SCRIPTS)/generic-dts \
 		dtbs
+	@echo   "DTBs saved in: $(NVIDIA_DTS_BUILD_SCRIPTS)/generic-dts/dtbs/"
 	@echo   "================================================================================"
 	@echo   "DTBs compiled successfully."
 	@echo   "================================================================================"

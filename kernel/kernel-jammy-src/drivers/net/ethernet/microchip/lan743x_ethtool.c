@@ -685,7 +685,10 @@ static int lan743x_ethtool_get_ts_info(struct net_device *netdev,
 			    BIT(HWTSTAMP_TX_ON) |
 			    BIT(HWTSTAMP_TX_ONESTEP_SYNC);
 	ts_info->rx_filters = BIT(HWTSTAMP_FILTER_NONE) |
-			      BIT(HWTSTAMP_FILTER_ALL);
+			      BIT(HWTSTAMP_FILTER_ALL) |
+			      BIT(HWTSTAMP_FILTER_PTP_V2_EVENT) |
+			      BIT(HWTSTAMP_FILTER_PTP_V2_SYNC) |
+			      BIT(HWTSTAMP_FILTER_PTP_V2_DELAY_REQ);
 	return 0;
 }
 
@@ -730,8 +733,8 @@ static int lan743x_ethtool_get_eee(struct net_device *netdev,
 static int lan743x_ethtool_set_eee(struct net_device *netdev,
 				   struct ethtool_eee *eee)
 {
-	struct lan743x_adapter *adapter;
-	struct phy_device *phydev;
+	struct lan743x_adapter *adapter = netdev_priv(netdev);
+	struct phy_device *phydev = NULL;
 	u32 buf = 0;
 	int ret = 0;
 
@@ -811,8 +814,9 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
 
 	device_set_wakeup_enable(&adapter->pdev->dev, (bool)wol->wolopts);
 
-	return netdev->phydev ? phy_ethtool_set_wol(netdev->phydev, wol)
-			: -ENETDOWN;
+	phy_ethtool_set_wol(netdev->phydev, wol);
+
+	return 0;
 }
 #endif /* CONFIG_PM */
 
