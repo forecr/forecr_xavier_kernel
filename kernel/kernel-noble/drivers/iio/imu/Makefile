@@ -29,3 +29,4 @@ obj-$(CONFIG_KMX61) += kmx61.o
 
 obj-y += st_lsm6dsx/
 obj-y += st_lsm9ds0/
+obj-y += wsen_isds/
