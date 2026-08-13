@@ -3605,11 +3605,10 @@
 			clock-names = "uartclk", "apb_pclk";
 			assigned-clocks = <&bpmp TEGRA264_CLK_UART4>;
 			assigned-clock-parents = <&bpmp TEGRA264_CLK_PLLP_OUT0>;
-			dmas = <&gpcdma 13 23 TEGRA_SID_GPCDMA>,
-			       <&gpcdma 13 13 TEGRA_SID_GPCDMA>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 13 23 TEGRA_SID_GPCDMA>, <&gpcdma 13 13 TEGRA_SID_GPCDMA>;
+			//dma-names = "rx", "tx";
 			iommus = <&smmu1_mmu TEGRA264_GPCDMA_SID_UART4>;
-			dma-coherent;
+			//dma-coherent;
 			arm,primecell-periphid = <0x00051011>;
 			resets = <&bpmp TEGRA264_RESET_UART4>;
 			reset-names = "serial";
@@ -3625,11 +3624,10 @@
 			clock-names = "uartclk", "apb_pclk";
 			assigned-clocks = <&bpmp TEGRA264_CLK_UART5>;
 			assigned-clock-parents = <&bpmp TEGRA264_CLK_PLLP_OUT0>;
-			dmas = <&gpcdma 11 11 TEGRA_SID_GPCDMA>,
-			       <&gpcdma 11 21 TEGRA_SID_GPCDMA>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 11 11 TEGRA_SID_GPCDMA>, <&gpcdma 11 21 TEGRA_SID_GPCDMA>;
+			//dma-names = "rx", "tx";
 			iommus = <&smmu1_mmu TEGRA264_GPCDMA_SID_UART5>;
-			dma-coherent;
+			//dma-coherent;
 			arm,primecell-periphid = <0x00051011>;
 			resets = <&bpmp TEGRA264_RESET_UART5>;
 			reset-names = "serial";
@@ -3660,11 +3658,10 @@
 			clock-names = "uartclk", "apb_pclk";
 			assigned-clocks = <&bpmp TEGRA264_CLK_UART9>;
 			assigned-clock-parents = <&bpmp TEGRA264_CLK_PLLP_OUT0>;
-			dmas = <&gpcdma 10 10 TEGRA_SID_GPCDMA>,
-			       <&gpcdma 10 20 TEGRA_SID_GPCDMA>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 10 10 TEGRA_SID_GPCDMA>, <&gpcdma 10 20 TEGRA_SID_GPCDMA>;
+			//dma-names = "rx", "tx";
 			iommus = <&smmu1_mmu TEGRA264_GPCDMA_SID_UART9>;
-			dma-coherent;
+			//dma-coherent;
 			arm,primecell-periphid = <0x00051011>;
 			resets = <&bpmp TEGRA264_RESET_UART9>;
 			reset-names = "serial";
@@ -3680,11 +3677,10 @@
 			clock-names = "uartclk", "apb_pclk";
 			assigned-clocks = <&bpmp TEGRA264_CLK_UART10>;
 			assigned-clock-parents = <&bpmp TEGRA264_CLK_PLLP_OUT0>;
-			dmas = <&gpcdma 12 12 TEGRA_SID_GPCDMA>,
-			       <&gpcdma 12 22 TEGRA_SID_GPCDMA>;
-			dma-names = "rx", "tx";
+			//dmas = <&gpcdma 12 12 TEGRA_SID_GPCDMA>, <&gpcdma 12 22 TEGRA_SID_GPCDMA>;
+			//dma-names = "rx", "tx";
 			iommus = <&smmu1_mmu TEGRA264_GPCDMA_SID_UART10>;
-			dma-coherent;
+			//dma-coherent;
 			arm,primecell-periphid = <0x00051011>;
 			resets = <&bpmp TEGRA264_RESET_UART10>;
 			reset-names = "serial";
