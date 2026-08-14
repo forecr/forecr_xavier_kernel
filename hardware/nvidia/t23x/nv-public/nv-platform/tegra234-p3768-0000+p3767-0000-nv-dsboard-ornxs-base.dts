@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/dts-v1/;
+
+#include "tegra234-p3768-0000+p3767-0000.dts"
+#include "tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi"
+#include "tegra234-p3768-0000-dsboard-ornxs.dtsi"
+
+/ {
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "Orin NX 16GB for DSBOARD-ORNXS";
+};
