@@ -1,0 +1,62 @@
+#Load Environment
+	source environment_nvidia
+
+#[OPTIONAL] Applying RT-Patch
+	./generic_rt_build.sh "enable"
+	export IGNORE_PREEMPT_RT_PRESENCE=1
+
+#DSBOARD-THRMAX configuration for AGX Thor
+	export KERNEL_DEF_CONFIG=dsboard_thrmax_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_thrmax
+
+#MILBOARD-THR configuration for AGX Thor
+	export KERNEL_DEF_CONFIG=milboard_thr_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_thr
+
+#DSBOARD-AGX, DSBOARD-AGXMAX & DSBOARD-AGXS for AGX Orin
+	export KERNEL_DEF_CONFIG=dsboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_agx
+
+#RAIBOARD-AGX for AGX Orin
+	export KERNEL_DEF_CONFIG=raiboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_raiboard_agx
+
+#MILBOARD-AGX & MILBOARD-AGXMAX for AGX Orin
+	export KERNEL_DEF_CONFIG=milboard_agx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_agx
+
+#MILBOARD-ORNX for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=milboard_ornx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_milboard_ornx
+
+#RAIBOARD-ORNX for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=raiboard_ornx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_raiboard_ornx
+
+#DSBOARD-ORNX, DSBOARD-ORNX-LAN & DSBOARD-ORNXS for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=dsboard_ornx_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_ornx
+
+#DSBOARD-NX2 for Orin NX & Orin Nano
+	export KERNEL_DEF_CONFIG=dsboard_nx2_defconfig
+	export KERNEL_OUTPUT=$HOME/kernel_out_dsboard_nx2
+
+#Compilation
+	make -C kernel
+	make modules
+	make dtbs
+
+#[INFO] Compiling DTB files only
+	make -C kernel dtc
+	make dtbs
+
+#[INFO] Changing & updating kernel config
+	make -C kernel dtc
+	make -C kernel menuconfig
+	make -C kernel update-defconfig
+
+#[INFO] Cleanup the source tree
+	make -C kernel clean
+	make clean
+	make extra-objs-clean
+
