@@ -15,7 +15,7 @@
 #include "tegra234-pwm-fan.dtsi"
 #include "tegra234-p3737-audio.dtsi"
 #include "tegra234-p3737-fixed-regulator.dtsi"
-#include "tegra234-ethernet-3737-0000.dtsi"
+#include "tegra234-ethernet-3737-0000-switch.dtsi"
 #include "tegra234-p3737-pcie.dtsi"
 #include "tegra234-p3737-super-module-e2614.dtsi"
 

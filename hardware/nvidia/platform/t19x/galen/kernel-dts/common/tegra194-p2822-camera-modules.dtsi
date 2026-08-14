@@ -320,7 +320,7 @@
 			};
 		};
 		tca9548@70 {
-			status = "disbaled";
+			status = "disabled";
 			i2c@0 {
 				status = "disabled";
 				ar1335_a@42 {
