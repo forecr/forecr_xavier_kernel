@@ -86,6 +86,10 @@
 #define PCI_DEVICE_ID_EXAR_XR17V252		0x0252
 #define PCI_DEVICE_ID_EXAR_XR17V254		0x0254
 #define PCI_DEVICE_ID_EXAR_XR17V258		0x0258
+#define PCI_DEVICE_ID_EXAR_XR17V8354		0x8354
+#define PCI_DEVICE_ID_EXAR_XR17D152		0x0152
+#define PCI_DEVICE_ID_EXAR_XR17D154		0x0154
+#define PCI_DEVICE_ID_EXAR_XR17D158		0x0158
 
 #define PCI_SUBDEVICE_ID_USR_2980		0x0128
 #define PCI_SUBDEVICE_ID_USR_2981		0x0129
@@ -900,6 +904,12 @@ static const struct exar8250_board pbn_exar_XR17V8358 = {
 	.exit		= pci_xr17v35x_exit,
 };
 
+static const struct exar8250_board pbn_exar_XR17V8354 = {
+	.num_ports	= 12,
+	.setup		= pci_xr17v35x_setup,
+	.exit		= pci_xr17v35x_exit,
+};
+
 #define CONNECT_DEVICE(devid, sdevid, bd) {				\
 	PCI_DEVICE_SUB(							\
 		PCI_VENDOR_ID_EXAR,					\
@@ -964,6 +974,21 @@ static const struct pci_device_id exar_pci_tbl[] = {
 	EXAR_DEVICE(EXAR, XR17C152, pbn_exar_XR17C15x),
 	EXAR_DEVICE(EXAR, XR17C154, pbn_exar_XR17C15x),
 	EXAR_DEVICE(EXAR, XR17C158, pbn_exar_XR17C15x),
+
+	/* Exar Corp. XR17D15[248] Dual/Quad/Octal PCI UART (legacy PCI bus)
+	 * Same register map as C15x */
+	EXAR_DEVICE(EXAR, XR17D152, pbn_exar_XR17C15x),
+	EXAR_DEVICE(EXAR, XR17D154, pbn_exar_XR17C15x),
+	EXAR_DEVICE(EXAR, XR17D158, pbn_exar_XR17C15x),
+
+	/* Exar Corp. XR17V25[248] Dual/Quad/Octal PCIe UART (older PCIe die)
+	 * Same 125 MHz clock and 0x400 channel stride as V35x family. */
+	EXAR_DEVICE(EXAR, XR17V252, pbn_exar_XR17V35x),
+	EXAR_DEVICE(EXAR, XR17V254, pbn_exar_XR17V35x),
+	EXAR_DEVICE(EXAR, XR17V258, pbn_exar_XR17V35x),
+
+	/* Exar Corp. XR17V8354 8+4-port combined PCIe UART (12 ports total) */
+	EXAR_DEVICE(EXAR, XR17V8354, pbn_exar_XR17V8354),
 
 	/* Exar Corp. XR17V[48]35[248] Dual/Quad/Octal/Hexa PCIe UARTs */
 	EXAR_DEVICE(EXAR, XR17V352, pbn_exar_XR17V35x),
