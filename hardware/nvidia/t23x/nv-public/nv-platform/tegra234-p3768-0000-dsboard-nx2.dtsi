@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2024, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/ {
+	aliases {
+		serial3 = &uartb;
+	};
+
+	bus@0 {
+		serial@3100000 { // UART1 (uarta)
+			status = "okay";
+		};
+
+		uartb: serial@3110000 { // UART0 (uartb) on expansion connector
+			status = "okay";
+			compatible = "nvidia,tegra194-hsuart";
+			reset-names = "serial";
+		};
+
+		i2c@c250000 {
+			pcf8574a: gpio@38 { // for rev-1.0, 1.1, 1.21 and 1.22
+				status = "okay";
+				compatible = "nxp,pcf8574a";
+				reg = <0x38>;
+				gpio-controller;
+				#gpio-cells = <2>;
+			};
+		};
+
+		spi@3210000{ // SPI0 with CS0 on expansion connector
+			status = "okay";
+			spi@0 {
+				compatible = "tegra-spidev";
+				reg = <0x0>;
+				spi-max-frequency = <50000000>;
+				controller-data {
+					nvidia,enable-hw-based-cs;
+					nvidia,rx-clk-tap-delay = <0x10>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+		};
+	};
+};
