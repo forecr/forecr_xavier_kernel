@@ -5,16 +5,19 @@ Forecr Linux Kernel source files for Jetson Xavier, Xavier NX, Orin, Orin NX and
 ### IGX-SW
 - [IGX-SW 2.0](https://github.com/forecr/forecr_xavier_kernel/tree/IGX-SW_2.0)
 ### JetPack-7.x
+- [JetPack-7.2.1](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-7.2.1)
 - [JetPack-7.2](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-7.2)
 - [JetPack-7.1](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-7.1)
 - [JetPack-7.0](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-7.0)
 ### JetPack-6.x
+- [JetPack-6.2.3](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.2.3)
 - [JetPack-6.2.2](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.2.2)
 - [JetPack-6.2.1](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.2.1)
 - [JetPack-6.2](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.2)
 - [JetPack-6.1](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.1)
 - [JetPack-6.0](https://github.com/forecr/forecr_xavier_kernel/tree/JetPack-6.0)
 ### JetPack-5.x
+- [JetPack-5.1.7](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.7)
 - [JetPack-5.1.6](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.6)
 - [JetPack-5.1.5](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.5)
 - [JetPack-5.1.4](https://github.com/forecr/forecr_xavier_kernel/tree/Jetpack-5.1.4)
