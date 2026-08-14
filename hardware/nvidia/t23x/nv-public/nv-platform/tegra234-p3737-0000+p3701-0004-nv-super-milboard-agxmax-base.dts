@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/dts-v1/;
+
+#include "tegra234-p3737-0000+p3701-0004-nv-milboard-agxmax-base.dts"
+
+/ {
+	compatible = "nvidia,p3737-0000+p3701-0004-super", "nvidia,p3701-0004", "nvidia,tegra234";
+	nvidia,dtsfilename = __FILE__;
+	nvidia,dtbbuildtime = __DATE__, __TIME__;
+	model = "AGX Orin Super for MILBOARD-AGXMAX";
+};
