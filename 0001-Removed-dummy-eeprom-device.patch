@@ -1,0 +1,178 @@
+From df4aa0d1edce470453d2239a41bf2ba7d1295cc1 Mon Sep 17 00:00:00 2001
+From: mkesgin <metinkesgin@forecr.io>
+Date: Wed, 19 Aug 2026 10:34:46 +0300
+Subject: [PATCH] Removed dummy eeprom device
+
+---
+ ...ra264-p4071-0000-dsboard-thrmax-10GbE.dtsi | 23 +------------------
+ .../tegra264-p4071-0000-dsboard-thrmax.dtsi   | 23 +------------------
+ ...egra264-p4071-0000-milboard-thr-rev10.dtsi | 22 ------------------
+ .../tegra264-p4071-0000-milboard-thr.dtsi     | 23 -------------------
+ 4 files changed, 2 insertions(+), 89 deletions(-)
+
+diff --git a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax-10GbE.dtsi b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax-10GbE.dtsi
+index 8e5226eae6..43d95945ba 100644
+--- a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax-10GbE.dtsi
++++ b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax-10GbE.dtsi
+@@ -107,18 +107,7 @@
+ 
+ 		i2c@810c640000 {
+ 			status = "okay";
+-			/* CVB EEPROM */
+-			eeprom@56 {
+-				compatible = "atmel,24c02";
+-				reg = <0x56>;
+-
+-				label = "system";
+-				vcc-supply = <&vdd_1v8_cvb>;
+-				address-width = <8>;
+-				pagesize = <8>;
+-				size = <256>;
+-				read-only;
+-			};
++			
+ 		};
+ 
+ 		i2c@810c6c0000 { // since rev-1.1
+@@ -505,16 +494,6 @@
+ 		};
+ 	};
+ 
+-	eeprom-manager {
+-		data-size = <0x100>;
+-		bus@0 {
+-			i2c-bus = <&i2c1>;
+-			eeprom@1 {
+-				slave-address = <0x56>;
+-				label = "cvb";
+-			};
+-		};
+-	};
+ 
+ 	soc_fan: pwm-fan {
+ 		compatible = "pwm-fan";
+diff --git a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax.dtsi b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax.dtsi
+index ef43d09290..202dd363f0 100644
+--- a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax.dtsi
++++ b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-dsboard-thrmax.dtsi
+@@ -107,18 +107,7 @@
+ 
+ 		i2c@810c640000 {
+ 			status = "okay";
+-			/* CVB EEPROM */
+-			eeprom@56 {
+-				compatible = "atmel,24c02";
+-				reg = <0x56>;
+-
+-				label = "system";
+-				vcc-supply = <&vdd_1v8_cvb>;
+-				address-width = <8>;
+-				pagesize = <8>;
+-				size = <256>;
+-				read-only;
+-			};
++
+ 		};
+ 
+ 		i2c@810c6c0000 { // since rev-1.1
+@@ -505,16 +494,6 @@
+ 		};
+ 	};
+ 
+-	eeprom-manager {
+-		data-size = <0x100>;
+-		bus@0 {
+-			i2c-bus = <&i2c1>;
+-			eeprom@1 {
+-				slave-address = <0x56>;
+-				label = "cvb";
+-			};
+-		};
+-	};
+ 
+ 	soc_fan: pwm-fan {
+ 		compatible = "pwm-fan";
+diff --git a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr-rev10.dtsi b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr-rev10.dtsi
+index 219b60a0c1..70d4ced3c5 100644
+--- a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr-rev10.dtsi
++++ b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr-rev10.dtsi
+@@ -107,18 +107,6 @@
+ 
+ 		i2c@810c640000 { // I2C1 (CAM_I2C)
+ 			status = "okay";
+-			/* CVB EEPROM */
+-			eeprom@56 {
+-				compatible = "atmel,24c02";
+-				reg = <0x56>;
+-
+-				label = "system";
+-				vcc-supply = <&vdd_1v8_cvb>;
+-				address-width = <8>;
+-				pagesize = <8>;
+-				size = <256>;
+-				read-only;
+-			};
+ 		};
+ 
+ 		i2c@810c680000 { // I2C8
+@@ -628,16 +616,6 @@
+ 		};
+ 	};
+ 
+-	eeprom-manager {
+-		data-size = <0x100>;
+-		bus@0 {
+-			i2c-bus = <&i2c1>;
+-			eeprom@1 {
+-				slave-address = <0x56>;
+-				label = "cvb";
+-			};
+-		};
+-	};
+ 
+ 	soc_fan: pwm-fan {
+ 		compatible = "pwm-fan";
+diff --git a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr.dtsi b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr.dtsi
+index 4fd0950cfe..46451224a2 100644
+--- a/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr.dtsi
++++ b/hardware/nvidia/t264/nv-public/nv-platform/tegra264-p4071-0000-milboard-thr.dtsi
+@@ -107,18 +107,6 @@
+ 
+ 		i2c@810c640000 { // I2C1 (CAM_I2C)
+ 			status = "okay";
+-			/* CVB EEPROM */
+-			eeprom@56 {
+-				compatible = "atmel,24c02";
+-				reg = <0x56>;
+-
+-				label = "system";
+-				vcc-supply = <&vdd_1v8_cvb>;
+-				address-width = <8>;
+-				pagesize = <8>;
+-				size = <256>;
+-				read-only;
+-			};
+ 		};
+ 
+ 		i2c@810c680000 { // I2C8
+@@ -670,17 +658,6 @@
+ 		};
+ 	};
+ 
+-	eeprom-manager {
+-		data-size = <0x100>;
+-		bus@0 {
+-			i2c-bus = <&i2c1>;
+-			eeprom@1 {
+-				slave-address = <0x56>;
+-				label = "cvb";
+-			};
+-		};
+-	};
+-
+ 	soc_fan: pwm-fan {
+ 		compatible = "pwm-fan";
+ 		pwms = <&pwm4 0 40000>;
+-- 
+2.34.1
+
