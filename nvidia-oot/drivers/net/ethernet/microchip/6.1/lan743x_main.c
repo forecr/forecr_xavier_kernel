@@ -1490,7 +1490,7 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
 {
 	struct net_device *netdev = adapter->netdev;
 	struct lan743x_phy *phy = &adapter->phy;
-	struct phy_device *phydev;
+	struct phy_device *phydev = NULL;
 	struct device_node *phynode;
 
 	int ret = -EIO;
