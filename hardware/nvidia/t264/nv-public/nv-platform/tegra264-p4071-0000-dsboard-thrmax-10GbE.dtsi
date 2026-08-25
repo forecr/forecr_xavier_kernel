@@ -107,18 +107,6 @@
 
 		i2c@810c640000 {
 			status = "okay";
-			/* CVB EEPROM */
-			eeprom@56 {
-				compatible = "atmel,24c02";
-				reg = <0x56>;
-
-				label = "system";
-				vcc-supply = <&vdd_1v8_cvb>;
-				address-width = <8>;
-				pagesize = <8>;
-				size = <256>;
-				read-only;
-			};
 		};
 
 		i2c@810c6c0000 { // since rev-1.1
@@ -493,17 +481,6 @@
 				shunt-resistor = <2000>;
 				status = "okay";
 				label = "VIN";
-			};
-		};
-	};
-
-	eeprom-manager {
-		data-size = <0x100>;
-		bus@0 {
-			i2c-bus = <&i2c1>;
-			eeprom@1 {
-				slave-address = <0x56>;
-				label = "cvb";
 			};
 		};
 	};
