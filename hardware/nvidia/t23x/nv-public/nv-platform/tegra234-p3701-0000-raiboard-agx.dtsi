@@ -88,6 +88,9 @@
 		//ethernet@6b00000 // already disabled
 
 		// 10G configured in tegra234-p3737-0000+p3701-0000.dts <- tegra234-p3737-0000.dtsi
+		ethernet@6800000 {
+			nvidia,mac-addr-idx = <1>;
+		};
 
 		ethernet@2310000 { //EQOS
 			status = "okay";
