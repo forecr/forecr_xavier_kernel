@@ -186,6 +186,7 @@
 	/* MGBE - A */
 	ethernet@6810000 {
 		status = "okay";
+		nvidia,mac-addr-idx = <1>;
 	};
 
 	ethernet@6910000 {
