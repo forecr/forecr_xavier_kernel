@@ -47,6 +47,12 @@
 	make -C kernel
 	make dtbs
 
+#[OPTIONAL] NXP 88W9098 WiFi/BT driver for M2-JODY-W377-00C (M.2 Key-E)
+	export CONFIG_WLAN_VENDOR_NXP=y
+	make modules
+	sudo mkdir -p $INSTALL_MOD_PATH/lib/firmware/nxp
+	sudo cp nvidia-oot/drivers/net/wireless/nxp/mxm_wifiex/firmware/nxp/* $INSTALL_MOD_PATH/lib/firmware/nxp/
+
 #[INFO] Using custom defconfig
 	cd $KERNEL_OUTPUT
 	make menuconfig
