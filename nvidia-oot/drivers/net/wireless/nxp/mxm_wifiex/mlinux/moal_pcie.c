@@ -129,6 +129,8 @@ static const struct pci_device_id wlan_ids[] = {
 
 	{},
 };
+/* Keep this to auto load the driver at boot */
+MODULE_DEVICE_TABLE(pci, wlan_ids);
 /* moal interface ops */
 static moal_if_ops pcie_ops;
 
