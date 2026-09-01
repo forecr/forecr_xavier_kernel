@@ -15,7 +15,7 @@
 
 /dts-v1/;
 
-#include "tegra234-p3701-0000-p3737-0000-dsboard-xv2.dts"
+#include "tegra234-p3701-0000-p3737-0000-dsboard-xv2-base.dts"
 
 / {
 	nvidia,dtsfilename = __FILE__;

@@ -1,0 +1,152 @@
+/*
+ * Copyright (c) 2015-2018, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "tegra234-camera-expansion-forecr-a00.dtsi"
+#include "dt-bindings/clock/tegra234-clock.h"
+
+#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
+
+/ {
+	tegra-camera-platform {
+		/**
+		* tpg_max_iso = <>;
+		* Max iso bw for 6 streams of tpg
+		* streams * nvcsi_freq * PG_bitrate / RG10 * BPP
+		* 6 * 102Mhz * 32 bits/ 10 bits * 2 Bps
+		* = 3916.8 MBps
+		*/
+		tpg_max_iso = <3916800>;
+	};
+
+	i2c@3180000 {
+		tca9548_70: tca9548@70 {
+			status = "okay";
+			compatible = "nxp,pca9548";
+			reg = <0x70>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			skip_mux_detect;
+			vif-supply = <&p3737_vdd_1v8_sys>;
+			vcc-supply = <&p3737_vdd_1v8_sys>;
+			vcc-pullup-supply = <&battery_reg>;
+			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
+			i2c@0 {
+				status = "okay";
+				reg = <0>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				imx219_a@10 {
+					status = "okay";
+					reset-gpios = <&pcf8574a_38 0 GPIO_ACTIVE_HIGH>;
+				};
+			};
+			i2c@1 {
+				status = "okay";
+				reg = <1>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				imx219_b@10 {
+					status = "okay";
+					reset-gpios = <&pcf8574a_38 1 GPIO_ACTIVE_HIGH>;
+				};
+			};
+			i2c@2 {
+				status = "okay";
+				reg = <2>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				imx219_c@10 {
+					status = "okay";
+					reset-gpios = <&pcf8574a_38 2 GPIO_ACTIVE_HIGH>;
+				};
+			};
+			i2c@3 {
+				status = "okay";
+				reg = <3>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				imx219_d@10 {
+					status = "okay";
+					reset-gpios = <&pcf8574a_38 3 GPIO_ACTIVE_HIGH>;
+				};
+			};
+			i2c@4 {
+				status = "okay";
+				reg = <4>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				imx219_e@10 {
+					status = "okay";
+					reset-gpios = <&pcf8574a_38 4 GPIO_ACTIVE_HIGH>;
+				};
+			};
+			i2c@5 {
+				status="okay";
+				reg = <5>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				imx219_g@10 {
+					status = "okay";
+					reset-gpios = <&pcf8574a_38 5 GPIO_ACTIVE_HIGH>;
+				};
+			};
+
+			i2c@6 {
+				status = "okay";
+				reg = <6>;
+				i2c-mux,deselect-on-exit;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				pcf8574a_38: pcf8574a@38 {
+					status = "okay";
+					compatible = "nxp,pcf8574a";
+					reg = <0x38>;
+					gpio-controller;
+					#gpio-cells = <2>;
+					pcf8574a_38_outlow {
+						/*
+						 * GPIO-0 : PWDN_CAM0
+						 * GPIO-1 : PWDN_CAM1
+						 * GPIO-2 : PWDN_CAM2
+						 * GPIO-3 : PWDN_CAM3
+						 * GPIO-4 : PWDN_CAM4
+						 * GPIO-5 : PWDN_CAM5
+						 * GPIO-6 : 
+						 * GPIO-7 : 
+						 */
+						gpio-hog;
+						gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
+						output-low;
+						label = "pcf8574a_38_outlow_0",
+							"pcf8574a_38_outlow_1",
+							"pcf8574a_38_outlow_2",
+							"pcf8574a_38_outlow_3",
+							"pcf8574a_38_outlow_4",
+							"pcf8574a_38_outlow_5",
+							"pcf8574a_38_outlow_6",
+							"pcf8574a_38_outlow_7";
+					};
+				};
+			};
+		};
+	};
+};
