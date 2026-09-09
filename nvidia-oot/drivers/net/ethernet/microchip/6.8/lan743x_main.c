@@ -1506,7 +1506,7 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
 		.speed = SPEED_1000,
 		.duplex = DUPLEX_FULL,
 	};
-	struct phy_device *phydev;
+	struct phy_device *phydev = NULL;
 	int ret = -EIO;
 
 	/* try devicetree phy, or fixed link */
