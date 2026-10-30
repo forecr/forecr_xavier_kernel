@@ -116,6 +116,7 @@
 				compatible = "ti,ina228";
 				status = "okay";
 				reg = <0x40>;
+				shunt-resistor = <5000>; // 5 micro-ohms
 			};
 
 			pcf8523_68: pcf8523@68 { // RTC
