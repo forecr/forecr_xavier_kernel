@@ -1,0 +1,60 @@
+/* SPDX-License-Identifier: GPL-2.0-only OR MIT
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ */
+#ifndef NVGPU_SYNC_SYNCPT_CMDBUF_GV11B_H
+#define NVGPU_SYNC_SYNCPT_CMDBUF_GV11B_H
+
+#include <nvgpu/types.h>
+#include <nvgpu/errno.h>
+
+struct gk20a;
+struct priv_cmd_entry;
+struct nvgpu_mem;
+struct nvgpu_channel;
+struct vm_gk20a;
+
+#ifdef CONFIG_TEGRA_GK20A_NVHOST
+
+#ifdef CONFIG_NVGPU_KERNEL_MODE_SUBMIT
+void gv11b_syncpt_add_wait_cmd(struct gk20a *g,
+		struct priv_cmd_entry *cmd,
+		u32 id, u32 thresh, u64 gpu_va_base);
+u32 gv11b_syncpt_get_wait_cmd_size(void);
+u32 gv11b_syncpt_get_incr_per_release(void);
+void gv11b_syncpt_add_incr_cmd(struct gk20a *g,
+		struct priv_cmd_entry *cmd,
+		u32 id, u64 gpu_va, bool wfi);
+u32 gv11b_syncpt_get_incr_cmd_size(bool wfi_cmd);
+#endif /* CONFIG_NVGPU_KERNEL_MODE_SUBMIT */
+
+void gv11b_syncpt_free_buf(struct nvgpu_channel *c,
+		struct nvgpu_mem *syncpt_buf);
+
+int gv11b_syncpt_alloc_buf(struct nvgpu_channel *c,
+		u32 syncpt_id, struct nvgpu_mem *syncpt_buf);
+
+int gv11b_syncpt_get_sync_ro_map(struct vm_gk20a *vm,
+		u64 *base_gpuva, u32 *sync_size, u32 *num_syncpoints);
+
+#else
+
+static inline void gv11b_syncpt_free_buf(struct nvgpu_channel *c,
+		struct nvgpu_mem *syncpt_buf)
+{
+}
+
+static inline int gv11b_syncpt_alloc_buf(struct nvgpu_channel *c,
+		u32 syncpt_id, struct nvgpu_mem *syncpt_buf)
+{
+	return -EINVAL;
+}
+
+static inline int gv11b_syncpt_get_sync_ro_map(struct vm_gk20a *vm,
+		u64 *base_gpuva, u32 *sync_size)
+{
+	return -EINVAL;
+}
+
+#endif /* CONFIG_TEGRA_GK20A_NVHOST */
+
+#endif /* NVGPU_SYNC_SYNCPT_CMDBUF_GV11B_H */

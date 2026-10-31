@@ -1,0 +1,310 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2025-2026, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+/dts-v1/;
+
+#include "tegra264-p3740-0002+p3834-0008-qspi-nvme.dts"
+#include "nv-soc/tegra264-soc-thermal-slowdown-disable.dtsi"
+
+/ {
+	compatible = "nvidia,p3740-0002+p3834-0008", "safety", "nvidia,p3834-0008", "nvidia,tegra264";
+
+	bus@0 {
+		tegra-hsp@8c00000 {
+			compatible = "nvidia,tegra264-hsp";
+			status = "okay";
+		};
+
+		tegra-hsp@8d00000 {
+			compatible = "nvidia,tegra264-hsp";
+			status = "okay";
+		};
+
+		i2c@c610000 { /* reserved for SMCU for safety operations */
+			status = "disabled";
+
+			ina3221@41 {
+				status = "disabled";
+			};
+
+			ina219@44 {
+				status = "disabled";
+			};
+
+			f75308@4d {
+				status = "disabled";
+			};
+		};
+
+		spi@810c440000 {
+			status = "okay";
+			compatible = "nvidia,tegra264-spi-slave";
+		};
+
+		pcie@a808440000 {
+			status = "disabled";
+		};
+	};
+
+	fsicom_client {
+		status = "okay";
+		iommus = <&smmu4_mmu 0xf10>;
+	};
+
+	/* FSI<->CCPLEX Communication through DRAM Carveout demo app */
+	FsiComAppChConfApp1 {
+		compatible = "nvidia,tegra-fsicom-sampleApp1";
+		status = "okay";
+		channelid_list = <3>;
+	};
+
+	FsiComIvc {
+		status = "okay";
+		/*
+		 * Keep daemon IPC endpoint list compatible with nvFsiCom expectations.
+		 * Adding new entries here can cause nvFsiCom to try opening endpoints
+		 * that don't exist and exit early.
+		 */
+		nChannel = <11>;
+		nvsciipc_endpoint = "nvfsicom_EPD",
+				    "nvfsicom_CcplexApp",
+				    "nvfsicom_CcplexApp_state_change",
+				    "nvfsicom_app1",
+				    "nvfsicom_app2",
+				    "nvfsicom_appGR",
+				    /*
+				     * Buffer demo endpoints (3K/5K/10K/32K/72K).
+				     * Must also exist in NvSciIpc config (e.g. `nvsciipc_safety.cfg`),
+				     * otherwise nvFsiCom and the demo apps will fail to open them.
+				     */
+				    "nvfsicom_3k",
+				    "nvfsicom_5k",
+				    "nvfsicom_10k",
+				    "nvfsicom_32k",
+				    "nvfsicom_72k";
+
+		/*
+		 * Thor demo channels (CCPLEX<->FSI):
+		 * - NvFsiCom internal header is 4B inside the SIVC frame
+		 * - App data passed to NvFsiComWrite must be <= (frame-size - 4)
+		 * - App header is 6B, so max demo payload is (frame-size - 10)
+		 *
+		 * Keep this override board-specific (do not change common t264 DTSI).
+		 */
+		channel_4 {
+			/* 1K (notification) */
+			frame-count = <4>;
+			frame-size = <1024>;
+			/* FSI runs only on core-id 0 on this board; override common setting. */
+			core-id = <0>;
+			/* Enable notifications for channel_4 if inherited/overridden elsewhere. */
+			/delete-property/ notification;
+		};
+
+		channel_6 {
+			/* 10K (notification) */
+			frame-count = <4>;
+			frame-size = <10240>;
+			core-id = <0>;
+			/delete-property/ notification;
+			NvSciCh = "nvfsicom_10k";
+		};
+
+		channel_9 {
+			/* 5K (notification) */
+			frame-count = <4>;
+			frame-size = <5120>;
+			core-id = <0>;
+			/delete-property/ notification;
+			NvSciCh = "nvfsicom_5k";
+		};
+
+		channel_18 {
+			/*
+			 * 3K:
+			 * - Notification mode (interrupt-driven) on CCPLEX.
+			 * - Bound to FSI core-id 1: only works when FSI CPU_Core_1 is enabled,
+			 *   matching the FSI SWC instance-id gated behavior.
+			 */
+			frame-count = <4>;
+			frame-size = <3072>;
+			core-id = <1>;
+			/delete-property/ notification;
+			NvSciCh = "nvfsicom_3k";
+		};
+
+		channel_7 {
+			/*
+			 * 32K perf channel (DMA-accelerated path).
+			 * Frame size is above CDDCCPLEXCOM_DMA_THRESHOLD_BYTES (18432),
+			 * so CddCcplexCom payload copies go through ccplexcom_dma_copy().
+			 * Frame-count 2 keeps SRAM carveout bounded
+			 * (2 * 32K * 2 dirs = 128K of the 16M CARVEOUT_SIZE).
+			 */
+			frame-count = <2>;
+			frame-size = <32768>;
+			core-id = <0>;
+			/delete-property/ notification;
+			NvSciCh = "nvfsicom_32k";
+		};
+
+		channel_8 {
+			/* 72K DMA-accelerated demo channel.
+			 * SIVC ring per direction = 2 * 73728 = 144 KiB. */
+			frame-count = <2>;
+			frame-size = <73728>;
+			core-id = <0>;
+			/delete-property/ notification;
+			NvSciCh = "nvfsicom_72k";
+		};
+	};
+
+	/* Dedicated config nodes for CCPLEX buffer demo (1K/3K/5K/10K/32K/72K). */
+	FsiComAppChConfBufDemo1K {
+		compatible = "nvidia,tegra-fsicom-bufdemo-1k";
+		status = "okay";
+		channelid_list = <4>;
+	};
+
+	FsiComAppChConfBufDemo3K {
+		compatible = "nvidia,tegra-fsicom-bufdemo-3k";
+		status = "okay";
+		/* 3K uses channel_18 which is core-id 1 on this board. */
+		channelid_list = <18>;
+	};
+
+	FsiComAppChConfBufDemo5K {
+		compatible = "nvidia,tegra-fsicom-bufdemo-5k";
+		status = "okay";
+		channelid_list = <9>;
+	};
+
+	FsiComAppChConfBufDemo10K {
+		compatible = "nvidia,tegra-fsicom-bufdemo-10k";
+		status = "okay";
+		/* 10K uses channel_6 on this board. */
+		channelid_list = <6>;
+	};
+
+	FsiComAppChConfBufDemo32K {
+		compatible = "nvidia,tegra-fsicom-bufdemo-32k";
+		status = "okay";
+		channelid_list = <7>;
+	};
+
+	FsiComAppChConfBufDemo72K {
+		compatible = "nvidia,tegra-fsicom-bufdemo-72k";
+		status = "okay";
+		channelid_list = <8>;
+	};
+
+	nvtherm-oc-event {
+		status = "disabled";
+	};
+
+	safetyservices_epl_client@110000 {
+		nvidia,tx-timeout-ms = <13>;
+		status = "okay";
+	};
+
+	ufshci@a80b8d0000 {
+		status = "okay";
+	};
+
+	thermal-shutdown-alert {
+		status = "okay";
+	};
+
+	thermal-zones {
+		cpu-thermal {
+			trips {
+				cpu_sw_shutdown_warning: thermal-shutdown-warning {
+					temperature = <115000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+
+				cpu-sw-shutdown {
+					temperature = <117500>;
+				};
+			};
+
+			cooling-maps {
+				map-shutdown-alert {
+					trip = <&cpu_sw_shutdown_warning>;
+					cooling-device = <&thermal_shutdown_alert 1 1>;
+				};
+			};
+		};
+
+		gpu-thermal {
+			trips {
+				gpu_sw_shutdown_warning: thermal-shutdown-warning {
+					temperature = <115000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+
+				gpu-sw-shutdown {
+					temperature = <117500>;
+				};
+			};
+
+			cooling-maps {
+				map-shutdown-alert {
+					trip = <&gpu_sw_shutdown_warning>;
+					cooling-device = <&thermal_shutdown_alert 1 1>;
+				};
+			};
+		};
+
+		soc012-thermal {
+			trips {
+				soc012_sw_shutdown_warning: thermal-shutdown-warning {
+					temperature = <115000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+
+				soc012-sw-shutdown {
+					temperature = <117500>;
+				};
+			};
+
+			cooling-maps {
+				map-shutdown-alert {
+					trip = <&soc012_sw_shutdown_warning>;
+					cooling-device = <&thermal_shutdown_alert 1 1>;
+				};
+			};
+		};
+
+		soc345-thermal {
+			trips {
+				soc345_sw_shutdown_warning: thermal-shutdown-warning {
+					temperature = <115000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+
+				soc345-sw-shutdown {
+					temperature = <117500>;
+				};
+			};
+
+			cooling-maps {
+				map-shutdown-alert {
+					trip = <&soc345_sw_shutdown_warning>;
+					cooling-device = <&thermal_shutdown_alert 1 1>;
+				};
+			};
+		};
+
+		tj-thermal {
+			trips {
+				tj-sw-shutdown {
+					temperature = <117500>;
+				};
+			};
+		};
+	};
+};

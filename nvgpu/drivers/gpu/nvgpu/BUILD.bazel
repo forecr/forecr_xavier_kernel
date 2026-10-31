@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+kernel_module(
+    name = "nvgpu",
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "**/Makefile.*",
+        "Makefile",
+    ]) + [
+        "//nvidia-oot/scripts/conftest:conftest_headers",
+        "//nvgpu:nvsched.sources",
+        "//nvgpu:nvgpu.headers",
+    ],
+    outs = [
+        "nvgpu.ko",
+    ],
+    kernel_build = "//nvidia-build/kleaf:tegra_android",
+    deps = [
+        "//nvidia-oot:nvoot",
+   ],
+)

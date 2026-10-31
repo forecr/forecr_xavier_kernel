@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: GPL-2.0-only OR MIT
+# SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+/**
+ * @page nvgpu-rm_interface_specification Interface Specification
+ *
+ * nvgpu-rm driver uses an operating system device control interface to expose APIs. On Linux, nvgpu-rm provides device files with commands (custom ids) as an interface.
+ *
+ * <table>
+ *   <caption>nvgpu-rm interface details</caption>
+ *   <tr> <th> Device File, Permissions                                               </th> <th> Command                                                 </th><th> Description                                   </th></tr>
+ *   <tr> <td rowspan="7" valign="middle">/dev/nvgpu/igpu0/channel, rw</td>           <td> @ref NVGPU_IOCTL_CHANNEL_ALLOC_OBJ_CTX                        </td><td> Object Context creation.                      </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_CHANNEL_ALLOC_GPFIFO_EX                      </td><td> GPFIFO creation.                              </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_CHANNEL_GET_USER_SYNCPOINT                   </td><td> User managed syncpoint allocation.            </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_CHANNEL_SET_PREEMPTION_MODE                  </td><td> Set Channel preemption mode.                  </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_CHANNEL_WDT                                  </td><td> Channel watchdog control.                     </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_CHANNEL_SET_ERROR_NOTIFIER                   </td><td> Set Channel error notifier.                   </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_CHANNEL_SETUP_BIND                           </td><td> Setup control buffers for channel.            </td></tr>
+ *   <tr> <td rowspan="9" valign="middle">/dev/nvgpu/igpu0/tsg, rw</td>               <td> @ref NVGPU_TSG_IOCTL_BIND_CHANNEL_EX                          </td><td> Binding Channel with TSG.                     </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_TSG_PREEMPT                                  </td><td> TSG Preemption.                               </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_TSG_ENABLE                                   </td><td> Enable TSG.                                   </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_IOCTL_TSG_DISABLE                                  </td><td> Disable TSG.                                  </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_TSG_IOCTL_READ_SINGLE_SM_ERROR_STATE               </td><td> Reading SM error states.                      </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_TSG_IOCTL_CREATE_SUBCONTEXT                        </td><td> Create GPU subcontext.                        </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_TSG_IOCTL_DELETE_SUBCONTEXT                        </td><td> Release GPU subcontext.                       </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_TSG_IOCTL_GET_SHARE_TOKEN                          </td><td> Get shared token for TSG sharing.             </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_TSG_IOCTL_REVOKE_SHARE_TOKEN                       </td><td> Revoke shared token for TSG.                  </td></tr>
+ *   <tr> <td rowspan="8" valign="middle">/dev/nvgpu/igpu0/as, rw</td>                <td> @ref NVGPU_AS_IOCTL_BIND_CHANNEL                              </td><td> Binding Address Space with channel.           </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_AS_IOCTL_MAP_BUFFER_EX                             </td><td> Map buffers to GPU.                           </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_AS_IOCTL_UNMAP_BUFFER                              </td><td> Unmap mapped buffers to GPU.                  </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_AS_IOCTL_GET_SYNC_RO_MAP                           </td><td> User managed syncpoint map.                   </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_AS_IOCTL_ALLOC_SPACE                               </td><td> Allocate range within an address space.       </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU32_AS_IOCTL_ALLOC_SPACE                             </td><td> Allocate range within an address space.       </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_AS_IOCTL_FREE_SPACE                                </td><td> Free allocated range within address space.    </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_AS_IOCTL_GET_VA_REGIONS                            </td><td> Getting vm regions.                           </td></tr>
+ *   <tr> <td rowspan="7" valign="middle">/dev/nvgpu/igpu0/ctrl, rw</td>              <td> @ref NVGPU_GPU_IOCTL_FLUSH_L2                                 </td><td> Flushing of L2 cache.                         </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_GET_CHARACTERISTICS                      </td><td> GPU device information.                       </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_GET_ENGINE_INFO                          </td><td> Get GPU Info.                                 </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_GET_TPC_MASKS                            </td><td> TPC masking.                                  </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_VSMS_MAPPING                             </td><td> Reserving/Freeing vm area.                    </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_REGISTER_BUFFER                          </td><td> Registering buffer.                           </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_GET_BUFFER_INFO                          </td><td> Get buffer info.                              </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPURM_INTF_GET_GPU_TIME                                </td><td> Get timestamp from GPU.                       </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_GET_PPC_MASKS                            </td><td> Get PPC enable mask vector.                   </td></tr>
+ *   <tr>                                                                             <td> @ref NVGPU_GPU_IOCTL_GET_ROP_MASKS                            </td><td> Get ROP enable mask vector.                   </td></tr>
+ * </table>
+ */
