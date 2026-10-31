@@ -1,0 +1,198 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 1993-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+#ifndef _DISPLAYPORT20_H_
+#define _DISPLAYPORT20_H_
+#include "nvcfg_sdk.h"
+
+// DSC Pass Through related DPCD. New bits in DPCD 0x0060h defined in DPCD2.0.
+#define NV_DPCD20_DSC_SUPPORT_PASS_THROUGH                                       1:1 /* R-XUF */
+#define NV_DPCD20_DSC_SUPPORT_PASS_THROUGH_NO                           (0x00000000) /* R-XUV */
+#define NV_DPCD20_DSC_SUPPORT_PASS_THROUGH_YES                          (0x00000001) /* R-XUV */
+// DSC Pass Through related DPCD. New bits in DPCD 0x0160h defined in DPCD2.0.
+#define NV_DPCD20_DSC_ENABLE_PASS_THROUGH                                                1:1 /* R-XUF */
+#define NV_DPCD20_DSC_ENABLE_PASS_THROUGH_NO                                    (0x00000000) /* R-XUV */
+#define NV_DPCD20_DSC_ENABLE_PASS_THROUGH_YES                                   (0x00000001) /* R-XUV */
+
+// DSC Dynamic PPS related DPCD. New bits in DPCD 0x0060h defined in DPCD2.0.
+#define NV_DPCD20_DSC_SUPPORT_DYNAMIC_PPS_COMPRESSED_TO_COMPRESSED                       2:2
+#define NV_DPCD20_DSC_SUPPORT_DYNAMIC_PPS_COMPRESSED_TO_COMPRESSED_NO           (0x00000000)
+#define NV_DPCD20_DSC_SUPPORT_DYNAMIC_PPS_COMPRESSED_TO_COMPRESSED_YES          (0x00000001)
+
+// DSC Dynamic PPS related DPCD. New bits in DPCD 0x0060h defined in DPCD2.0.
+#define NV_DPCD20_DSC_SUPPORT_DYNAMIC_PPS_UNCOMPRESSED_TO_FROM_COMPRESSED                3:3
+#define NV_DPCD20_DSC_SUPPORT_DYNAMIC_PPS_UNCOMPRESSED_TO_FROM_COMPRESSED_NO    (0x00000000)
+#define NV_DPCD20_DSC_SUPPORT_DYNAMIC_PPS_UNCOMPRESSED_TO_FROM_COMPRESSED_YES   (0x00000001)
+
+// PANEL REPLAY RELATED DPCD
+#define NV_DPCD20_PANEL_REPLAY_CAPABILITY                                       (0x000000B0) /* R-XUR */
+#define NV_DPCD20_PANEL_REPLAY_CAPABILITY_SUPPORTED                                     0:0  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CAPABILITY_SUPPORTED_NO                          (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CAPABILITY_SUPPORTED_YES                         (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION                                         (0x000001B0) /* R-XUR */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_ENABLE_PR_MODE                                  0:0  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_ENABLE_PR_MODE_NO                       (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_ENABLE_PR_MODE_YES                      (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_ENABLE_CRC                                      1:1  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_ENABLE_CRC_NO                           (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_ENABLE_CRC_YES                          (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_ADAPTIVE_SYNC_SDP_MISSING                   2:2  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_ADAPTIVE_SYNC_SDP_MISSING_NO        (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_ADAPTIVE_SYNC_SDP_MISSING_YES       (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_SDP_UNCORRECTABLE_ERROR                     3:3  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_SDP_UNCORRECTABLE_ERROR_NO          (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_SDP_UNCORRECTABLE_ERROR_YES         (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_RFB_STORAGE_ERRORS                          4:4  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_RFB_STORAGE_ERRORS_NO               (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_RFB_STORAGE_ERRORS_YES              (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_RFB_ACTIVE_FRAME_CRC_ERROR                  5:5  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_RFB_ACTIVE_FRAME_CRC_ERROR_NO       (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_CONFIGURATION_HPD_RFB_ACTIVE_FRAME_CRC_ERROR_YES      (0x00000001) /* R-XUV */
+
+
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS                                     (0x00002020) /* R-XUR */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_ACTIVE_FRAME_CRC_ERROR                      0:0  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_ACTIVE_FRAME_CRC_ERROR_NO           (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_ACTIVE_FRAME_CRC_ERROR_YES          (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_RFB_STORAGE_ERROR                           1:1  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_RFB_STORAGE_ERROR_NO                (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_RFB_STORAGE_ERROR_YES               (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_VSC_SDP_UNCORRECTABLE_ERROR                 2:2  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_VSC_SDP_UNCORRECTABLE_ERROR_NO      (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_VSC_SDP_UNCORRECTABLE_ERROR_YES     (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_ADAPTIVE_SYNC_SDP_MISSING                   3:3  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_ADAPTIVE_SYNC_SDP_MISSING_NO        (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_ERROR_STATUS_ADAPTIVE_SYNC_SDP_MISSING_YES       (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS                              (0x00002022) /* R-XUR */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_PR_STATUS                            2:0  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_PR_STATUS_STATE_0            (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_PR_STATUS_STATE_1            (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_PR_STATUS_STATE_2            (0x00000002) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_PR_STATUS_STATE_ERROR        (0x00000007) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED                    4:3  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_LOCKED     (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_COASTING   (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_GOVERNING  (0x00000002) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_RELOCKING  (0x00000003) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_VALID              5:5  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_VALID_NO   (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_AND_FRAME_LOCK_STATUS_SINK_FRAME_LOCKED_VALID_YES  (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO                              (0x00002024) /* R-XUR */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_STATE                                0:0  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_STATE_INACTIVE               (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_STATE_ACTIVE                 (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_CRC_VALID                            2:2  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_CRC_VALID_NO                 (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_CRC_VALID_YES                (0x00000001) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_SU_COORDINATE_VALID                  3:3  /* R-XUF */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_SU_COORDINATE_VALID_NO       (0x00000000) /* R-XUV */
+#define NV_DPCD20_PANEL_REPLAY_DEBUG_LAST_VSC_SDP_CARRYING_PR_INFO_SU_COORDINATE_VALID_YES      (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_PHY_REPEATER_ALPM_CAPS                           (0x000F0009) /* R-XUR */
+#define NV_DPCD20_PHY_REPEATER_ALPM_CAPS_AUX_LESS                          0:0  /* R-XUF */
+#define NV_DPCD20_PHY_REPEATER_ALPM_CAPS_AUX_LESS_NOT_SUPPORTED    (0x00000000) /* R-XUV */
+#define NV_DPCD20_PHY_REPEATER_ALPM_CAPS_AUX_LESS_SUPPORTED        (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_PHY_REPEATER_TOTAL_LTTPR_CNT                     (0x000F000A) /* RWXUR */
+#define NV_DPCD20_PHY_REPEATER_TOTAL_LTTPR_CNT_VAL                         7:0  /* R-XUF */
+
+
+//
+// Adding DPCD registers for DP Tunneling feature.
+//
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES                                                 (0x000E000D) /* R-XUR */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_DPTUNNELING_SUPPORT                                      0:0 /* R-XUF */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_DPTUNNELING_SUPPORT_NO                          (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_DPTUNNELING_SUPPORT_YES                         (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_PANEL_REPLAY_TUNNELING_OPTIMIZATION_SUPPORT              6:6 /* R-XUF */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_PANEL_REPLAY_TUNNELING_OPTIMIZATION_SUPPORT_NO  (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_PANEL_REPLAY_TUNNELING_OPTIMIZATION_SUPPORT_YES (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_DPIN_BW_ALLOCATION_MODE_SUPPORT                          7:7 /* R-XUF */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_DPIN_BW_ALLOCATION_MODE_SUPPORT_NO              (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_CAPABILITIES_DPIN_BW_ALLOCATION_MODE_SUPPORT_YES             (0x00000001) /* R-XUV */
+
+// DPCD Registers for DPRX Event Status Indicator Field
+#define NV_DPCD20_LINK_SERVICE_IRQ_VECTOR_ESI0                                        (0x00002005) /* R-XUR */
+#define NV_DPCD20_LINK_SERVICE_IRQ_VECTOR_ESI0_DP_TUNNELING_IRQ                                5:5 /* R-XUF */
+#define NV_DPCD20_LINK_SERVICE_IRQ_VECTOR_ESI0_DP_TUNNELING_IRQ_NO                    (0x00000000) /* R-XUV */
+#define NV_DPCD20_LINK_SERVICE_IRQ_VECTOR_ESI0_DP_TUNNELING_IRQ_YES                   (0x00000001) /* R-XUV */
+
+// DPCD Registers for DP IN BW Allocation
+#define NV_DPCD20_USB4_DRIVER_BW_CAPABILITY                                           (0x000E0020) /* R-XUR */
+#define NV_DPCD20_USB4_DRIVER_BW_ALLOCATION                                                    7:7 /* R-XUF */
+#define NV_DPCD20_USB4_DRIVER_BW_ALLOCATION_NO                                        (0x00000000) /* R-XUV */
+#define NV_DPCD20_USB4_DRIVER_BW_ALLOCATION_YES                                       (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_DP_TUNNEL_BW_GRANULARITY                                            (0x000E0022) /* R-XUR */
+#define NV_DPCD20_DP_TUNNEL_BW_GRANULARITY_VAL                                                 1:0 /* R-XUF */
+#define NV_DPCD20_DP_TUNNEL_BW_GRANULARITY_VAL_0_25_GBPS                              (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_BW_GRANULARITY_VAL_0_50_GBPS                              (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNEL_BW_GRANULARITY_VAL_1_00_GBPS                              (0x00000002) /* R-XUV */
+
+#define NV_DPCD20_DP_TUNNEL_ESTIMATED_BW                                              (0x000E0023) /* R-XUR */
+
+#define NV_DPCD20_DP_TUNNEL_ALLOCATED_BW                                              (0x000E0024) /* R-XUR */
+
+#define NV_DPCD20_DP_TUNNEL_REQUESTED_BW                                              (0x000E0031) /* R-XUR */
+
+#define NV_DPCD20_DP_TUNNELING_STATUS                                                 (0x000E0025) /* R-XUR */
+#define NV_DPCD20_DP_TUNNELING_BW_REQUEST_FAILED                                               0:0 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_BW_REQUEST_FAILED_NO                                   (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_BW_REQUEST_FAILED_YES                                  (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_BW_REQUEST_SUCCEEDED                                            1:1 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_BW_REQUEST_SUCCEEDED_NO                                (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_BW_REQUEST_SUCCEEDED_YES                               (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_ESTIMATED_BW_CHANGED                                            2:2 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_ESTIMATED_BW_CHANGED_NO                                (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_ESTIMATED_BW_CHANGED_YES                               (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_BW_ALLOCATION_CAPABILITY_CHANGED                                3:3 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_BW_ALLOCATION_CAPABILITY_CHANGED_NO                    (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_BW_ALLOCATION_CAPABILITY_CHANGED_YES                   (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_EXIT_DISCOVERY_MODE                                             4:4 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_EXIT_DISCOVERY_MODE_NO                                 (0x00000000) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_EXIT_DISCOVERY_MODE_YES                                (0x00000001) /* R-XUV */
+
+#define NV_DPCD20_DP_TUNNELING_8B10B_MAX_LINK_RATE                                    (0x000E0028) /* R-XUR */
+#define NV_DPCD20_DP_TUNNELING_8B10B_MAX_LINK_RATE_VAL                                         7:0 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_8B10B_MAX_LINK_RATE_VAL_1_62_GBPS                      (0x00000006) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_8B10B_MAX_LINK_RATE_VAL_2_70_GBPS                      (0x0000000A) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_8B10B_MAX_LINK_RATE_VAL_5_40_GBPS                      (0x00000014) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_8B10B_MAX_LINK_RATE_VAL_8_10_GBPS                      (0x0000001E) /* R-XUV */
+
+#define NV_DPCD20_DP_TUNNELING_MAX_LANE_COUNT                                         (0x000E0029) /* R-XUR */
+#define NV_DPCD20_DP_TUNNELING_MAX_LANE_COUNT_LANE                                             7:0 /* R-XUF */
+#define NV_DPCD20_DP_TUNNELING_MAX_LANE_COUNT_LANE_ONE                                (0x00000001) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_MAX_LANE_COUNT_LANE_TWO                                (0x00000002) /* R-XUV */
+#define NV_DPCD20_DP_TUNNELING_MAX_LANE_COUNT_LANE_FOUR                               (0x00000004) /* R-XUV */
+
+#define NV_DPCD20_DPTX_BW_ALLOCATION_MODE_CONTROL                                     (0x000E0030) /* R-XUR */
+#define NV_DPCD20_DPTX_UNMASK_BW_ALLOCATION_IRQ                                                6:6 /* R-XUF */
+#define NV_DPCD20_DPTX_UNMASK_BW_ALLOCATION_IRQ_NO                                    (0x00000000) /* R-XUV */
+#define NV_DPCD20_DPTX_UNMASK_BW_ALLOCATION_IRQ_YES                                   (0x00000001) /* R-XUV */
+#define NV_DPCD20_DPTX_DISPLAY_DRIVER_BW_ALLOCATION_MODE_ENABLE                                7:7 /* R-XUF */
+#define NV_DPCD20_DPTX_DISPLAY_DRIVER_BW_ALLOCATION_MODE_ENABLE_NO                    (0x00000000) /* R-XUV */
+#define NV_DPCD20_DPTX_DISPLAY_DRIVER_BW_ALLOCATION_MODE_ENABLE_YES                   (0x00000001) /* R-XUV */
+
+#endif // #ifndef _DISPLAYPORT20_H_
