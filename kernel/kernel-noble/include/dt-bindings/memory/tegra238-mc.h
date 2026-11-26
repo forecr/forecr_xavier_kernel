@@ -1,0 +1,277 @@
+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+/* SPDX-FileCopyrightText: Copyright (c) 2018-2025, NVIDIA CORPORATION & AFFILIATES. All rights reserved. */
+
+#ifndef DT_BINDINGS_MEMORY_TEGRA238_MC_H
+#define DT_BINDINGS_MEMORY_TEGRA238_MC_H
+
+/* special clients */
+#define TEGRA_SID_INVALID		0x0
+#define TEGRA_SID_PASSTHROUGH		0x7f
+
+/*
+ ********* ISO SMMU STREAM IDs ***********
+ */
+#define TEGRA_SID_ISO_NVDISPLAY		0x1U
+#define TEGRA_SID_ISO_APE0		0x2U
+#define TEGRA_SID_ISO_APE1		0x3U
+
+/*
+ ********* NISO0 SMMU STREAM IDs **********
+ */
+#define TEGRA_SID_NISO_AON		0x1U
+#define TEGRA_SID_NISO_BPMP		0x2U
+#define TEGRA_SID_NISO_ETR		0x3U
+#define TEGRA_SID_NISO_FDE		0x4U
+#define TEGRA_SID_NISO_HC		0x5U
+#define TEGRA_SID_NISO_HDA		0x6U
+#define TEGRA_SID_NISO_NVDEC		0x7U
+#define TEGRA_SID_NISO_NVDISPLAY	0x8U
+#define TEGRA_SID_NISO_NVENC		0x9U
+#define TEGRA_SID_NISO_OFA		0xAU
+#define TEGRA_SID_NISO_PCIE0		0xBU
+#define TEGRA_SID_NISO_PCIE1		0xCU
+#define TEGRA_SID_NISO_PCIE2		0xDU
+#define TEGRA_SID_NISO_PCIE3		0xEU
+#define TEGRA_SID_NISO_HWMP_PMA		0xFU
+#define TEGRA_SID_NISO_PSC		0x10U
+#define TEGRA_SID_NISO_SDMMC1A		0x11U
+#define TEGRA_SID_NISO_SDMMC4A		0x12U
+#define TEGRA_SID_NISO_SES_SE0		0x13U
+#define TEGRA_SID_NISO_SES_SE1		0x14U
+#define TEGRA_SID_NISO_SES_SE2		0x15U
+#define TEGRA_SID_NISO_SEU1_SE0		0x16U
+#define TEGRA_SID_NISO_SEU1_SE1		0x17U
+#define TEGRA_SID_NISO_SEU1_SE2		0x18U
+#define TEGRA_SID_NISO_TSEC		0x19U
+#define TEGRA_SID_NISO_UFSHC		0x1AU
+#define TEGRA_SID_NISO_VIC		0x1BU
+#define TEGRA_SID_NISO_XUSB_HOST	0x1CU
+#define TEGRA_SID_NISO_XUSB_DEV		0x1DU
+#define TEGRA_SID_NISO_GPCDMA_0		0x1EU
+
+#define TEGRA_SID_NISO_SMMU_TEST    	0x1FU
+
+/* Host1x virtualization clients. */
+#define TEGRA_SID_NISO_HOST1X_CTX0	0x20U
+#define TEGRA_SID_NISO_HOST1X_CTX1	0x21U
+#define TEGRA_SID_NISO_HOST1X_CTX2	0x22U
+#define TEGRA_SID_NISO_HOST1X_CTX3	0x23U
+#define TEGRA_SID_NISO_HOST1X_CTX4	0x24U
+#define TEGRA_SID_NISO_HOST1X_CTX5	0x25U
+#define TEGRA_SID_NISO_HOST1X_CTX6	0x26U
+#define TEGRA_SID_NISO_HOST1X_CTX7	0x27U
+
+#define TEGRA_SID_NISO_XUSB_VF0		0x28U
+#define TEGRA_SID_NISO_XUSB_VF1		0x29U
+#define TEGRA_SID_NISO_XUSB_VF2		0x2AU
+#define TEGRA_SID_NISO_XUSB_VF3		0x2BU
+
+/* Host1x command buffers */
+#define TEGRA_SID_NISO_HC_VM0		0x2CU
+#define TEGRA_SID_NISO_HC_VM1		0x2DU
+#define TEGRA_SID_NISO_HC_VM2		0x2EU
+#define TEGRA_SID_NISO_HC_VM3		0x2FU
+#define TEGRA_SID_NISO_HC_VM4		0x30U
+#define TEGRA_SID_NISO_HC_VM5		0x31U
+#define TEGRA_SID_NISO_HC_VM6		0x32U
+#define TEGRA_SID_NISO_HC_VM7		0x33U
+
+/*
+ * memory client IDs
+ */
+
+#define TEGRA238_MEMORY_CLIENT_PTCR 0x00
+#define TEGRA238_MEMORY_CLIENT_NVL5RHP 0x13
+#define TEGRA238_MEMORY_CLIENT_NVL5R 0x14
+/* High-definition audio (HDA) reads */
+#define TEGRA238_MEMORY_CLIENT_HDAR 0x15
+/* Host channel data reads */
+#define TEGRA238_MEMORY_CLIENT_HOST1XDMAR 0x16
+#define TEGRA238_MEMORY_CLIENT_NVL5W 0x17
+#define TEGRA238_MEMORY_CLIENT_NVL6RHP 0x18
+#define TEGRA238_MEMORY_CLIENT_NVL6R 0x19
+#define TEGRA238_MEMORY_CLIENT_NVL6W 0x1a
+#define TEGRA238_MEMORY_CLIENT_NVL7RHP 0x1b
+/* Encoder Read client */
+#define TEGRA238_MEMORY_CLIENT_NVENCSRD 0x1c
+#define TEGRA238_MEMORY_CLIENT_NVL7R 0x1d
+#define TEGRA238_MEMORY_CLIENT_NVL7W 0x1e
+#define TEGRA238_MEMORY_CLIENT_NVL8RHP 0x20
+#define TEGRA238_MEMORY_CLIENT_NVL8R 0x21
+#define TEGRA238_MEMORY_CLIENT_NVL8W 0x22
+#define TEGRA238_MEMORY_CLIENT_NVL9RHP 0x23
+#define TEGRA238_MEMORY_CLIENT_NVL9R 0x24
+#define TEGRA238_MEMORY_CLIENT_NVL9W 0x25
+/* Reads from Cortex-A9 4 CPU cores via the L2 cache */
+#define TEGRA238_MEMORY_CLIENT_MPCORER 0x27
+/* Encoder write client */
+#define TEGRA238_MEMORY_CLIENT_NVENCSWR 0x2b
+/* Platform secirity Read clients */
+#define TEGRA238_MEMORY_CLIENT_PSCR 0x33
+/* Platform secirity writes */
+#define TEGRA238_MEMORY_CLIENT_PSCW 0x34
+/* High-definition audio (HDA) writes */
+#define TEGRA238_MEMORY_CLIENT_HDAW 0x35
+/* Writes from Cortex-A9 4 CPU cores via the L2 cache */
+#define TEGRA238_MEMORY_CLIENT_MPCOREW 0x39
+/* OFAA client */
+#define TEGRA238_MEMORY_CLIENT_OFAR1 0x3a
+/* XUSB HOST reads */
+#define TEGRA238_MEMORY_CLIENT_XUSB_HOSTR 0x4a
+/* XUSB HOST writes */
+#define TEGRA238_MEMORY_CLIENT_XUSB_HOSTW 0x4b
+/* XUSB DEV reads */
+#define TEGRA238_MEMORY_CLIENT_XUSB_DEVR 0x4c
+/* XUSB_DEV writes */
+#define TEGRA238_MEMORY_CLIENT_XUSB_DEVW 0x4d
+/* TSEC Memory Return Data Client */
+#define TEGRA238_MEMORY_CLIENT_TSECSRD 0x54
+/* TSEC Memory Write Client */
+#define TEGRA238_MEMORY_CLIENT_TSECSWR 0x55
+/* OFA Read client */
+#define TEGRA238_MEMORY_CLIENT_OFAR 0x5d
+/* OFA writes client */
+#define TEGRA238_MEMORY_CLIENT_OFAW 0x5e
+/* sdmmca memory read client */
+#define TEGRA238_MEMORY_CLIENT_SDMMCRA 0x60
+/* sdmmcd memory read client */
+#define TEGRA238_MEMORY_CLIENT_SDMMCRAB 0x63
+/* sdmmca memory write client */
+#define TEGRA238_MEMORY_CLIENT_SDMMCWA 0x64
+/* sdmmcd memory write client */
+#define TEGRA238_MEMORY_CLIENT_SDMMCWAB 0x67
+/* SE Memory Return Data Client Description */
+#define TEGRA238_MEMORY_CLIENT_SEU1RD 0x68
+/* SE Memory Write Client Description */
+#define TEGRA238_MEMORY_CLIENT_SEU1WR 0x69
+/* VIC Read client */
+#define TEGRA238_MEMORY_CLIENT_VICSRD 0x6c
+/* VIC Write client */
+#define TEGRA238_MEMORY_CLIENT_VICSWR 0x6d
+/* NISO display read client */
+#define TEGRA238_MEMORY_CLIENT_NVDISPNISOR 0x73
+/* NISO display write client */
+#define TEGRA238_MEMORY_CLIENT_NVDISPNISOW 0x74
+/* Decoder read client */
+#define TEGRA238_MEMORY_CLIENT_NVDECSRD 0x78
+/* Decoder Write client */
+#define TEGRA238_MEMORY_CLIENT_NVDECSWR 0x79
+/* Audio Processing (APE) engine reads */
+#define TEGRA238_MEMORY_CLIENT_APER 0x7a
+/* Audio Processing (APE) engine writes */
+#define TEGRA238_MEMORY_CLIENT_APEW 0x7b
+/* SE Memory Return Data Client Description */
+#define TEGRA238_MEMORY_CLIENT_SESRD 0x80
+/* SE Memory Write Client Description */
+#define TEGRA238_MEMORY_CLIENT_SESWR 0x81
+/* AXI AP and DFD-AUX0/1 Read clients Both share the same interface on the on MSS */
+#define TEGRA238_MEMORY_CLIENT_AXIAPR 0x82
+/* AXI AP and DFD-AUX0/1 write clients Both sahre the same interface on MSS */
+#define TEGRA238_MEMORY_CLIENT_AXIAPW 0x83
+/* ETR reads */
+#define TEGRA238_MEMORY_CLIENT_ETRR 0x84
+/* ETR writes */
+#define TEGRA238_MEMORY_CLIENT_ETRW 0x85
+/* AXI Switch read client */
+#define TEGRA238_MEMORY_CLIENT_AXISR 0x8c
+/* AXI Switch write client */
+#define TEGRA238_MEMORY_CLIENT_AXISW 0x8d
+/* UFSHC read client */
+#define TEGRA238_MEMORY_CLIENT_UFSHCR 0x90
+/* UFSHC write client */
+#define TEGRA238_MEMORY_CLIENT_UFSHCW 0x91
+/* NVDISPLAY read client */
+#define TEGRA238_MEMORY_CLIENT_NVDISPLAYR 0x92
+/* BPMP read client */
+#define TEGRA238_MEMORY_CLIENT_BPMPR 0x93
+/* BPMP write client */
+#define TEGRA238_MEMORY_CLIENT_BPMPW 0x94
+/* BPMPDMA read client */
+#define TEGRA238_MEMORY_CLIENT_BPMPDMAR 0x95
+/* BPMPDMA write client */
+#define TEGRA238_MEMORY_CLIENT_BPMPDMAW 0x96
+/* AON read client */
+#define TEGRA238_MEMORY_CLIENT_AONR 0x97
+/* AON write client */
+#define TEGRA238_MEMORY_CLIENT_AONW 0x98
+/* AONDMA read client */
+#define TEGRA238_MEMORY_CLIENT_AONDMAR 0x99
+/* AONDMA write client */
+#define TEGRA238_MEMORY_CLIENT_AONDMAW 0x9a
+/* APEDMA read client */
+#define TEGRA238_MEMORY_CLIENT_APEDMAR 0x9f
+/* APEDMA write client */
+#define TEGRA238_MEMORY_CLIENT_APEDMAW 0xa0
+/* NVDISPLAY read client instance 2 */
+#define TEGRA238_MEMORY_CLIENT_NVDISPLAYR1 0xa1
+/* VIC Multi MCCIF Read client */
+#define TEGRA238_MEMORY_CLIENT_VICSRD1 0xa2
+/* Decoder read multi mccif client */
+#define TEGRA238_MEMORY_CLIENT_NVDECSRD1 0xa3
+/* mss internal memqual MIU0 reads */
+#define TEGRA238_MEMORY_CLIENT_MIU0R 0xa6
+/* mss internal memqual MIU0 writes */
+#define TEGRA238_MEMORY_CLIENT_MIU0W 0xa7
+/* mss internal memqual MIU1 reads */
+#define TEGRA238_MEMORY_CLIENT_MIU1R 0xa8
+/* mss internal memqual MIU1 writes */
+#define TEGRA238_MEMORY_CLIENT_MIU1W 0xa9
+/* mss internal memqual MIU2 reads */
+#define TEGRA238_MEMORY_CLIENT_MIU2R 0xae
+/* mss internal memqual MIU2 writes */
+#define TEGRA238_MEMORY_CLIENT_MIU2W 0xaf
+/* mss internal memqual MIU3 reads */
+#define TEGRA238_MEMORY_CLIENT_MIU3R 0xb0
+/* mss internal memqual MIU3 writes */
+#define TEGRA238_MEMORY_CLIENT_MIU3W 0xb1
+#define TEGRA238_MEMORY_CLIENT_DPMUR 0xb4
+#define TEGRA238_MEMORY_CLIENT_DPMUW 0xb5
+#define TEGRA238_MEMORY_CLIENT_NVL0R 0xb6
+#define TEGRA238_MEMORY_CLIENT_NVL0W 0xb7
+#define TEGRA238_MEMORY_CLIENT_NVL1R 0xb8
+#define TEGRA238_MEMORY_CLIENT_NVL1W 0xb9
+#define TEGRA238_MEMORY_CLIENT_NVL2R 0xba
+#define TEGRA238_MEMORY_CLIENT_NVL2W 0xbb
+/* PCIE0 Read clients */
+#define TEGRA238_MEMORY_CLIENT_PCIE0R 0xd8
+/* PCIE0 Write client */
+#define TEGRA238_MEMORY_CLIENT_PCIE0W 0xd9
+/* PCIE1 Read clients */
+#define TEGRA238_MEMORY_CLIENT_PCIE1R 0xda
+/* PCIE1 write clients */
+#define TEGRA238_MEMORY_CLIENT_PCIE1W 0xdb
+/* PCIE2 Read clients */
+#define TEGRA238_MEMORY_CLIENT_PCIE2AR 0xdc
+/* PCIE2 write clients */
+#define TEGRA238_MEMORY_CLIENT_PCIE2AW 0xdd
+/* PCIE3 Read clients */
+#define TEGRA238_MEMORY_CLIENT_PCIE3R 0xde
+/* PCIE3 write clients writes */
+#define TEGRA238_MEMORY_CLIENT_PCIE3W 0xdf
+#define TEGRA238_MEMORY_CLIENT_NVL3R 0xe5
+#define TEGRA238_MEMORY_CLIENT_NVL3W 0xe6
+#define TEGRA238_MEMORY_CLIENT_NVL4R 0xe7
+#define TEGRA238_MEMORY_CLIENT_NVL4W 0xe8
+#define TEGRA238_MEMORY_CLIENT_NVL0RHP 0xf4
+#define TEGRA238_MEMORY_CLIENT_NVL1RHP 0xf5
+#define TEGRA238_MEMORY_CLIENT_NVL2RHP 0xf6
+#define TEGRA238_MEMORY_CLIENT_NVL3RHP 0xf7
+#define TEGRA238_MEMORY_CLIENT_NVL4RHP 0xf8
+#define TEGRA238_MEMORY_CLIENT_CCPLEXISTR 0x100
+#define TEGRA238_MEMORY_CLIENT_CCPLEXISTW 0x101
+/* HWPM Write Interface */
+#define TEGRA238_MEMORY_CLIENT_PMA0AWR 0x122
+#define TEGRA238_MEMORY_CLIENT_NVL_COMMON_R 0x13e
+/* Audio Processing (APE1) engine writes */
+#define TEGRA238_MEMORY_CLIENT_APE1W 0x13f
+/* Audio Processing (APE1) engine reads */
+#define TEGRA238_MEMORY_CLIENT_APE1R 0x140
+/* FDE read client */
+#define TEGRA238_MEMORY_CLIENT_FDERD 0x141
+/* FDE write client */
+#define TEGRA238_MEMORY_CLIENT_FDEWR 0x142
+
+/* ICC ID's for dummy MC clients used to represent CPU Clusters */
+#define TEGRA_ICC_MC_CPU_CLUSTER0       1003
+
+#endif
