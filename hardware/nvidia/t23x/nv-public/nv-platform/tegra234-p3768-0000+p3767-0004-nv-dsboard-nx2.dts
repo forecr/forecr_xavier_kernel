@@ -28,4 +28,23 @@
 			};
 		};
 	};
+
+	/*
+	 * PVA0/NVDLA0/NVDLA1 above are the only consumers of the CV power
+	 * domain, so on this module the CV rail never ungates and the
+	 * CV0/CV1/CV2 soctherm sensors can never be read.
+	 */
+	thermal-zones {
+		cv0-thermal {
+			status = "disabled";
+		};
+
+		cv1-thermal {
+			status = "disabled";
+		};
+
+		cv2-thermal {
+			status = "disabled";
+		};
+	};
 };
