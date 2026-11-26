@@ -1,6 +1,6 @@
 # For DSBOARD-THRMAX with AGX Thor SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_thrmax_agx_thor
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_thrmax_agx_thor/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra264-p4071-0000+p3834-0000-nv-dsboard-thrmax.dtb $HOME/kernel_out_dsboard_thrmax_agx_thor/0_tegra264-p4071-0000+p3834-0000-nv.dtb
@@ -30,7 +30,7 @@
 
 # For MILBOARD-THR with AGX Thor SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_thr_agx_thor
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_THOR_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_thr_agx_thor/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra264-p4071-0000+p3834-0000-nv-milboard-thr.dtb $HOME/kernel_out_milboard_thr_agx_thor/0_tegra264-p4071-0000+p3834-0000-nv.dtb
@@ -58,7 +58,7 @@
 
 # For DSBOARD-AGX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agx_orin
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agx_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agx-base.dtb $HOME/kernel_out_dsboard_agx_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
@@ -84,7 +84,7 @@
 
 # For DSBOARD-AGXMAX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agxmax_orin
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
@@ -110,7 +110,7 @@
 
 # For DSBOARD-AGXMAX with AGX Orin Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agxmax_orin_ind
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxmax_orin_ind/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0008-nv-dsboard-agxmax-base.dtb $HOME/kernel_out_dsboard_agxmax_orin_ind/tegra234-p3737-0000+p3701-0008-nv.dtb
@@ -130,7 +130,7 @@
 
 # For DSBOARD-AGXS with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agxs_orin
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxs_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
@@ -156,7 +156,7 @@
 
 # For DSBOARD-AGXS with AGX Orin Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_agxs_orin_ind
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_agxs_orin_ind/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0008-nv-dsboard-agxs-base.dtb $HOME/kernel_out_dsboard_agxs_orin_ind/tegra234-p3737-0000+p3701-0008-nv.dtb
@@ -176,7 +176,7 @@
 
 # For RAIBOARD-AGX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_raiboard_agx_orin
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_agx_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
@@ -202,7 +202,7 @@
 
 # For RAIBOARD-AGX with AGX Orin Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_raiboard_agx_orin_ind
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_agx_orin_ind/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0008-nv-raiboard-agx-base.dtb $HOME/kernel_out_raiboard_agx_orin_ind/tegra234-p3737-0000+p3701-0008-nv.dtb
@@ -222,7 +222,7 @@
 
 # For MILBOARD-AGX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_agx_orin
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
@@ -248,7 +248,7 @@
 
 # For MILBOARD-AGX with AGX Orin Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_agx_orin_ind
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_agx_orin_ind/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0008-nv-milboard-agx-base.dtb $HOME/kernel_out_milboard_agx_orin_ind/tegra234-p3737-0000+p3701-0008-nv.dtb
@@ -268,7 +268,7 @@
 
 # For MILBOARD-AGXMAX with AGX Orin SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_agxmax_orin
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_agxmax_orin/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0000-nv-milboard-agxmax-base.dtb $HOME/kernel_out_milboard_agxmax_orin/tegra234-p3737-0000+p3701-0000-nv.dtb
@@ -294,7 +294,7 @@
 
 # For MILBOARD-AGXMAX with AGX Orin Industrial SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_agxmax_orin_ind
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_AGX_ORIN_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_agxmax_orin_ind/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3737-0000+p3701-0008-nv-milboard-agxmax-base.dtb $HOME/kernel_out_milboard_agxmax_orin_ind/tegra234-p3737-0000+p3701-0008-nv.dtb
@@ -314,7 +314,7 @@
 
 # For MILBOARD-ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_ornx_orin_nx
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_ornx_orin_nx/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0000-nv-super-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
@@ -339,7 +339,7 @@
 
 # For MILBOARD-ORNX with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_milboard_ornx_orin_nano
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_milboard_ornx_orin_nano/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0003-nv-super-milboard-ornx-base.dtb $HOME/kernel_out_milboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
@@ -364,7 +364,7 @@
 
 # For RAIBOARD-ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_raiboard_ornx_orin_nx
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nx/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0000-nv-super-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
@@ -389,7 +389,7 @@
 
 # For RAIBOARD-ORNX with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_raiboard_ornx_orin_nano
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_raiboard_ornx_orin_nano/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0003-nv-super-raiboard-ornx-base.dtb $HOME/kernel_out_raiboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
@@ -414,7 +414,7 @@
 
 # For DSBOARD-ORNX with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_orin_nx
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nx/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0000-nv-super-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
@@ -437,7 +437,7 @@
 
 # For DSBOARD-ORNX with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_orin_nano
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_orin_nano/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0003-nv-super-dsboard-ornx.dtb $HOME/kernel_out_dsboard_ornx_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
@@ -460,7 +460,7 @@
 
 # For DSBOARD-ORNX-LAN with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_lan_orin_nx
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_lan_orin_nx/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0000-nv-super-dsboard-ornx-lan-base.dtb $HOME/kernel_out_dsboard_ornx_lan_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
@@ -487,7 +487,7 @@
 
 # For DSBOARD-ORNX-LAN with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornx_lan_orin_nano
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornx_lan_orin_nano/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0003-nv-super-dsboard-ornx-lan-base.dtb $HOME/kernel_out_dsboard_ornx_lan_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
@@ -514,7 +514,7 @@
 
 # For DSBOARD-ORNXS with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nx
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nx/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0000-nv-super-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
@@ -541,7 +541,7 @@
 
 # For DSBOARD-ORNXS with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_ornxs_orin_nano
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_ornxs_orin_nano/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0003-nv-super-dsboard-ornxs-base.dtb $HOME/kernel_out_dsboard_ornxs_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
@@ -568,7 +568,7 @@
 
 # For DSBOARD-NX2 (rev-1.22 or newer) with Orin NX SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nx
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NX_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nx/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0000-nv-super-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nx/tegra234-p3768-0000+p3767-0000-nv-super.dtb
@@ -591,7 +591,7 @@
 
 # For DSBOARD-NX2 (rev-1.22 or newer) with Orin Nano SoM, type these commands below:
 	mkdir $HOME/kernel_out_dsboard_nx2_orin_nano
-	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.1_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
+	export INSTALL_MOD_PATH=$HOME/nvidia/nvidia_sdk/JetPack_7.2.2_Linux_JETSON_ORIN_NANO_TARGETS/Linux_for_Tegra/rootfs
 	sudo -E make install -C kernel
 	cp $KERNEL_OUTPUT/arch/arm64/boot/Image $HOME/kernel_out_dsboard_nx2_orin_nano/Image
 	cp build/nvidia-public/devicetree/generic-dtbs/tegra234-p3768-0000+p3767-0003-nv-super-dsboard-nx2.dtb $HOME/kernel_out_dsboard_nx2_orin_nano/tegra234-p3768-0000+p3767-0003-nv-super.dtb
