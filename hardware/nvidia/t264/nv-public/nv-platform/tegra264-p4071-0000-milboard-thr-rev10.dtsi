@@ -6,6 +6,7 @@
 #include <dt-bindings/sound/rt5640.h>
 #include "tegra264-p4071-0080-p3834-0008-dcb-quad-hdmi.dtsi"
 #include "nv-soc/tegra264-soc-audio-overlay.dtsi"
+#include "tegra264-coe.dtsi"
 
 /* CVB : JEDHA */
 / {
