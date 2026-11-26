@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/*
+ * Camera-over-Ethernet (CoE) MGBE overlay.
+ *
+ * The RCE firmware supports up to 14 channel slots. CoE VDMA channels start
+ * at 4 (channels 0-3 are reserved for CCPlex), and the RCE driver derives a
+ * channel offset from the lowest nvidia,vm-channels value so those 14 slots
+ * map to HW VDMA channels 4-17 - i.e. 14 channels usable natively for CoE.
+ * The base tegra264.dtsi keeps the single-channel default; boards that enable
+ * the tegra-capture-coe* devices include this overlay to opt into the wider
+ * channel map.
+ */
+
+&mgbe_vm_vdma_config {
+	pdma_e {
+		nvidia,num-vdma-channels = <3>;
+		nvidia,vdma-channels = <4 5 6>;
+	};
+	pdma_f {
+		nvidia,num-vdma-channels = <3>;
+		nvidia,vdma-channels = <7 8 9>;
+	};
+	pdma_g {
+		nvidia,num-vdma-channels = <4>;
+		nvidia,vdma-channels = <10 11 12 13>;
+	};
+	pdma_h {
+		nvidia,num-vdma-channels = <4>;
+		nvidia,vdma-channels = <14 15 16 17>;
+	};
+};
+
+&mgbe_vm_irq_config {
+	vm_irq5 {
+		nvidia,num-vm-channels = <14>;
+		nvidia,vm-channels = <4 5 6 7 8 9 10 11 12 13 14 15 16 17>;
+	};
+};

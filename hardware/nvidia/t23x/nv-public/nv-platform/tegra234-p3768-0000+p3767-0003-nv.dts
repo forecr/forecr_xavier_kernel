@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2023-2026, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/dts-v1/;
+
+#include "tegra234-p3768-0000+p3767-0005.dts"
+#include "tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi"
+
+/ {
+	compatible = "nvidia,p3768-0000+p3767-0003", "nvidia,p3767-0003", "nvidia,tegra234";
+
+	bus@0 {
+		host1x@13e00000 {
+			nvdla0@15880000 {
+				status = "disabled";
+			};
+
+			nvdla1@158c0000 {
+				status = "disabled";
+			};
+
+			pva0@16000000 {
+				status = "disabled";
+			};
+		};
+	};
+
+	/*
+	 * PVA0/NVDLA0/NVDLA1 above are the only consumers of the CV power
+	 * domain, so on this module the CV rail never ungates and the
+	 * CV0/CV1/CV2 soctherm sensors can never be read.
+	 */
+	thermal-zones {
+		cv0-thermal {
+			status = "disabled";
+		};
+
+		cv1-thermal {
+			status = "disabled";
+		};
+
+		cv2-thermal {
+			status = "disabled";
+		};
+	};
+};

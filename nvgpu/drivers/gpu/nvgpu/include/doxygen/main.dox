@@ -1,0 +1,10 @@
+# -*- C -*-  Tell emacs this uses C file (i.e comment) syntax
+# SPDX-License-Identifier: GPL-2.0-only OR MIT
+# SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+/**
+ * @mainpage nvgpu-rm driver Interface Specification
+ *
+ * -# @subpage nvgpu-rm_interface_specification
+ *
+ */

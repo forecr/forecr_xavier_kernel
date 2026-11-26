@@ -1,0 +1,87 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-FileCopyrightText: Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	overlay-name = "Tegra264 p3740-0002+p3834-0008 QSPI NVMe USB-C Host Overlay";
+	compatible = "nvidia,p3740-0002+p3834-0008";
+
+	fragment-t264-p3740-0002-p3834-0008-usbc-host@0 {
+		target = <&xusb_padctl>;
+
+		__overlay__ {
+			pads {
+				usb2 {
+					lanes {
+						usbc_host_usb2_0: usb2-0 {
+							#phy-cells = <0>;
+						};
+
+						usbc_host_usb2_1: usb2-1 {
+							#phy-cells = <0>;
+						};
+
+						usbc_host_usb2_2: usb2-2 {
+							#phy-cells = <0>;
+						};
+
+						usbc_host_usb2_3: usb2-3 {
+							#phy-cells = <0>;
+						};
+					};
+				};
+
+				usb3 {
+					lanes {
+						usbc_host_usb3_0: usb3-0 {
+							#phy-cells = <0>;
+						};
+
+						usbc_host_usb3_1: usb3-1 {
+							#phy-cells = <0>;
+						};
+
+						usbc_host_usb3_2: usb3-2 {
+							#phy-cells = <0>;
+						};
+					};
+				};
+			};
+
+			ports {
+				usb2-0 {
+					mode = "host";
+				};
+			};
+		};
+	};
+
+	fragment-t264-p3740-0002-p3834-0008-usbc-host@1 {
+		target-path = "/bus@0/usb@a808670000";
+
+		__overlay__ {
+			phys = <&usbc_host_usb2_0>,
+				<&usbc_host_usb3_2>;
+			phy-names = "usb2-0", "usb3-2";
+			status = "disabled";
+		};
+	};
+
+	fragment-t264-p3740-0002-p3834-0008-usbc-host@2 {
+		target-path = "/bus@0/usb@a80aa10000";
+
+		__overlay__ {
+			phys = <&usbc_host_usb2_0>,
+				<&usbc_host_usb2_1>,
+				<&usbc_host_usb2_2>,
+				<&usbc_host_usb2_3>,
+				<&usbc_host_usb3_0>,
+				<&usbc_host_usb3_1>,
+				<&usbc_host_usb3_2>;
+			phy-names = "usb2-0", "usb2-1", "usb2-2", "usb2-3",
+				"usb3-0", "usb3-1", "usb3-2";
+		};
+	};
+};
