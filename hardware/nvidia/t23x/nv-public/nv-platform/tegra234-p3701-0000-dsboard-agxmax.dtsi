@@ -43,18 +43,19 @@
 			status = "okay";
 
 			ports {
+				/*
+				 * PZ.01 is muxed to USB (VBUS_EN) on DSBOARD-AGXMAX, so the
+				 * devkit gpio-usb-b-connector VBUS detection on PZ.01 never
+				 * sees VBUS. Start the recovery USB in device role instead.
+				 */
 				usb2-0 {
 					status = "okay";
 					vbus-supply = <&vdd_5v0_sys>;
 					mode = "otg";
 					usb-role-switch;
+					role-switch-default-mode = "peripheral";
 					/delete-node/ port;
-					connector {
-						compatible = "usb-b-connector", "gpio-usb-b-connector";
-						label = "micro-USB";
-						type = "micro";
-						vbus-gpios = <&gpio TEGRA234_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
-					};
+					/delete-node/ connector;
 				};
 
 				usb2-1 {
